@@ -1,0 +1,72 @@
+{
+  "name": "mobx-restful-table",
+  "version": "0.3.0",
+  "license": "LGPL-3.0",
+  "author": "shiy2008@gmail.com",
+  "description": "A super Table component for CRUD operation, which is based on MobX RESTful & React.",
+  "keywords": [
+    "table",
+    "form",
+    "component",
+    "crud",
+    "mobx",
+    "restful",
+    "react"
+  ],
+  "homepage": "https://ideapp.dev/MobX-RESTful-table/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idea2app/MobX-RESTful-table.git"
+  },
+  "bugs": {
+    "url": "https://github.com/idea2app/MobX-RESTful-table/issues"
+  },
+  "source": "source/index.ts",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "dependencies": {
+    "@swc/helpers": "^0.4.14",
+    "classnames": "^2.3.2",
+    "mobx-i18n": "^0.3.3",
+    "mobx-react": "^6.3.1",
+    "mobx-restful": "^0.6.0-rc.18",
+    "react": ">=16 <18",
+    "react-bootstrap": "^2.6.0",
+    "regenerator-runtime": "^0.13.11",
+    "web-utility": "^3.9.9"
+  },
+  "devDependencies": {
+    "@parcel/packager-ts": "~2.6.2",
+    "@parcel/transformer-typescript-types": "~2.6.2",
+    "@types/react": "^17.0.52",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
+    "parcel": "~2.6.2",
+    "prettier": "^2.8.0",
+    "typedoc": "^0.23.21",
+    "typedoc-plugin-mdn-links": "^2.0.0",
+    "typescript": "~4.7.4"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "arrowParens": "avoid",
+    "tabWidth": 2
+  },
+  "lint-staged": {
+    "*.{md,json,yml,ts}": "prettier --write"
+  },
+  "browserslist": "> 0.5%, last 2 versions, not dead, IE 11",
+  "targets": {
+    "main": {
+      "optimize": true
+    }
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "test": "lint-staged",
+    "build": "rm -rf dist/ docs/  &&  parcel build  &&  typedoc source/",
+    "prepublishOnly": "npm test  &&  npm run build"
+  }
+}
