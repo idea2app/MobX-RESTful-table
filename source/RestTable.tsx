@@ -32,11 +32,12 @@ export interface Column<T extends DataObject>
 
 export interface RestTableProps<T extends DataObject> extends TableProps {
   editable?: boolean;
+  deletable?: boolean;
   columns: Column<T>[];
   store: ListModel<T>;
   translater: TranslationModel<
     string,
-    'create' | 'submit' | 'cancel' | 'total_x_rows'
+    'create' | 'edit' | 'delete' | 'submit' | 'cancel' | 'total_x_rows'
   >;
 }
 
@@ -46,12 +47,48 @@ export class RestTable<T extends DataObject> extends PureComponent<
 > {
   static displayName = 'RestTable';
 
+  get columns(): Column<T>[] {
+    const { editable, deletable, columns, store, translater } = this.props;
+    const { t } = translater;
+
+    return [
+      ...columns,
+      (editable || deletable) &&
+        ({
+          renderBody: data => (
+            <>
+              {editable && (
+                <Button
+                  className="text-nowrap m-1"
+                  variant="warning"
+                  size="sm"
+                  onClick={() => (store.currentOne = data)}
+                >
+                  {t('edit')}
+                </Button>
+              )}
+              {deletable && (
+                <Button
+                  className="text-nowrap m-1"
+                  variant="danger"
+                  size="sm"
+                  onClick={() => store.deleteOne(data.id)}
+                >
+                  {t('delete')}
+                </Button>
+              )}
+            </>
+          ),
+        } as Column<T>),
+    ].filter(Boolean);
+  }
+
   get hasHeader() {
-    return this.props.columns.some(({ renderHead }) => renderHead);
+    return this.columns.some(({ renderHead }) => renderHead);
   }
 
   get hasFooter() {
-    return this.props.columns.some(({ renderFoot }) => renderFoot);
+    return this.columns.some(({ renderFoot }) => renderFoot);
   }
 
   componentDidMount() {
@@ -64,13 +101,14 @@ export class RestTable<T extends DataObject> extends PureComponent<
   renderTable() {
     const {
         className,
-        columns,
+        columns: _,
         store,
         translater,
+        editable,
         responsive = true,
         ...tableProps
       } = this.props,
-      { hasHeader, hasFooter } = this;
+      { hasHeader, hasFooter, columns } = this;
     const { indexKey, downloading, currentPage } = store;
 
     return (
