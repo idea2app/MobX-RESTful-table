@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A super Table component for CRUD operation, which is based on MobX RESTful & React.",

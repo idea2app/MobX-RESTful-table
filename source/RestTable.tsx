@@ -309,8 +309,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
   getList = debounce(({ pageIndex, pageSize }) => {
     const { store } = this.props;
 
-    if (store.downloading < 1 && !store.noMore)
-      store.getList({}, pageIndex, pageSize);
+    if (store.downloading < 1) store.getList({}, pageIndex, pageSize);
   });
 
   async deleteList(keys: IDType[]) {

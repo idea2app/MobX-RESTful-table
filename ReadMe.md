@@ -108,18 +108,6 @@ export default class PaginationPage extends PureComponent {
         ),
       },
       { key: 'stargazers_count', type: 'number', renderHead: t('star_count') },
-      {
-        renderBody: data => (
-          <Button
-            className="text-nowrap"
-            variant="warning"
-            size="sm"
-            onClick={() => (repositoryStore.currentOne = data)}
-          >
-            {t('edit')}
-          </Button>
-        ),
-      },
     ];
   }
 
@@ -131,9 +119,11 @@ export default class PaginationPage extends PureComponent {
           striped
           hover
           editable
+          deletable
           columns={this.columns}
           store={repositoryStore}
           translater={i18n}
+          onCheck={console.log}
         />
       </Container>
     );
