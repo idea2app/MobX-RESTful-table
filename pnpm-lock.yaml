@@ -8,12 +8,13 @@ specifiers:
   classnames: ^2.3.2
   husky: ^8.0.2
   lint-staged: ^13.1.0
+  mobx: ^5.15.7
   mobx-i18n: ^0.3.6
   mobx-react: ^6.3.1
   mobx-restful: ^0.6.0-rc.19
   parcel: ~2.6.2
   prettier: ^2.8.1
-  react: '>=17.0.2'
+  react: ^17.0.2
   react-bootstrap: ^2.7.0
   regenerator-runtime: ^0.13.11
   typedoc: ^0.23.21
@@ -24,9 +25,9 @@ specifiers:
 dependencies:
   '@swc/helpers': 0.4.14
   classnames: 2.3.2
-  mobx-i18n: 0.3.6
-  mobx-react: 6.3.1_react@17.0.2
-  mobx-restful: 0.6.0-rc.19_typescript@4.7.4
+  mobx-i18n: 0.3.6_mobx@5.15.7
+  mobx-react: 6.3.1_mobx@5.15.7+react@17.0.2
+  mobx-restful: 0.6.0-rc.19_dss5dgebhlll4wuvbmbwonwy4e
   react-bootstrap: 2.7.0_q5o373oqrklnndq2vhekyuzhxi
   regenerator-runtime: 0.13.11
   web-utility: 3.9.9_typescript@4.7.4
@@ -37,6 +38,7 @@ devDependencies:
   '@types/react': 17.0.52
   husky: 8.0.2
   lint-staged: 13.1.0
+  mobx: 5.15.7
   parcel: 2.6.2
   prettier: 2.8.1
   react: 17.0.2
@@ -1796,16 +1798,17 @@ packages:
       brace-expansion: 2.0.1
     dev: true
 
-  /mobx-i18n/0.3.6:
+  /mobx-i18n/0.3.6_mobx@5.15.7:
     resolution: {integrity: sha512-hfa+TUaIpgGAGIJ0tq6WOHYNTrTHPt6bUHbAwNxbyiP+puCnYAA8EnKyBLXALUi+cvTB4jtv6MgJueoPjI96rQ==}
     peerDependencies:
       mobx: '>=4 <6'
     dependencies:
       '@swc/helpers': 0.4.14
+      mobx: 5.15.7
       regenerator-runtime: 0.13.11
     dev: false
 
-  /mobx-react-lite/2.2.2_react@17.0.2:
+  /mobx-react-lite/2.2.2_mobx@5.15.7+react@17.0.2:
     resolution: {integrity: sha512-2SlXALHIkyUPDsV4VTKVR9DW7K3Ksh1aaIv3NrNJygTbhXe2A9GrcKHZ2ovIiOp/BXilOcTYemfHHZubP431dg==}
     peerDependencies:
       mobx: ^4.0.0 || ^5.0.0
@@ -1818,23 +1821,25 @@ packages:
       react-native:
         optional: true
     dependencies:
+      mobx: 5.15.7
       react: 17.0.2
     dev: false
 
-  /mobx-react/6.3.1_react@17.0.2:
+  /mobx-react/6.3.1_mobx@5.15.7+react@17.0.2:
     resolution: {integrity: sha512-IOxdJGnRSNSJrL2uGpWO5w9JH5q5HoxEqwOF4gye1gmZYdjoYkkMzSGMDnRCUpN/BNzZcFoMdHXrjvkwO7KgaQ==}
     peerDependencies:
       mobx: ^5.15.4 || ^4.15.4
       react: ^16.8.0 || 16.9.0-alpha.0
     dependencies:
-      mobx-react-lite: 2.2.2_react@17.0.2
+      mobx: 5.15.7
+      mobx-react-lite: 2.2.2_mobx@5.15.7+react@17.0.2
       react: 17.0.2
     transitivePeerDependencies:
       - react-dom
       - react-native
     dev: false
 
-  /mobx-restful/0.6.0-rc.19_typescript@4.7.4:
+  /mobx-restful/0.6.0-rc.19_dss5dgebhlll4wuvbmbwonwy4e:
     resolution: {integrity: sha512-88o3fJmSZRoJNpIZWMgum/DgKFxDxYRZhrEr6ovhZOG+346Ahl54x41CxDHQcu7NRFwpxyMwO0j1Ixjw9DSK9A==}
     peerDependencies:
       mobx: '>=4 <6'
@@ -1842,6 +1847,7 @@ packages:
       '@swc/helpers': 0.4.14
       class-validator: 0.13.2
       koajax: 0.8.3_typescript@4.7.4
+      mobx: 5.15.7
       reflect-metadata: 0.1.13
       regenerator-runtime: 0.13.11
       web-utility: 3.9.9_typescript@4.7.4
@@ -1849,6 +1855,9 @@ packages:
       - jsdom
       - typescript
     dev: false
+
+  /mobx/5.15.7:
+    resolution: {integrity: sha512-wyM3FghTkhmC+hQjyPGGFdpehrcX1KOXsDuERhfK2YbJemkUhEB+6wzEN639T21onxlfYBmriA1PFnvxTUhcKw==}
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
