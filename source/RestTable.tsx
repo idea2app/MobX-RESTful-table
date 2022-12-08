@@ -1,5 +1,6 @@
 import { isEmpty, uniqueID, formToJSON } from 'web-utility';
 import classNames from 'classnames';
+import { observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { DataObject, IDType, ListModel } from 'mobx-restful';
 import { observer } from 'mobx-react';
@@ -10,17 +11,16 @@ import {
   ReactNode,
 } from 'react';
 import {
-  Row,
-  Col,
   Table,
   TableProps,
   Spinner,
-  Modal,
-  Form,
   Button,
+  Form,
+  Modal,
 } from 'react-bootstrap';
 
 import { Pager } from './Pager';
+import { FormField } from './FormField';
 
 export interface Column<T extends DataObject>
   extends Pick<InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -37,8 +37,15 @@ export interface RestTableProps<T extends DataObject> extends TableProps {
   store: ListModel<T>;
   translater: TranslationModel<
     string,
-    'create' | 'edit' | 'delete' | 'submit' | 'cancel' | 'total_x_rows'
+    | 'create'
+    | 'edit'
+    | 'delete'
+    | 'submit'
+    | 'cancel'
+    | 'total_x_rows'
+    | 'sure_to_delete_x'
   >;
+  onCheck?: (keys: IDType[]) => any;
 }
 
 @observer
@@ -47,12 +54,76 @@ export class RestTable<T extends DataObject> extends PureComponent<
 > {
   static displayName = 'RestTable';
 
+  @observable
+  checkedKeys: IDType[] = [];
+
+  toggleCheck(key: IDType) {
+    const { checkedKeys } = this;
+    const index = checkedKeys.indexOf(key);
+
+    this.checkedKeys =
+      index < 0
+        ? [...checkedKeys, key]
+        : [...checkedKeys.slice(0, index), ...checkedKeys.slice(index + 1)];
+
+    this.props.onCheck?.(this.checkedKeys);
+  }
+
+  toggleCheckAll = () => {
+    const { store, onCheck } = this.props;
+    const { indexKey, currentPage } = store;
+
+    this.checkedKeys = this.checkedKeys.length
+      ? []
+      : currentPage.map(({ [indexKey]: ID }) => ID);
+
+    onCheck?.(this.checkedKeys);
+  };
+
   get columns(): Column<T>[] {
-    const { editable, deletable, columns, store, translater } = this.props;
-    const { t } = translater;
+    const { checkedKeys, toggleCheckAll } = this,
+      { editable, deletable, columns, store, translater, onCheck } = this.props;
+    const { t } = translater,
+      { indexKey, currentPage } = store;
 
     return [
+      onCheck &&
+        ({
+          renderHead: () => (
+            <Form.Check
+              type="checkbox"
+              name={`all-${indexKey.toString()}`}
+              value={checkedKeys + ''}
+              checked={
+                !!currentPage[0] &&
+                currentPage.every(({ [indexKey]: ID }) =>
+                  checkedKeys.includes(ID),
+                )
+              }
+              ref={(input: HTMLInputElement | null) =>
+                input &&
+                (input.indeterminate =
+                  !!checkedKeys.length &&
+                  checkedKeys.length < currentPage.length)
+              }
+              onClick={toggleCheckAll}
+              onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
+            />
+          ),
+          renderBody: ({ [indexKey]: ID }) => (
+            <Form.Check
+              type="checkbox"
+              name={indexKey.toString()}
+              value={ID}
+              checked={checkedKeys.includes(ID)}
+              onClick={() => this.toggleCheck(ID)}
+              onKeyUp={({ key }) => key === ' ' && this.toggleCheck(ID)}
+            />
+          ),
+        } as Column<T>),
+
       ...columns,
+
       (editable || deletable) &&
         ({
           renderBody: data => (
@@ -72,7 +143,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
                   className="text-nowrap m-1"
                   variant="danger"
                   size="sm"
-                  onClick={() => store.deleteOne(data.id)}
+                  onClick={() => this.deleteList([data.id])}
                 >
                   {t('delete')}
                 </Button>
@@ -105,6 +176,8 @@ export class RestTable<T extends DataObject> extends PureComponent<
         store,
         translater,
         editable,
+        deletable,
+        onCheck,
         responsive = true,
         ...tableProps
       } = this.props,
@@ -118,7 +191,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
             <tr className="align-middle text-nowrap">
               {columns.map(({ key, renderHead }, index) => (
                 <th key={key?.toString() || index}>
-                  {key && typeof renderHead === 'function'
+                  {typeof renderHead === 'function'
                     ? renderHead(key)
                     : renderHead || key}
                 </th>
@@ -151,7 +224,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
             <tr className="align-middle">
               {columns.map(({ key, renderFoot }, index) => (
                 <td key={key?.toString() || index}>
-                  {key && typeof renderFoot === 'function'
+                  {typeof renderFoot === 'function'
                     ? renderFoot(key)
                     : renderFoot || key}
                 </td>
@@ -175,28 +248,19 @@ export class RestTable<T extends DataObject> extends PureComponent<
 
   renderInput = ({ key, type, renderHead }: Column<T>) => {
     const { currentOne } = this.props.store;
+    const label =
+      typeof renderHead === 'function' ? renderHead?.(key) : renderHead || key;
 
     return (
       key && (
-        <Form.Group
-          as={Row}
-          className="align-items-center mb-3"
+        <FormField
+          className="mb-3"
           key={key.toString()}
-          controlId={key.toString()}
-        >
-          <Form.Label column sm={3}>
-            {typeof renderHead === 'function'
-              ? renderHead?.(key)
-              : renderHead || key}
-          </Form.Label>
-          <Col sm={9}>
-            <Form.Control
-              type={type}
-              name={key.toString()}
-              defaultValue={currentOne[key]}
-            />
-          </Col>
-        </Form.Group>
+          label={label}
+          type={type}
+          name={key.toString()}
+          defaultValue={currentOne[key]}
+        />
       )
     );
   };
@@ -241,8 +305,15 @@ export class RestTable<T extends DataObject> extends PureComponent<
     );
   }
 
+  async deleteList(keys: IDType[]) {
+    const { translater, store } = this.props;
+
+    if (confirm(translater.t('sure_to_delete_x', { keys })))
+      for (const key of keys) await store.deleteOne(key);
+  }
+
   render() {
-    const { className, editable, store, translater } = this.props;
+    const { className, editable, deletable, store, translater } = this.props;
     const { indexKey, pageIndex, pageCount, totalCount } = store,
       { t } = translater;
 
@@ -260,13 +331,24 @@ export class RestTable<T extends DataObject> extends PureComponent<
               </span>
             )}
           </nav>
-          {editable && (
-            <Button
-              onClick={() => (store.currentOne[indexKey] = '' as T[keyof T])}
-            >
-              {t('create')}
-            </Button>
-          )}
+          <div>
+            {deletable && (
+              <Button
+                className="mx-2"
+                variant="danger"
+                onClick={() => this.deleteList(this.checkedKeys)}
+              >
+                {t('delete')}
+              </Button>
+            )}
+            {editable && (
+              <Button
+                onClick={() => (store.currentOne[indexKey] = '' as T[keyof T])}
+              >
+                {t('create')}
+              </Button>
+            )}
+          </div>
         </header>
 
         {this.renderTable()}
