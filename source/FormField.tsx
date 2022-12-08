@@ -17,3 +17,5 @@ export const FormField: FC<FormFieldProps> = ({
     <Form.Control name={name} placeholder={name || id} {...controlProps} />
   </Form.FloatingLabel>
 );
+
+FormField.displayName = 'FormField';

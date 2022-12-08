@@ -1,5 +1,6 @@
 import { isEmpty, uniqueID, formToJSON } from 'web-utility';
 import classNames from 'classnames';
+import { debounce } from 'lodash';
 import { observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { DataObject, IDType, ListModel } from 'mobx-restful';
@@ -305,6 +306,13 @@ export class RestTable<T extends DataObject> extends PureComponent<
     );
   }
 
+  getList = debounce(({ pageIndex, pageSize }) => {
+    const { store } = this.props;
+
+    if (store.downloading < 1 && !store.noMore)
+      store.getList({}, pageIndex, pageSize);
+  });
+
   async deleteList(keys: IDType[]) {
     const { translater, store } = this.props;
 
@@ -314,7 +322,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
 
   render() {
     const { className, editable, deletable, store, translater } = this.props;
-    const { indexKey, pageIndex, pageCount, totalCount } = store,
+    const { indexKey, pageSize, pageIndex, pageCount, totalCount } = store,
       { t } = translater;
 
     return (
@@ -322,8 +330,8 @@ export class RestTable<T extends DataObject> extends PureComponent<
         <header className="d-flex justify-content-between sticky-top bg-white py-3">
           <nav className="d-flex align-items-center">
             <Pager
-              {...{ pageIndex, pageCount }}
-              onChange={index => store.getList({}, index)}
+              {...{ pageSize, pageIndex, pageCount }}
+              onChange={this.getList}
             />
             {totalCount && (
               <span className="mx-3 fs14">
