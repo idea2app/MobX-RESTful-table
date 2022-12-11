@@ -101,6 +101,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
                   checkedKeys.includes(ID),
                 )
               }
+              // https://github.com/facebook/react/issues/1798
               ref={(input: HTMLInputElement | null) =>
                 input &&
                 (input.indeterminate =

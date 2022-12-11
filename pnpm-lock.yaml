@@ -11,15 +11,15 @@ specifiers:
   lint-staged: ^13.1.0
   lodash: ^4.17.21
   mobx: ^5.15.7
-  mobx-i18n: ^0.3.6
+  mobx-i18n: ^0.3.11
   mobx-react: ^6.3.1
-  mobx-restful: ^0.6.0-rc.19
+  mobx-restful: ^0.6.0-rc.21
   parcel: ~2.6.2
   prettier: ^2.8.1
   react: ^17.0.2
   react-bootstrap: ^2.7.0
   regenerator-runtime: ^0.13.11
-  typedoc: ^0.23.21
+  typedoc: ^0.23.22
   typedoc-plugin-mdn-links: ^2.0.0
   typescript: ~4.7.4
   web-utility: ^3.9.9
@@ -28,9 +28,9 @@ dependencies:
   '@swc/helpers': 0.4.14
   classnames: 2.3.2
   lodash: 4.17.21
-  mobx-i18n: 0.3.6_mobx@5.15.7
+  mobx-i18n: 0.3.11_mobx@5.15.7
   mobx-react: 6.3.1_mobx@5.15.7+react@17.0.2
-  mobx-restful: 0.6.0-rc.19_dss5dgebhlll4wuvbmbwonwy4e
+  mobx-restful: 0.6.0-rc.21_dss5dgebhlll4wuvbmbwonwy4e
   react-bootstrap: 2.7.0_q5o373oqrklnndq2vhekyuzhxi
   regenerator-runtime: 0.13.11
   web-utility: 3.9.9_typescript@4.7.4
@@ -46,8 +46,8 @@ devDependencies:
   parcel: 2.6.2
   prettier: 2.8.1
   react: 17.0.2
-  typedoc: 0.23.21_typescript@4.7.4
-  typedoc-plugin-mdn-links: 2.0.0_typedoc@0.23.21
+  typedoc: 0.23.22_typescript@4.7.4
+  typedoc-plugin-mdn-links: 2.0.0_typedoc@0.23.22
   typescript: 4.7.4
 
 packages:
@@ -1014,6 +1014,10 @@ packages:
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
+  /@types/validator/13.7.10:
+    resolution: {integrity: sha512-t1yxFAR2n0+VO6hd/FJ9F2uezAZVWHLmpmlJzm1eX03+H7+HsuTAp7L8QJs+2pQCfWkP1+EXsGK9Z9v7o/qPVQ==}
+    dev: false
+
   /@types/warning/3.0.0:
     resolution: {integrity: sha512-t/Tvs5qR47OLOr+4E9ckN8AmP2Tf16gWq+/qA4iUGS/OOyHVO8wv2vjJuX8SNOUTJyWb+2t7wJm6cXILFnOROA==}
     dev: false
@@ -1150,9 +1154,10 @@ packages:
     engines: {node: '>=6.0'}
     dev: true
 
-  /class-validator/0.13.2:
-    resolution: {integrity: sha512-yBUcQy07FPlGzUjoLuUfIOXzgynnQPPruyK1Ge2B74k9ROwnle1E+NxLWnUv5OLU8hA/qL5leAE9XnXq3byaBw==}
+  /class-validator/0.14.0:
+    resolution: {integrity: sha512-ct3ltplN8I9fOwUd8GrP8UQixwff129BkEtuWDKL5W45cQuLd19xqmTLu5ge78YDm/fdje6FMt0hGOhl0lii3A==}
     dependencies:
+      '@types/validator': 13.7.10
       libphonenumber-js: 1.10.14
       validator: 13.7.0
     dev: false
@@ -1810,8 +1815,8 @@ packages:
       brace-expansion: 2.0.1
     dev: true
 
-  /mobx-i18n/0.3.6_mobx@5.15.7:
-    resolution: {integrity: sha512-hfa+TUaIpgGAGIJ0tq6WOHYNTrTHPt6bUHbAwNxbyiP+puCnYAA8EnKyBLXALUi+cvTB4jtv6MgJueoPjI96rQ==}
+  /mobx-i18n/0.3.11_mobx@5.15.7:
+    resolution: {integrity: sha512-TMh5db8P5bP3i3atqGeF3HQD2L/AEd6YcNsgJlEhDjFyMmmq9knlFWuIJ2CDo3CDh4MMbHXP+jNVZBBJfonGoA==}
     peerDependencies:
       mobx: '>=4 <6'
     dependencies:
@@ -1851,13 +1856,13 @@ packages:
       - react-native
     dev: false
 
-  /mobx-restful/0.6.0-rc.19_dss5dgebhlll4wuvbmbwonwy4e:
-    resolution: {integrity: sha512-88o3fJmSZRoJNpIZWMgum/DgKFxDxYRZhrEr6ovhZOG+346Ahl54x41CxDHQcu7NRFwpxyMwO0j1Ixjw9DSK9A==}
+  /mobx-restful/0.6.0-rc.21_dss5dgebhlll4wuvbmbwonwy4e:
+    resolution: {integrity: sha512-lB4Osl2bDOGYC8zdxs0xvKK5ZyoowlOfRERRhOoupoQP10Sr5mtvmXpFwYjOtl9woD+kf9lfFTotx4bEP80OrQ==}
     peerDependencies:
       mobx: '>=4 <6'
     dependencies:
       '@swc/helpers': 0.4.14
-      class-validator: 0.13.2
+      class-validator: 0.14.0
       koajax: 0.8.3_typescript@4.7.4
       mobx: 5.15.7
       reflect-metadata: 0.1.13
@@ -2393,16 +2398,16 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /typedoc-plugin-mdn-links/2.0.0_typedoc@0.23.21:
+  /typedoc-plugin-mdn-links/2.0.0_typedoc@0.23.22:
     resolution: {integrity: sha512-IGLuelXPOenGdmklr5DHgPPf/MfZj7aEYCxCMtPN8C1D0lA7w0YLahd0jhDDcOMU7zL1EPcM5pPnhZHltDhqGQ==}
     peerDependencies:
       typedoc: 0.22.x || 0.23.x
     dependencies:
-      typedoc: 0.23.21_typescript@4.7.4
+      typedoc: 0.23.22_typescript@4.7.4
     dev: true
 
-  /typedoc/0.23.21_typescript@4.7.4:
-    resolution: {integrity: sha512-VNE9Jv7BgclvyH9moi2mluneSviD43dCE9pY8RWkO88/DrEgJZk9KpUk7WO468c9WWs/+aG6dOnoH7ccjnErhg==}
+  /typedoc/0.23.22_typescript@4.7.4:
+    resolution: {integrity: sha512-5sJkjK60xp8A7YpcYniu3+Wf0QcgojEnhzHuCN+CkdpQkKRhOspon/9+sGTkGI8kjVkZs3KHrhltpQyVhRMVfw==}
     engines: {node: '>= 14.14'}
     hasBin: true
     peerDependencies:
