@@ -1,14 +1,12 @@
 import { debounce } from 'lodash';
-import { observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
-import { IDType, DataObject, ListModel, Stream } from 'mobx-restful';
+import { DataObject, NewData, ListModel, Stream } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
 
 import { EdgePosition, ScrollBoundary } from './ScrollBoundary';
 
 export interface ScrollListProps<T extends DataObject = DataObject> {
   defaultData?: T[];
-  onCheck?: (keys: IDType[]) => any;
 }
 
 export type DataType<P> = P extends ScrollListProps<infer D> ? D : never;
@@ -19,8 +17,7 @@ export abstract class ScrollList<
   abstract store: ListModel<DataType<P>>;
   abstract translater: TranslationModel<string, 'load_more' | 'no_more'>;
 
-  @observable
-  selectedIds: string[] = [];
+  filter: NewData<DataType<P>> = {};
 
   async boot() {
     const BaseStream = Stream<DataObject>;
@@ -28,13 +25,16 @@ export abstract class ScrollList<
     const store = this.store as unknown as InstanceType<
         ReturnType<typeof BaseStream>
       >,
-      { defaultData } = this.props;
+      { defaultData } = this.props,
+      { filter } = this;
+
+    if (store.downloading > 0) return;
 
     store.clear();
 
-    if (defaultData) await store.restoreList({ allItems: defaultData });
+    if (defaultData) await store.restoreList({ allItems: defaultData, filter });
 
-    await store.getList(store.filter, store.pageList.length + 1);
+    await store.getList(filter, store.pageList.length + 1);
   }
 
   componentWillUnmount() {
