@@ -16,6 +16,7 @@ import {
 } from 'react-bootstrap';
 
 import { Pager } from './Pager';
+import { FilePreview } from './FilePreview';
 import { Field, RestForm, RestFormProps } from './RestForm';
 
 export interface Column<T extends DataObject>
@@ -72,78 +73,106 @@ export class RestTable<T extends DataObject> extends PureComponent<
   };
 
   @computed
-  get columns(): Column<T>[] {
+  get checkColumn(): Column<T> {
     const { checkedKeys, toggleCheckAll } = this,
-      { editable, deletable, columns, store, translater, onCheck } = this.props;
-    const { t } = translater,
-      { indexKey, currentPage } = store;
+      { indexKey, currentPage } = this.props.store;
+
+    return {
+      renderHead: () => (
+        <Form.Check
+          type="checkbox"
+          name={`all-${indexKey.toString()}`}
+          value={checkedKeys + ''}
+          checked={
+            !!currentPage[0] &&
+            currentPage.every(({ [indexKey]: ID }) => checkedKeys.includes(ID))
+          }
+          // https://github.com/facebook/react/issues/1798
+          ref={(input: HTMLInputElement | null) =>
+            input &&
+            (input.indeterminate =
+              !!checkedKeys.length && checkedKeys.length < currentPage.length)
+          }
+          onClick={toggleCheckAll}
+          onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
+        />
+      ),
+      renderBody: ({ [indexKey]: ID }) => (
+        <Form.Check
+          type="checkbox"
+          name={indexKey.toString()}
+          value={ID}
+          checked={checkedKeys.includes(ID)}
+          onClick={() => this.toggleCheck(ID)}
+          onKeyUp={({ key }) => key === ' ' && this.toggleCheck(ID)}
+        />
+      ),
+    };
+  }
+
+  @computed
+  get operateColumn(): Column<T> {
+    const { editable, deletable, store, translater } = this.props;
+    const { t } = translater;
+
+    return {
+      renderBody: data => (
+        <>
+          {editable && (
+            <Button
+              className="text-nowrap m-1"
+              variant="warning"
+              size="sm"
+              onClick={() => (store.currentOne = data)}
+            >
+              {t('edit')}
+            </Button>
+          )}
+          {deletable && (
+            <Button
+              className="text-nowrap m-1"
+              variant="danger"
+              size="sm"
+              onClick={() => this.deleteList([data.id])}
+            >
+              {t('delete')}
+            </Button>
+          )}
+        </>
+      ),
+    };
+  }
+
+  @computed
+  get columns(): Column<T>[] {
+    const { editable, deletable, columns, onCheck } = this.props;
 
     return [
-      onCheck &&
-        ({
-          renderHead: () => (
-            <Form.Check
-              type="checkbox"
-              name={`all-${indexKey.toString()}`}
-              value={checkedKeys + ''}
-              checked={
-                !!currentPage[0] &&
-                currentPage.every(({ [indexKey]: ID }) =>
-                  checkedKeys.includes(ID),
-                )
-              }
-              // https://github.com/facebook/react/issues/1798
-              ref={(input: HTMLInputElement | null) =>
-                input &&
-                (input.indeterminate =
-                  !!checkedKeys.length &&
-                  checkedKeys.length < currentPage.length)
-              }
-              onClick={toggleCheckAll}
-              onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
-            />
-          ),
-          renderBody: ({ [indexKey]: ID }) => (
-            <Form.Check
-              type="checkbox"
-              name={indexKey.toString()}
-              value={ID}
-              checked={checkedKeys.includes(ID)}
-              onClick={() => this.toggleCheck(ID)}
-              onKeyUp={({ key }) => key === ' ' && this.toggleCheck(ID)}
-            />
-          ),
-        } as Column<T>),
+      onCheck && this.checkColumn,
 
-      ...columns,
+      ...columns.map(
+        ({ type, key, accept, renderBody, ...column }) =>
+          ({
+            ...column,
+            type,
+            key,
+            renderBody:
+              type === 'url'
+                ? ({ [key]: value }) =>
+                    value && (
+                      <a target="_blank" href={value}>
+                        {value}
+                      </a>
+                    )
+                : type === 'file'
+                ? ({ [key]: value }) => (
+                    <FilePreview type={accept} path={value} />
+                  )
+                : renderBody,
+          } as Column<T>),
+      ),
 
-      (editable || deletable) &&
-        ({
-          renderBody: data => (
-            <>
-              {editable && (
-                <Button
-                  className="text-nowrap m-1"
-                  variant="warning"
-                  size="sm"
-                  onClick={() => (store.currentOne = data)}
-                >
-                  {t('edit')}
-                </Button>
-              )}
-              {deletable && (
-                <Button
-                  className="text-nowrap m-1"
-                  variant="danger"
-                  size="sm"
-                  onClick={() => this.deleteList([data.id])}
-                >
-                  {t('delete')}
-                </Button>
-              )}
-            </>
-          ),
-        } as Column<T>),
+      (editable || deletable) && this.operateColumn,
     ].filter(Boolean);
   }
 
