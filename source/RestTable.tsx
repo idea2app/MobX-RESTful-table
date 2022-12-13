@@ -1,16 +1,11 @@
-import { isEmpty, uniqueID, formToJSON } from 'web-utility';
+import { isEmpty } from 'web-utility';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import { observable } from 'mobx';
+import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
-import { DataObject, IDType, ListModel } from 'mobx-restful';
+import { DataObject, IDType } from 'mobx-restful';
 import { observer } from 'mobx-react';
-import {
-  InputHTMLAttributes,
-  FormEvent,
-  PureComponent,
-  ReactNode,
-} from 'react';
+import { PureComponent, ReactNode } from 'react';
 import {
   Table,
   TableProps,
@@ -21,31 +16,26 @@ import {
 } from 'react-bootstrap';
 
 import { Pager } from './Pager';
-import { FormField } from './FormField';
+import { Field, RestForm, RestFormProps } from './RestForm';
 
 export interface Column<T extends DataObject>
-  extends Pick<InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  key?: keyof T;
-  renderHead?: ReactNode | ((data: keyof T) => ReactNode);
+  extends Omit<Field<T>, 'renderLabel'> {
+  renderHead?: Field<T>['renderLabel'];
   renderBody?: (data: T) => ReactNode;
   renderFoot?: ReactNode | ((data: keyof T) => ReactNode);
 }
 
-export interface RestTableProps<T extends DataObject> extends TableProps {
+export interface RestTableProps<T extends DataObject>
+  extends TableProps,
+    Omit<RestFormProps<T>, 'id' | 'fields' | 'translater'> {
   editable?: boolean;
   deletable?: boolean;
   columns: Column<T>[];
-  store: ListModel<T>;
-  translater: TranslationModel<
-    string,
-    | 'create'
-    | 'edit'
-    | 'delete'
-    | 'submit'
-    | 'cancel'
-    | 'total_x_rows'
-    | 'sure_to_delete_x'
-  >;
+  translater: RestFormProps<T>['translater'] &
+    TranslationModel<
+      string,
+      'create' | 'edit' | 'delete' | 'total_x_rows' | 'sure_to_delete_x'
+    >;
   onCheck?: (keys: IDType[]) => any;
 }
 
@@ -81,6 +71,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
     onCheck?.(this.checkedKeys);
   };
 
+  @computed
   get columns(): Column<T>[] {
     const { checkedKeys, toggleCheckAll } = this,
       { editable, deletable, columns, store, translater, onCheck } = this.props;
@@ -156,12 +147,19 @@ export class RestTable<T extends DataObject> extends PureComponent<
     ].filter(Boolean);
   }
 
+  @computed
   get hasHeader() {
     return this.columns.some(({ renderHead }) => renderHead);
   }
 
+  @computed
   get hasFooter() {
     return this.columns.some(({ renderFoot }) => renderFoot);
+  }
+
+  @computed
+  get editing() {
+    return !isEmpty(this.props.store.currentOne);
   }
 
   componentDidMount() {
@@ -183,7 +181,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
         responsive = true,
         ...tableProps
       } = this.props,
-      { hasHeader, hasFooter, columns } = this;
+      { hasHeader, hasFooter, columns, editing } = this;
     const { indexKey, downloading, currentPage } = store;
 
     return (
@@ -202,7 +200,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
           </thead>
         )}
         <tbody>
-          {downloading > 0 ? (
+          {!editing && downloading > 0 ? (
             <tr>
               <td className="text-center p-3" colSpan={columns.length}>
                 <Spinner />
@@ -238,71 +236,28 @@ export class RestTable<T extends DataObject> extends PureComponent<
     );
   }
 
-  handleSubmit = (ID: IDType) => async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const { store } = this.props;
-
-    await store.updateOne(formToJSON(event.currentTarget), ID);
-
-    store.clearCurrent();
-  };
-
-  renderInput = ({ key, type, renderHead }: Column<T>) => {
-    const { currentOne } = this.props.store;
-    const label =
-      typeof renderHead === 'function' ? renderHead?.(key) : renderHead || key;
-
-    return (
-      key && (
-        <FormField
-          className="mb-3"
-          key={key.toString()}
-          label={label}
-          type={type}
-          name={key.toString()}
-          defaultValue={currentOne[key]}
-        />
-      )
-    );
-  };
-
   renderDialog() {
     const { columns, store, translater } = this.props,
-      formId = uniqueID();
-    const { indexKey, uploading, currentOne } = store,
-      { t } = translater;
+      { editing } = this;
+    const { indexKey, currentOne } = store;
+
     const ID = currentOne[indexKey];
 
     return (
-      <Modal
-        show={!isEmpty(store.currentOne)}
-        onHide={() => store.clearCurrent()}
-      >
+      <Modal show={editing} onHide={() => store.clearCurrent()}>
         <Modal.Header closeButton>{ID}</Modal.Header>
 
         <Modal.Body>
-          <Form
-            id={formId}
-            onSubmit={this.handleSubmit(ID)}
-            onReset={() => store.clearCurrent()}
-          >
-            {columns.map(this.renderInput)}
-          </Form>
+          <RestForm
+            id={ID}
+            fields={columns.map(({ renderHead, ...field }) => ({
+              ...field,
+              renderLabel: renderHead,
+            }))}
+            store={store}
+            translater={translater}
+          />
         </Modal.Body>
-        <Modal.Footer>
-          <Button type="submit" form={formId} disabled={uploading > 0}>
-            {t('submit')}
-          </Button>
-          <Button
-            type="reset"
-            variant="danger"
-            form={formId}
-            disabled={uploading > 0}
-          >
-            {t('cancel')}
-          </Button>
-        </Modal.Footer>
       </Modal>
     );
   }
