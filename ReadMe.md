@@ -8,13 +8,13 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 
 ## Components
 
-1. [File Preview](https://ideapp.dev/MobX-RESTful-table/functions/FilePreview-1.html)
-2. [Form Field](https://ideapp.dev/MobX-RESTful-table/functions/FormField-1.html)
-3. [REST Form](https://ideapp.dev/MobX-RESTful-table/classes/RestForm.html)
-4. [Pager](https://ideapp.dev/MobX-RESTful-table/functions/Pager-1.html)
-5. [REST Table](https://ideapp.dev/MobX-RESTful-table/classes/RestTable.html)
-6. [Scroll Boundary](https://ideapp.dev/MobX-RESTful-table/functions/ScrollBoundary-1.html)
-7. [Scroll List](https://ideapp.dev/MobX-RESTful-table/classes/ScrollList.html)
+1. [File Preview](https://idea2app.github.io/MobX-RESTful-table/functions/FilePreview-1.html)
+2. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
+3. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
+4. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
+5. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
+6. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
+7. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
 
 ## Installation
 
@@ -80,7 +80,6 @@ export default class PaginationPage extends PureComponent {
     return [
       {
         key: 'full_name',
-        type: 'url',
         renderHead: t('repository_name'),
         renderBody: ({ html_url, full_name }) => (
           <a target="_blank" href={html_url}>
@@ -88,17 +87,7 @@ export default class PaginationPage extends PureComponent {
           </a>
         ),
       },
-      {
-        key: 'homepage',
-        type: 'url',
-        renderHead: t('home_page'),
-        renderBody: ({ homepage }) =>
-          homepage && (
-            <a target="_blank" href={homepage}>
-              {homepage}
-            </a>
-          ),
-      },
+      { key: 'homepage', type: 'url', renderHead: t('home_page') },
       { key: 'language', renderHead: t('programming_language') },
       {
         key: 'topics',

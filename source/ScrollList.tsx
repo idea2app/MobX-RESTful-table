@@ -2,10 +2,14 @@ import { debounce } from 'lodash';
 import { TranslationModel } from 'mobx-i18n';
 import { DataObject, NewData, ListModel, Stream } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
+import {
+  EdgePosition,
+  ScrollBoundary,
+  ScrollBoundaryProps,
+} from './ScrollBoundary';
 
-import { EdgePosition, ScrollBoundary } from './ScrollBoundary';
-
-export interface ScrollListProps<T extends DataObject = DataObject> {
+export interface ScrollListProps<T extends DataObject = DataObject>
+  extends Pick<ScrollBoundaryProps, 'className'> {
   defaultData?: T[];
 }
 
@@ -51,11 +55,12 @@ export abstract class ScrollList<
   abstract renderList(): ReactNode;
 
   render() {
-    const { t } = this.translater,
+    const { className } = this.props,
+      { t } = this.translater,
       { noMore, allItems } = this.store;
 
     return (
-      <ScrollBoundary onTouch={this.loadMore}>
+      <ScrollBoundary className={className} onTouch={this.loadMore}>
         <div>
           {this.renderList()}
 
