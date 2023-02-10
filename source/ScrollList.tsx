@@ -1,4 +1,5 @@
 import { debounce } from 'lodash';
+import { when } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { DataObject, NewData, ListModel, Stream } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
@@ -32,7 +33,7 @@ export abstract class ScrollList<
       { defaultData } = this.props,
       { filter } = this;
 
-    if (store.downloading > 0) return;
+    await when(() => store.downloading < 1);
 
     store.clear();
 

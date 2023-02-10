@@ -8,14 +8,14 @@ specifiers:
   '@types/react': ^17.0.53
   classnames: ^2.3.2
   husky: ^8.0.3
-  lint-staged: ^13.1.0
+  lint-staged: ^13.1.1
   lodash: ^4.17.21
   mobx: ^5.15.7
   mobx-i18n: ^0.3.14
   mobx-react: ^6.3.1
   mobx-restful: ^0.6.0
   parcel: ~2.6.2
-  prettier: ^2.8.3
+  prettier: ^2.8.4
   react: ^17.0.2
   react-bootstrap: ^2.7.0
   regenerator-runtime: ^0.13.11
@@ -41,10 +41,10 @@ devDependencies:
   '@types/lodash': 4.14.191
   '@types/react': 17.0.53
   husky: 8.0.3
-  lint-staged: 13.1.0
+  lint-staged: 13.1.1
   mobx: 5.15.7
   parcel: 2.6.2
-  prettier: 2.8.3
+  prettier: 2.8.4
   react: 17.0.2
   typedoc: 0.23.24_typescript@4.7.4
   typedoc-plugin-mdn-links: 2.0.2_typedoc@0.23.24
@@ -1692,8 +1692,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /lint-staged/13.1.0:
-    resolution: {integrity: sha512-pn/sR8IrcF/T0vpWLilih8jmVouMlxqXxKuAojmbiGX5n/gDnz+abdPptlj0vYnbfE0SQNl3CY/HwtM0+yfOVQ==}
+  /lint-staged/13.1.1:
+    resolution: {integrity: sha512-LLJLO0Kdbcv2a+CvSF4p1M7jBZOajKSMpBUvyR8+bXccsqPER0/NxTFQSpNHjqwV9kM3tkHczYerTB5wI+bksQ==}
     engines: {node: ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -2091,8 +2091,8 @@ packages:
       posthtml-render: 3.0.0
     dev: true
 
-  /prettier/2.8.3:
-    resolution: {integrity: sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==}
+  /prettier/2.8.4:
+    resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
