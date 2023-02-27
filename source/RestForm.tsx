@@ -46,7 +46,7 @@ export class RestForm<T extends DataObject> extends PureComponent<
     store.clearCurrent();
   };
 
-  renderInput = ({ key, type, renderLabel }: Field<T>) => {
+  renderInput = ({ key, type, renderLabel, renderInput }: Field<T>) => {
     const { currentOne } = this.props.store;
     const label =
       typeof renderLabel === 'function'
@@ -54,7 +54,8 @@ export class RestForm<T extends DataObject> extends PureComponent<
         : renderLabel || key;
 
     return (
-      key && (
+      renderInput?.(currentOne) ||
+      (key && (
         <FormField
           className="mb-3"
           key={key.toString()}
@@ -63,7 +64,7 @@ export class RestForm<T extends DataObject> extends PureComponent<
           name={key.toString()}
           defaultValue={currentOne[key]}
         />
-      )
+      ))
     );
   };
 

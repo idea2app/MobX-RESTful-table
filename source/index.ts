@@ -1,4 +1,5 @@
 export * from './FilePreview';
+export * from './FilePicker';
 export * from './FormField';
 export * from './RestForm';
 export * from './Pager';

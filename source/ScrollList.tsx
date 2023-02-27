@@ -1,7 +1,7 @@
 import { debounce } from 'lodash';
 import { when } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
-import { DataObject, NewData, ListModel, Stream } from 'mobx-restful';
+import { DataObject, ListModel, Stream, Filter } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
 import {
   EdgePosition,
@@ -22,7 +22,7 @@ export abstract class ScrollList<
   abstract store: ListModel<DataType<P>>;
   abstract translater: TranslationModel<string, 'load_more' | 'no_more'>;
 
-  filter: NewData<DataType<P>> = {};
+  filter: Filter<DataType<P>> = {};
 
   async boot() {
     const BaseStream = Stream<DataObject>;
