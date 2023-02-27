@@ -8,18 +8,18 @@ specifiers:
   '@types/react': ^17.0.53
   classnames: ^2.3.2
   husky: ^8.0.3
-  lint-staged: ^13.1.1
+  lint-staged: ^13.1.2
   lodash: ^4.17.21
   mobx: ^5.15.7
   mobx-i18n: ^0.3.14
   mobx-react: ^6.3.1
-  mobx-restful: ^0.6.0
+  mobx-restful: ^0.6.3
   parcel: ~2.6.2
   prettier: ^2.8.4
   react: ^17.0.2
-  react-bootstrap: ^2.7.0
+  react-bootstrap: ^2.7.2
   regenerator-runtime: ^0.13.11
-  typedoc: ^0.23.24
+  typedoc: ^0.23.26
   typedoc-plugin-mdn-links: ^2.0.2
   typescript: ~4.7.4
   web-utility: ^4.0.0
@@ -30,8 +30,8 @@ dependencies:
   lodash: 4.17.21
   mobx-i18n: 0.3.14_mobx@5.15.7
   mobx-react: 6.3.1_mobx@5.15.7+react@17.0.2
-  mobx-restful: 0.6.0_dss5dgebhlll4wuvbmbwonwy4e
-  react-bootstrap: 2.7.0_h7fc2el62uaa77gho3xhys6ola
+  mobx-restful: 0.6.3_dss5dgebhlll4wuvbmbwonwy4e
+  react-bootstrap: 2.7.2_h7fc2el62uaa77gho3xhys6ola
   regenerator-runtime: 0.13.11
   web-utility: 4.0.0_typescript@4.7.4
 
@@ -41,13 +41,13 @@ devDependencies:
   '@types/lodash': 4.14.191
   '@types/react': 17.0.53
   husky: 8.0.3
-  lint-staged: 13.1.1
+  lint-staged: 13.1.2
   mobx: 5.15.7
   parcel: 2.6.2
   prettier: 2.8.4
   react: 17.0.2
-  typedoc: 0.23.24_typescript@4.7.4
-  typedoc-plugin-mdn-links: 2.0.2_typedoc@0.23.24
+  typedoc: 0.23.26_typescript@4.7.4
+  typedoc-plugin-mdn-links: 2.0.2_typedoc@0.23.26
   typescript: 4.7.4
 
 packages:
@@ -993,7 +993,7 @@ packages:
   /@types/react-transition-group/4.4.5:
     resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}
     dependencies:
-      '@types/react': 18.0.26
+      '@types/react': 17.0.53
     dev: false
 
   /@types/react/17.0.53:
@@ -1002,14 +1002,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
-
-  /@types/react/18.0.26:
-    resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.1
-    dev: false
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
@@ -1055,6 +1047,10 @@ packages:
   /ansi-regex/6.0.1:
     resolution: {integrity: sha512-n5M855fKb2SsfMIiFFoVrABHJC8QtHwVx+mHWP3QcEqBHYienj5dHSgjbxtC0WEZXYt4wcD6zrQElDPhFuZgfA==}
     engines: {node: '>=12'}
+    dev: true
+
+  /ansi-sequence-parser/1.1.0:
+    resolution: {integrity: sha512-lEm8mt52to2fT8GhciPCGeCXACSz2UwIN4X2e2LJSnZ5uAbn2/dsYdOmUXq0AtWS5cpAupysIneExOgH0Vd2TQ==}
     dev: true
 
   /ansi-styles/3.2.1:
@@ -1692,8 +1688,8 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
-  /lint-staged/13.1.1:
-    resolution: {integrity: sha512-LLJLO0Kdbcv2a+CvSF4p1M7jBZOajKSMpBUvyR8+bXccsqPER0/NxTFQSpNHjqwV9kM3tkHczYerTB5wI+bksQ==}
+  /lint-staged/13.1.2:
+    resolution: {integrity: sha512-K9b4FPbWkpnupvK3WXZLbgu9pchUJ6N7TtVZjbaPsoizkqFUDkUReUL25xdrCljJs7uLUF3tZ7nVPeo/6lp+6w==}
     engines: {node: ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -1808,8 +1804,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /minimatch/5.1.6:
-    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
+  /minimatch/7.2.0:
+    resolution: {integrity: sha512-rMRHmwySzopAQjmWW6TkAKCEDKNaY/HuV/c2YkWWuWnfkTwApt0V4hnYzzPnZ/5Gcd2+8MPncSyuOGPl3xPvcg==}
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
@@ -1856,8 +1852,8 @@ packages:
       - react-native
     dev: false
 
-  /mobx-restful/0.6.0_dss5dgebhlll4wuvbmbwonwy4e:
-    resolution: {integrity: sha512-LtA8qDSHPrX/0+5WaKxj+QRWjzSxrvpzvfDcRF8PcX1Z0dzXfRERdNvN7KhBJ3mHYKYp47gZPNjabBzCqzE4YQ==}
+  /mobx-restful/0.6.3_dss5dgebhlll4wuvbmbwonwy4e:
+    resolution: {integrity: sha512-y40QEXqOgvWM9Isv6lPwA4Wz9U3zmaI4wxXwJ1HX6D8gmfWOy/0Hhj5xkosOe9xh+4IRHYCLO/Po2ZeXH43jWQ==}
     peerDependencies:
       mobx: '>=4 <6'
     dependencies:
@@ -2115,8 +2111,8 @@ packages:
       react-is: 16.13.1
     dev: false
 
-  /react-bootstrap/2.7.0_h7fc2el62uaa77gho3xhys6ola:
-    resolution: {integrity: sha512-Jcrn6aUuRVBeSB6dzKODKZU1TONOdhAxu0IDm4Sv74SJUm98dMdhSotF2SNvFEADANoR+stV+7TK6SNX1wWu5w==}
+  /react-bootstrap/2.7.2_h7fc2el62uaa77gho3xhys6ola:
+    resolution: {integrity: sha512-WDSln+mG4RLLFO01stkj2bEx/3MF4YihK9D/dWnHaSxOiQZLbhhlf95D2Jb20X3t2m7vMxRe888FVrfLJoGmmA==}
     peerDependencies:
       '@types/react': '>=16.14.8'
       react: '>=16.14.0'
@@ -2229,9 +2225,10 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /shiki/0.12.1:
-    resolution: {integrity: sha512-aieaV1m349rZINEBkjxh2QbBvFFQOlgqYTNtCal82hHj4dDZ76oMlQIX+C7ryerBTDiga3e5NfH6smjdJ02BbQ==}
+  /shiki/0.14.1:
+    resolution: {integrity: sha512-+Jz4nBkCBe0mEDqo1eKRcCdjRtrCjozmcbTUjbPTX7OOJfEbTZzlUWlZtGe3Gb5oV1/jnojhG//YZc3rs9zSEw==}
     dependencies:
+      ansi-sequence-parser: 1.1.0
       jsonc-parser: 3.2.0
       vscode-oniguruma: 1.7.0
       vscode-textmate: 8.0.0
@@ -2398,16 +2395,16 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /typedoc-plugin-mdn-links/2.0.2_typedoc@0.23.24:
+  /typedoc-plugin-mdn-links/2.0.2_typedoc@0.23.26:
     resolution: {integrity: sha512-Fzjvfsj3rxvmZNqWRvq9JTGBkOkrPp0kBtvJCJ4U5Jm14OF1KoRErtmwgVQcPLA5Xs8h5I/W4uZBaL8SDHsgxQ==}
     peerDependencies:
       typedoc: 0.22.x || 0.23.x
     dependencies:
-      typedoc: 0.23.24_typescript@4.7.4
+      typedoc: 0.23.26_typescript@4.7.4
     dev: true
 
-  /typedoc/0.23.24_typescript@4.7.4:
-    resolution: {integrity: sha512-bfmy8lNQh+WrPYcJbtjQ6JEEsVl/ce1ZIXyXhyW+a1vFrjO39t6J8sL/d6FfAGrJTc7McCXgk9AanYBSNvLdIA==}
+  /typedoc/0.23.26_typescript@4.7.4:
+    resolution: {integrity: sha512-5m4KwR5tOLnk0OtMaRn9IdbeRM32uPemN9kur7YK9wFqx8U0CYrvO9aVq6ysdZSV1c824BTm+BuQl2Ze/k1HtA==}
     engines: {node: '>= 14.14'}
     hasBin: true
     peerDependencies:
@@ -2415,8 +2412,8 @@ packages:
     dependencies:
       lunr: 2.3.9
       marked: 4.2.12
-      minimatch: 5.1.6
-      shiki: 0.12.1
+      minimatch: 7.2.0
+      shiki: 0.14.1
       typescript: 4.7.4
     dev: true
 
@@ -2431,7 +2428,7 @@ packages:
       react: '>=15.0.0'
     dependencies:
       '@babel/runtime': 7.20.6
-      '@types/react': 18.0.26
+      '@types/react': 17.0.53
       invariant: 2.2.4
       react: 17.0.2
       react-lifecycles-compat: 3.0.4

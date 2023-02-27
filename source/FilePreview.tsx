@@ -5,11 +5,15 @@ export type FilePreviewProps = ImageProps &
   HTMLAttributes<HTMLAudioElement> &
   HTMLAttributes<HTMLVideoElement> &
   HTMLAttributes<HTMLAnchorElement> & {
-    type: InputHTMLAttributes<HTMLInputElement>['accept'];
+    type?: InputHTMLAttributes<HTMLInputElement>['accept'];
     path: string;
   };
 
-export const FilePreview: FC<FilePreviewProps> = ({ type, path, ...props }) => {
+export const FilePreview: FC<FilePreviewProps> = ({
+  type = '*/*',
+  path,
+  ...props
+}) => {
   const [kind] = type.split('/'),
     [name, ...rest] =
       new URL(path, 'http://localhost').pathname
