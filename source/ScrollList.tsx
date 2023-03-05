@@ -20,7 +20,7 @@ export abstract class ScrollList<
   P extends ScrollListProps,
 > extends Component<P> {
   abstract store: ListModel<DataType<P>>;
-  abstract translater: TranslationModel<string, 'load_more' | 'no_more'>;
+  abstract translator: TranslationModel<string, 'load_more' | 'no_more'>;
 
   filter: Filter<DataType<P>> = {};
 
@@ -57,7 +57,7 @@ export abstract class ScrollList<
 
   render() {
     const { className } = this.props,
-      { t } = this.translater,
+      { t } = this.translator,
       { noMore, allItems } = this.store;
 
     return (

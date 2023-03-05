@@ -9,12 +9,13 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 ## Components
 
 1. [File Preview](https://idea2app.github.io/MobX-RESTful-table/functions/FilePreview-1.html)
-2. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
-3. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
-4. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
-5. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
-6. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
-7. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
+2. [File Picker](https://idea2app.github.io/MobX-RESTful-table/classes/FilePicker.html)
+3. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
+4. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
+5. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
+6. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
+7. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
+8. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
 
 ## Installation
 
@@ -123,7 +124,7 @@ export default class PaginationPage extends PureComponent {
           deletable
           columns={this.columns}
           store={repositoryStore}
-          translater={i18n}
+          translator={i18n}
           onCheck={console.log}
         />
       </Container>
@@ -156,7 +157,7 @@ export interface GitListProps extends ScrollListProps<GitRepository> {
 @observer
 export class GitList extends ScrollList<GitListProps> {
   store = this.props.store;
-  translater = i18n;
+  translator = i18n;
 
   constructor(props: GitListProps) {
     super(props);

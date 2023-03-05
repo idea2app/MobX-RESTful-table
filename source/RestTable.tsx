@@ -28,11 +28,11 @@ export interface Column<T extends DataObject>
 
 export interface RestTableProps<T extends DataObject>
   extends TableProps,
-    Omit<RestFormProps<T>, 'id' | 'fields' | 'translater'> {
+    Omit<RestFormProps<T>, 'id' | 'fields' | 'translator'> {
   editable?: boolean;
   deletable?: boolean;
   columns: Column<T>[];
-  translater: RestFormProps<T>['translater'] &
+  translator: RestFormProps<T>['translator'] &
     TranslationModel<
       string,
       'create' | 'edit' | 'delete' | 'total_x_rows' | 'sure_to_delete_x'
@@ -112,8 +112,8 @@ export class RestTable<T extends DataObject> extends PureComponent<
 
   @computed
   get operateColumn(): Column<T> {
-    const { editable, deletable, store, translater } = this.props;
-    const { t } = translater;
+    const { editable, deletable, store, translator } = this.props;
+    const { t } = translator;
 
     return {
       renderBody: data => (
@@ -203,7 +203,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
         className,
         columns: _,
         store,
-        translater,
+        translator,
         editable,
         deletable,
         onCheck,
@@ -218,13 +218,16 @@ export class RestTable<T extends DataObject> extends PureComponent<
         {hasHeader && (
           <thead>
             <tr className="align-middle text-nowrap">
-              {columns.map(({ key, renderHead }, index) => (
-                <th key={key?.toString() || index}>
-                  {typeof renderHead === 'function'
-                    ? renderHead(key)
-                    : renderHead || key}
-                </th>
-              ))}
+              {columns.map(
+                ({ key, renderHead }, index) =>
+                  (key || renderHead) && (
+                    <th key={key?.toString() || index}>
+                      {typeof renderHead === 'function'
+                        ? renderHead(key)
+                        : renderHead || key}
+                    </th>
+                  ),
+              )}
             </tr>
           </thead>
         )}
@@ -238,11 +241,14 @@ export class RestTable<T extends DataObject> extends PureComponent<
           ) : (
             currentPage.map(data => (
               <tr key={data[indexKey]} className="align-middle">
-                {columns.map(({ key, renderBody }, index) => (
-                  <td key={key?.toString() || index}>
-                    {renderBody?.(data) || (key && data[key])}
-                  </td>
-                ))}
+                {columns.map(
+                  ({ key, renderBody }, index) =>
+                    (key || renderBody) && (
+                      <td key={key?.toString() || index}>
+                        {renderBody?.(data) || (key && data[key])}
+                      </td>
+                    ),
+                )}
               </tr>
             ))
           )}
@@ -251,13 +257,16 @@ export class RestTable<T extends DataObject> extends PureComponent<
         {hasFooter && (
           <tfoot>
             <tr className="align-middle">
-              {columns.map(({ key, renderFoot }, index) => (
-                <td key={key?.toString() || index}>
-                  {typeof renderFoot === 'function'
-                    ? renderFoot(key)
-                    : renderFoot || key}
-                </td>
-              ))}
+              {columns.map(
+                ({ key, renderFoot }, index) =>
+                  (key || renderFoot) && (
+                    <td key={key?.toString() || index}>
+                      {typeof renderFoot === 'function'
+                        ? renderFoot(key)
+                        : renderFoot || key}
+                    </td>
+                  ),
+              )}
             </tr>
           </tfoot>
         )}
@@ -266,7 +275,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
   }
 
   renderDialog() {
-    const { columns, store, translater } = this.props,
+    const { columns, store, translator } = this.props,
       { editing } = this;
     const { indexKey, currentOne } = store;
 
@@ -284,7 +293,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
               renderLabel: renderHead,
             }))}
             store={store}
-            translater={translater}
+            translator={translator}
           />
         </Modal.Body>
       </Modal>
@@ -298,16 +307,16 @@ export class RestTable<T extends DataObject> extends PureComponent<
   });
 
   async deleteList(keys: IDType[]) {
-    const { translater, store } = this.props;
+    const { translator, store } = this.props;
 
-    if (confirm(translater.t('sure_to_delete_x', { keys })))
+    if (confirm(translator.t('sure_to_delete_x', { keys })))
       for (const key of keys) await store.deleteOne(key);
   }
 
   render() {
-    const { className, editable, deletable, store, translater } = this.props;
+    const { className, editable, deletable, store, translator } = this.props;
     const { indexKey, pageSize, pageIndex, pageCount, totalCount } = store,
-      { t } = translater;
+      { t } = translator;
 
     return (
       <div className={classNames('h-100 overflow-auto', className)}>

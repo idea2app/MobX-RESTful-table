@@ -23,7 +23,7 @@ export interface RestFormProps<T extends DataObject> {
   id?: IDType;
   fields: Field<T>[];
   store: ListModel<T>;
-  translater: TranslationModel<string, 'submit' | 'cancel'>;
+  translator: TranslationModel<string, 'submit' | 'cancel'>;
 }
 
 @observer
@@ -69,9 +69,9 @@ export class RestForm<T extends DataObject> extends PureComponent<
   };
 
   render() {
-    const { fields, store, translater } = this.props;
+    const { fields, store, translator } = this.props;
     const { downloading, uploading } = store,
-      { t } = translater;
+      { t } = translator;
     const loading = downloading > 0 || uploading > 0;
 
     return (

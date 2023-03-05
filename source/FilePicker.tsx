@@ -72,7 +72,7 @@ export class FilePicker extends PureComponent<FilePickerProps> {
 
     return (
       <div
-        className={`d-inline-block border position-relative ${className}`}
+        className={`form-control position-relative ${className}`}
         style={style}
       >
         {value ? (
