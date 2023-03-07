@@ -12,11 +12,12 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 2. [File Preview](https://idea2app.github.io/MobX-RESTful-table/functions/FilePreview-1.html)
 3. [File Picker](https://idea2app.github.io/MobX-RESTful-table/classes/FilePicker.html)
 4. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
-5. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
-6. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
-7. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
-8. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
-9. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
+5. [Badge Input](https://idea2app.github.io/MobX-RESTful-table/classes/BadgeInput.html)
+6. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
+7. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
+8. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
+9. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
+10. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
 
 ## Installation
 

@@ -15,14 +15,16 @@ export class ImagePreview extends PureComponent<ImageProps> {
   @observable
   viewing = false;
 
-  componentDidUpdate(prevProps: Readonly<ImageProps>) {
+  componentDidMount() {
     const { src } = this.props;
-
-    if (prevProps.src === src) return;
 
     this.loadedPath = '';
 
     if (src) this.load(src);
+  }
+
+  componentDidUpdate({ src }: Readonly<ImageProps>) {
+    if (src !== this.props.src) this.componentDidMount();
   }
 
   async load(path: string) {
@@ -56,7 +58,11 @@ export class ImagePreview extends PureComponent<ImageProps> {
 
     return (
       <figure
-        className={classNames(downloading && 'p-5', className)}
+        className={classNames(
+          'm-0',
+          downloading && 'p-5 d-flex justify-content-center align-items-center',
+          className,
+        )}
         {...props}
       >
         {downloading ? (
@@ -66,12 +72,13 @@ export class ImagePreview extends PureComponent<ImageProps> {
             <Image
               {...{ loading, fluid, rounded, roundedCircle, thumbnail }}
               src={loadedPath}
+              onClick={() => (this.viewing = true)}
             />
           )
         )}
         <Modal centered show={viewing} onHide={() => (this.viewing = false)}>
           <Modal.Body>
-            <img src={loadedPath} />
+            <Image fluid src={loadedPath} />
           </Modal.Body>
         </Modal>
       </figure>
