@@ -1,5 +1,7 @@
-import { HTMLAttributes, InputHTMLAttributes, FC } from 'react';
-import { Image, ImageProps } from 'react-bootstrap';
+import { FC, HTMLAttributes, InputHTMLAttributes } from 'react';
+import { ImageProps } from 'react-bootstrap';
+
+import { ImagePreview } from './ImagePreview';
 
 export type FilePreviewProps = ImageProps &
   HTMLAttributes<HTMLAudioElement> &
@@ -23,7 +25,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
   const extension = rest.join('.');
 
   return kind === 'image' ? (
-    <Image fluid src={path} {...props} />
+    <ImagePreview fluid loading="lazy" src={path} {...props} />
   ) : kind === 'audio' ? (
     <audio controls src={path} {...props} />
   ) : kind === 'video' ? (
