@@ -116,6 +116,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
     const { t } = translator;
 
     return {
+      renderHead: () => <></>,
       renderBody: data => (
         <>
           {editable && (
@@ -319,7 +320,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
       { t } = translator;
 
     return (
-      <div className={classNames('h-100 overflow-auto', className)}>
+      <div className={classNames('overflow-auto', className)}>
         <header className="d-flex justify-content-between sticky-top bg-white py-3">
           <nav className="d-flex align-items-center">
             <Pager
