@@ -70,6 +70,7 @@ export class ImagePreview extends PureComponent<ImageProps> {
         ) : (
           loadedPath && (
             <Image
+              className="w-100 h-100 object-fit-contain"
               {...{ loading, fluid, rounded, roundedCircle, thumbnail }}
               src={loadedPath}
               onClick={() => (this.viewing = true)}
