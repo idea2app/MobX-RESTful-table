@@ -1,42 +1,18 @@
-import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  ChangeEvent,
-  InputHTMLAttributes,
-  MouseEvent,
-  PureComponent,
-} from 'react';
+import { ChangeEvent, MouseEvent } from 'react';
 import { CloseButton } from 'react-bootstrap';
 
 import { FilePreview } from './FilePreview';
+import { FormComponent, FormComponentProps } from './FormComponent';
 
-export type FilePickerProps = Pick<
-  InputHTMLAttributes<HTMLInputElement>,
-  | 'className'
-  | 'style'
-  | 'id'
-  | 'name'
-  | 'defaultValue'
-  | 'value'
-  | 'required'
-  | 'disabled'
-  | 'accept'
-  | 'onChange'
->;
+export interface FilePickerProps extends FormComponentProps {
+  defaultValue?: string;
+  value?: string;
+}
 
 @observer
-export class FilePicker extends PureComponent<FilePickerProps> {
+export class FilePicker extends FormComponent<FilePickerProps> {
   static readonly displayName = 'FilePicker';
-
-  @observable
-  innerValue = '';
-
-  @computed
-  get value() {
-    const { value, defaultValue } = this.props;
-
-    return value || this.innerValue || defaultValue;
-  }
 
   handleAdd = (event: ChangeEvent<HTMLInputElement>) => {
     const file = (event.currentTarget as HTMLInputElement).files?.[0];
@@ -87,6 +63,7 @@ export class FilePicker extends PureComponent<FilePickerProps> {
           </div>
         )}
         <input
+          ref={this.ref}
           className="position-absolute start-0 top-0 w-100 h-100 opacity-0"
           type="file"
           name={innerValue ? name : undefined}

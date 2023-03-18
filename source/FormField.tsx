@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, FC } from 'react';
 import { FloatingLabelProps, FormControlProps, Form } from 'react-bootstrap';
 
-import { FilePicker } from './FilePicker';
+import { FilePicker, FilePickerProps } from './FilePicker';
 
 export type FormFieldProps = InputHTMLAttributes<HTMLInputElement> &
   FormControlProps &
@@ -20,7 +20,7 @@ export const FormField: FC<FormFieldProps> = ({
     <Form.Group {...{ className, style }}>
       <Form.Label htmlFor={id}>{label}</Form.Label>
 
-      <FilePicker {...{ id, name }} {...controlProps} />
+      <FilePicker {...{ id, name }} {...(controlProps as FilePickerProps)} />
     </Form.Group>
   ) : (
     <Form.FloatingLabel {...{ className, style, label }} controlId={name || id}>
