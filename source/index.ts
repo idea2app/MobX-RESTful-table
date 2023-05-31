@@ -2,6 +2,7 @@ export * from './FormComponent';
 export * from './ImagePreview';
 export * from './FilePreview';
 export * from './FilePicker';
+export * from './FileUploader';
 export * from './FormField';
 export * from './BadgeInput';
 export * from './RestForm';

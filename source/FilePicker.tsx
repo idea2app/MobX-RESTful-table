@@ -6,8 +6,7 @@ import { FilePreview } from './FilePreview';
 import { FormComponent, FormComponentProps } from './FormComponent';
 
 export interface FilePickerProps extends FormComponentProps {
-  defaultValue?: string;
-  value?: string;
+  onChange?: (value: FormComponentProps['value'], file?: File) => any;
 }
 
 @observer
@@ -17,34 +16,44 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   handleAdd = (event: ChangeEvent<HTMLInputElement>) => {
     const file = (event.currentTarget as HTMLInputElement).files?.[0];
 
-    if (file) this.innerValue = URL.createObjectURL(file);
+    this.innerValue = file ? URL.createObjectURL(file) : '';
 
-    this.props.onChange?.(event);
+    this.props.onChange?.(this.innerValue, file);
   };
 
   handleClear = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     if (this.innerValue) {
-      URL.revokeObjectURL(this.innerValue);
+      URL.revokeObjectURL(this.innerValue + '');
 
       this.innerValue = '';
     }
-    // @ts-ignore
-    this.props.onChange?.(event);
+    this.props.onChange?.(this.innerValue);
   };
 
+  renderInput() {
+    const { id, name, value, required, disabled, accept } = this.props;
+
+    return (
+      <>
+        <input
+          ref={this.ref}
+          className="position-absolute start-0 top-0 w-100 h-100 opacity-0"
+          type="file"
+          name={value ? undefined : name}
+          required={!value && required}
+          {...{ id, disabled, accept }}
+          onChange={this.handleAdd}
+        />
+        {value && <input type="hidden" name={name} value={value} />}
+      </>
+    );
+  }
+
   render() {
-    const { value, innerValue } = this,
-      {
-        className = '',
-        style,
-        id,
-        name,
-        required,
-        disabled,
-        accept,
-      } = this.props;
+    const { value } = this,
+      { className = '', style, accept } = this.props;
 
     return (
       <div
@@ -62,14 +71,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
             +
           </div>
         )}
-        <input
-          ref={this.ref}
-          className="position-absolute start-0 top-0 w-100 h-100 opacity-0"
-          type="file"
-          name={innerValue ? name : undefined}
-          {...{ id, required, disabled, accept }}
-          onChange={this.handleAdd}
-        />
+        {this.renderInput()}
         {value && (
           <CloseButton
             className="position-absolute top-0 end-0"

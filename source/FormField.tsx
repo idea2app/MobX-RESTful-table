@@ -1,7 +1,5 @@
-import { InputHTMLAttributes, FC } from 'react';
-import { FloatingLabelProps, FormControlProps, Form } from 'react-bootstrap';
-
-import { FilePicker, FilePickerProps } from './FilePicker';
+import { FC, InputHTMLAttributes } from 'react';
+import { FloatingLabelProps, Form, FormControlProps } from 'react-bootstrap';
 
 export type FormFieldProps = InputHTMLAttributes<HTMLInputElement> &
   FormControlProps &
@@ -11,25 +9,13 @@ export const FormField: FC<FormFieldProps> = ({
   className,
   style,
   label,
-  type,
   id,
   name,
   ...controlProps
-}) =>
-  type === 'file' ? (
-    <Form.Group {...{ className, style }}>
-      <Form.Label htmlFor={id}>{label}</Form.Label>
-
-      <FilePicker {...{ id, name }} {...(controlProps as FilePickerProps)} />
-    </Form.Group>
-  ) : (
-    <Form.FloatingLabel {...{ className, style, label }} controlId={name || id}>
-      <Form.Control
-        {...{ type, name }}
-        placeholder={name || id}
-        {...controlProps}
-      />
-    </Form.FloatingLabel>
-  );
+}) => (
+  <Form.FloatingLabel {...{ className, style, label }} controlId={name || id}>
+    <Form.Control name={name} placeholder={name || id} {...controlProps} />
+  </Form.FloatingLabel>
+);
 
 FormField.displayName = 'FormField';

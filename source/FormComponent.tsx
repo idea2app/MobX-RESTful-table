@@ -1,13 +1,19 @@
 import { computed, observable } from 'mobx';
-import { createRef, InputHTMLAttributes, PureComponent } from 'react';
+import { Component, createRef, InputHTMLAttributes } from 'react';
 
-export type FormComponentProps = InputHTMLAttributes<HTMLInputElement>;
+export interface FormComponentProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  onChange?: (
+    value: InputHTMLAttributes<HTMLInputElement>['value'],
+    ...extra: any[]
+  ) => any;
+}
 
 export abstract class FormComponent<
   P extends FormComponentProps = FormComponentProps,
   S = {},
   SS = any,
-> extends PureComponent<P, S, SS> {
+> extends Component<P, S, SS> {
   ref = createRef<HTMLInputElement & HTMLTextAreaElement & HTMLSelectElement>();
 
   @observable
@@ -15,10 +21,14 @@ export abstract class FormComponent<
 
   @computed
   get value() {
-    return this.props.value || this.innerValue;
+    return this.props.value ?? this.innerValue;
   }
 
-  reset = () => (this.innerValue = this.props.defaultValue);
+  reset = () => {
+    this.innerValue = this.props.defaultValue;
+
+    this.props.onChange?.(this.innerValue);
+  };
 
   componentDidMount() {
     this.ref.current?.form?.addEventListener('reset', this.reset);
