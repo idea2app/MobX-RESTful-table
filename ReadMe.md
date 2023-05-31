@@ -61,6 +61,8 @@ npm i react@17 \
 
 ### Pagination Table
 
+Inspired by [Ant Design - Pro Table](https://procomponents.ant.design/components/table)
+
 - [Source Code][10]
 - [Preview Link][11]
 
@@ -208,6 +210,47 @@ const ScrollListPage: FC = observer(() => (
 ));
 
 export default ScrollListPage;
+```
+
+### File Uploader
+
+#### `model/File.ts`
+
+```ts
+import { toggle } from 'mobx-restful';
+import { FileModel } from 'mobx-restful-table';
+
+import { uploadFile } from '../utility';
+
+export class AssetFileModel extends FileModel {
+  @toggle('uploading')
+  async upload(file: File) {
+    const URI = await uploadFile(file);
+
+    return super.upload(URI);
+  }
+}
+
+export default new AssetFileModel();
+```
+
+#### `pages/editor.tsx`
+
+```tsx
+import fileStore from '../model/File';
+
+export default function EditorPage() {
+  return (
+    <FileUpload
+      store={fileStore}
+      accept="image/*"
+      name="images"
+      multiple
+      required
+      onChange={console.log}
+    />
+  );
+}
 ```
 
 [1]: https://en.wikipedia.org/wiki/Create,_read,_update_and_delete

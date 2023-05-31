@@ -1,74 +1,59 @@
-import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  ChangeEvent,
-  InputHTMLAttributes,
-  MouseEvent,
-  PureComponent,
-} from 'react';
+import { ChangeEvent, MouseEvent } from 'react';
 import { CloseButton } from 'react-bootstrap';
 
 import { FilePreview } from './FilePreview';
+import { FormComponent, FormComponentProps } from './FormComponent';
 
-export type FilePickerProps = Pick<
-  InputHTMLAttributes<HTMLInputElement>,
-  | 'className'
-  | 'style'
-  | 'id'
-  | 'name'
-  | 'defaultValue'
-  | 'value'
-  | 'required'
-  | 'disabled'
-  | 'accept'
-  | 'onChange'
->;
+export interface FilePickerProps extends FormComponentProps {
+  onChange?: (value: FormComponentProps['value'], file?: File) => any;
+}
 
 @observer
-export class FilePicker extends PureComponent<FilePickerProps> {
+export class FilePicker extends FormComponent<FilePickerProps> {
   static readonly displayName = 'FilePicker';
-
-  @observable
-  innerValue = '';
-
-  @computed
-  get value() {
-    const { value, defaultValue } = this.props;
-
-    return value || this.innerValue || defaultValue;
-  }
 
   handleAdd = (event: ChangeEvent<HTMLInputElement>) => {
     const file = (event.currentTarget as HTMLInputElement).files?.[0];
 
-    if (file) this.innerValue = URL.createObjectURL(file);
+    this.innerValue = file ? URL.createObjectURL(file) : '';
 
-    this.props.onChange?.(event);
+    this.props.onChange?.(this.innerValue, file);
   };
 
   handleClear = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     if (this.innerValue) {
-      URL.revokeObjectURL(this.innerValue);
+      URL.revokeObjectURL(this.innerValue + '');
 
       this.innerValue = '';
     }
-    // @ts-ignore
-    this.props.onChange?.(event);
+    this.props.onChange?.(this.innerValue);
   };
 
+  renderInput() {
+    const { id, name, value, required, disabled, accept } = this.props;
+
+    return (
+      <>
+        <input
+          ref={this.ref}
+          className="position-absolute start-0 top-0 w-100 h-100 opacity-0"
+          type="file"
+          name={value ? undefined : name}
+          required={!value && required}
+          {...{ id, disabled, accept }}
+          onChange={this.handleAdd}
+        />
+        {value && <input type="hidden" name={name} value={value} />}
+      </>
+    );
+  }
+
   render() {
-    const { value, innerValue } = this,
-      {
-        className = '',
-        style,
-        id,
-        name,
-        required,
-        disabled,
-        accept,
-      } = this.props;
+    const { value } = this,
+      { className = '', style, accept } = this.props;
 
     return (
       <div
@@ -86,13 +71,7 @@ export class FilePicker extends PureComponent<FilePickerProps> {
             +
           </div>
         )}
-        <input
-          className="position-absolute start-0 top-0 w-100 h-100 opacity-0"
-          type="file"
-          name={innerValue ? name : undefined}
-          {...{ id, required, disabled, accept }}
-          onChange={this.handleAdd}
-        />
+        {this.renderInput()}
         {value && (
           <CloseButton
             className="position-absolute top-0 end-0"

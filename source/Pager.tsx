@@ -1,5 +1,5 @@
 import { ListModel } from 'mobx-restful';
-import { FC } from 'react';
+import { FC, MouseEvent } from 'react';
 import { Pagination, Form } from 'react-bootstrap';
 import { buildURLData, parseURLData } from 'web-utility';
 
@@ -21,7 +21,13 @@ export const Pager: FC<PagerProps> = ({
 
     return {
       href: `?${buildURLData({ ...parseURLData(), ...pagination })}`,
-      onClick: () => onChange?.(pagination),
+      onClick:
+        onChange &&
+        ((event: MouseEvent<HTMLAnchorElement>) => {
+          event.preventDefault();
+
+          onChange(pagination);
+        }),
     };
   }
 
