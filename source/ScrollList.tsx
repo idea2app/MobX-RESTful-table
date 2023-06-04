@@ -1,7 +1,8 @@
 import { debounce } from 'lodash';
 import { when } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
-import { DataObject, ListModel, Stream, Filter } from 'mobx-restful';
+import { observer } from 'mobx-react';
+import { DataObject, Filter, ListModel, Stream } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
 import {
   EdgePosition,
@@ -11,28 +12,30 @@ import {
 
 export interface ScrollListProps<T extends DataObject = DataObject>
   extends Pick<ScrollBoundaryProps, 'className'> {
+  translator: TranslationModel<string, 'load_more' | 'no_more'>;
+  store: ListModel<T>;
+  filter?: Filter<T>;
   defaultData?: T[];
+  renderList(allItems: T[]): ReactNode;
 }
 
-export type DataType<P> = P extends ScrollListProps<infer D> ? D : never;
+@observer
+export class ScrollList<T extends DataObject = DataObject> extends Component<
+  ScrollListProps<T>
+> {
+  constructor(props: ScrollListProps<T>) {
+    super(props);
 
-export abstract class ScrollList<
-  P extends ScrollListProps,
-> extends Component<P> {
-  abstract store: ListModel<DataType<P>>;
-  abstract translator: TranslationModel<string, 'load_more' | 'no_more'>;
-
-  filter: Filter<DataType<P>> = {};
+    this.boot();
+  }
 
   async boot() {
-    const BaseStream = Stream<DataObject>;
+    const BaseStream = Stream<DataObject>,
+      { filter, defaultData } = this.props;
 
-    const store = this.store as unknown as InstanceType<
-        ReturnType<typeof BaseStream>
-      >,
-      { defaultData } = this.props,
-      { filter } = this;
-
+    const store = this.props.store as unknown as InstanceType<
+      ReturnType<typeof BaseStream>
+    >;
     await when(() => store.downloading < 1);
 
     store.clear();
@@ -43,27 +46,25 @@ export abstract class ScrollList<
   }
 
   componentWillUnmount() {
-    this.store.clear();
+    this.props.store.clear();
   }
 
   loadMore = debounce((edge: EdgePosition) => {
-    const { store } = this;
+    const { store } = this.props;
 
     if (edge === 'bottom' && store.downloading < 1 && !store.noMore)
       store.getList();
   });
 
-  abstract renderList(): ReactNode;
-
   render() {
-    const { className } = this.props,
-      { t } = this.translator,
-      { noMore, allItems } = this.store;
+    const { className, translator, store, renderList } = this.props;
+    const { t } = translator,
+      { noMore, allItems } = store;
 
     return (
       <ScrollBoundary className={className} onTouch={this.loadMore}>
         <div>
-          {this.renderList()}
+          {renderList(allItems)}
 
           <footer className="mt-4 text-center text-muted small">
             {noMore || !allItems.length ? t('no_more') : t('load_more')}

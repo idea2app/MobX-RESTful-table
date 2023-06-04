@@ -11,13 +11,14 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 1. [Image Preview](https://idea2app.github.io/MobX-RESTful-table/classes/ImagePreview.html)
 2. [File Preview](https://idea2app.github.io/MobX-RESTful-table/functions/FilePreview-1.html)
 3. [File Picker](https://idea2app.github.io/MobX-RESTful-table/classes/FilePicker.html)
-4. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
-5. [Badge Input](https://idea2app.github.io/MobX-RESTful-table/classes/BadgeInput.html)
-6. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
-7. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
-8. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
-9. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
-10. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
+4. [File Uploader](https://idea2app.github.io/MobX-RESTful-table/classes/FileUploader.html)
+5. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
+6. [Badge Input](https://idea2app.github.io/MobX-RESTful-table/classes/BadgeInput.html)
+7. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
+8. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
+9. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
+10. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
+11. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
 
 ## Installation
 
@@ -141,61 +142,18 @@ export default class PaginationPage extends PureComponent {
 
 [Preview Link][12]
 
-#### `components/Git/index.tsx`
+#### `pages/scroll-list.tsx`
 
 [Source Code][13]
 
 ```tsx
 import { observer } from 'mobx-react';
-import { Row, Col } from 'react-bootstrap';
-import { ScrollList, ScrollListProps } from 'mobx-restful-table';
-
-import { GitCard } from './Card';
-import { GitRepository, RepositoryModel } from '../../models/Repository';
-import { i18n } from '../../models/Translation';
-
-export interface GitListProps extends ScrollListProps<GitRepository> {
-  store: RepositoryModel;
-}
-
-@observer
-export class GitList extends ScrollList<GitListProps> {
-  store = this.props.store;
-  translator = i18n;
-
-  constructor(props: GitListProps) {
-    super(props);
-
-    this.boot();
-  }
-
-  renderList() {
-    const { allItems } = this.store;
-
-    return (
-      <Row as="ul" className="list-unstyled g-4" xs={1} sm={2}>
-        {allItems.map(item => (
-          <Col as="li" key={item.id}>
-            <GitCard className="h-100 shadow-sm" {...item} />
-          </Col>
-        ))}
-      </Row>
-    );
-  }
-}
-```
-
-#### `pages/scroll-list.tsx`
-
-[Source Code][14]
-
-```tsx
-import { observer } from 'mobx-react';
 import { FC } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { Loading } from 'idea-react';
+import { ScrollList } from 'mobx-restful-table';
 
-import { GitList } from '../components/Git';
+import { GitCard } from '../components/Git';
 import repositoryStore from '../models/Repository';
 import { i18n } from '../models/Translation';
 
@@ -205,7 +163,19 @@ const ScrollListPage: FC = observer(() => (
 
     {repositoryStore.downloading > 0 && <Loading />}
 
-    <GitList store={repositoryStore} />
+    <ScrollList
+      translator={i18n}
+      store={repositoryStore}
+      renderList={allItems => (
+        <Row as="ul" className="list-unstyled g-4" xs={1} sm={2}>
+          {allItems.map(item => (
+            <Col as="li" key={item.id}>
+              <GitCard className="h-100 shadow-sm" {...item} />
+            </Col>
+          ))}
+        </Row>
+      )}
+    />
   </Container>
 ));
 
@@ -265,5 +235,4 @@ export default function EditorPage() {
 [10]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/pages/pagination.tsx
 [11]: https://next-bootstrap-ts.vercel.app/pagination/
 [12]: https://next-bootstrap-ts.vercel.app/scroll-list/
-[13]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/components/Git
-[14]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/pages/scroll-list.tsx
+[13]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/pages/scroll-list.tsx
