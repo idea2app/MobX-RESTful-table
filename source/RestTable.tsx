@@ -158,7 +158,8 @@ export class RestTable<T extends DataObject> extends PureComponent<
             type,
             key,
             renderBody:
-              type === 'url'
+              renderBody ??
+              (type === 'url'
                 ? ({ [key]: value }) =>
                     value && (
                       <a target="_blank" href={value}>
@@ -169,7 +170,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
                 ? ({ [key]: value }) => (
                     <FilePreview type={accept} path={value} />
                   )
-                : renderBody,
+                : undefined),
           } as Column<T>),
       ),
 
@@ -276,7 +277,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
   }
 
   renderDialog() {
-    const { columns, store, translator } = this.props,
+    const { columns, store, translator, uploader } = this.props,
       { editing } = this;
     const { indexKey, currentOne } = store;
 
@@ -293,8 +294,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
               ...field,
               renderLabel: renderHead,
             }))}
-            store={store}
-            translator={translator}
+            {...{ store, translator, uploader }}
           />
         </Modal.Body>
       </Modal>

@@ -1,22 +1,37 @@
-import { formToJSON } from 'web-utility';
 import { TranslationModel } from 'mobx-i18n';
-import { DataObject, IDType, ListModel } from 'mobx-restful';
 import { observer } from 'mobx-react';
+import { DataObject, IDType, ListModel } from 'mobx-restful';
 import {
   FormEvent,
   InputHTMLAttributes,
   PureComponent,
   ReactNode,
 } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
+import { formToJSON } from 'web-utility';
 
+import { FilePreview } from './FilePreview';
+import { FileModel, FileUploader } from './FileUploader';
 import { FormField } from './FormField';
 
 export interface Field<T extends DataObject>
-  extends Pick<InputHTMLAttributes<HTMLInputElement>, 'type' | 'accept'> {
+  extends Pick<
+    InputHTMLAttributes<HTMLInputElement>,
+    | 'type'
+    | 'readOnly'
+    | 'required'
+    | 'min'
+    | 'minLength'
+    | 'max'
+    | 'maxLength'
+    | 'step'
+    | 'multiple'
+    | 'accept'
+    | 'placeholder'
+  > {
   key?: keyof T;
   renderLabel?: ReactNode | ((data: keyof T) => ReactNode);
-  renderInput?: (data: T) => ReactNode;
+  renderInput?: (data: T, meta: Field<T>) => ReactNode;
 }
 
 export interface RestFormProps<T extends DataObject> {
@@ -24,6 +39,7 @@ export interface RestFormProps<T extends DataObject> {
   fields: Field<T>[];
   store: ListModel<T>;
   translator: TranslationModel<string, 'submit' | 'cancel'>;
+  uploader?: FileModel;
 }
 
 @observer
@@ -46,6 +62,46 @@ export class RestForm<T extends DataObject> extends PureComponent<
     store.clearCurrent();
   };
 
+  get fields(): Field<T>[] {
+    const { fields, uploader } = this.props;
+
+    return fields.map(
+      ({
+        type,
+        key,
+        readOnly,
+        required,
+        multiple,
+        accept,
+        renderInput,
+        ...field
+      }) => ({
+        ...field,
+        type,
+        key,
+        readOnly,
+        required,
+        multiple,
+        accept,
+        renderInput:
+          renderInput ??
+          (type === 'file'
+            ? ({ [key]: path }) =>
+                uploader ? (
+                  <FileUploader
+                    store={uploader}
+                    name={key?.toString()}
+                    {...{ required, multiple, accept }}
+                    defaultValue={path}
+                  />
+                ) : (
+                  readOnly && <FilePreview {...{ type, path }} />
+                )
+            : undefined),
+      }),
+    );
+  }
+
   renderInput = ({ key, renderLabel, renderInput, ...props }: Field<T>) => {
     const { currentOne } = this.props.store;
     const label =
@@ -54,7 +110,7 @@ export class RestForm<T extends DataObject> extends PureComponent<
         : renderLabel || key;
 
     return (
-      renderInput?.(currentOne) ||
+      renderInput?.(currentOne, { key, ...props }) ||
       (key && (
         <FormField
           {...props}
@@ -69,7 +125,8 @@ export class RestForm<T extends DataObject> extends PureComponent<
   };
 
   render() {
-    const { fields, store, translator } = this.props;
+    const { fields } = this,
+      { store, translator } = this.props;
     const { downloading, uploading } = store,
       { t } = translator;
     const loading = downloading > 0 || uploading > 0;
