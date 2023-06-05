@@ -23,13 +23,7 @@ export interface ScrollListProps<T extends DataObject = DataObject>
 export class ScrollList<T extends DataObject = DataObject> extends Component<
   ScrollListProps<T>
 > {
-  constructor(props: ScrollListProps<T>) {
-    super(props);
-
-    this.boot();
-  }
-
-  async boot() {
+  async componentDidMount() {
     const BaseStream = Stream<DataObject>,
       { filter, defaultData } = this.props;
 
