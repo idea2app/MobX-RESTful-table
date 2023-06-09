@@ -23,8 +23,9 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 ## Installation
 
 ```shell
-npm i react@17 \
-  mobx@5 mobx-react@6 \
+npm i react \
+  mobx@5 \
+  mobx-react@6 \
   mobx-i18n \
   mobx-restful \
   mobx-restful-table
@@ -204,23 +205,23 @@ export class AssetFileModel extends FileModel {
 export default new AssetFileModel();
 ```
 
-#### `pages/editor.tsx`
+#### `page/editor.tsx`
 
 ```tsx
+import { FileUploader } from 'mobx-restful-table';
+
 import fileStore from '../model/File';
 
-export default function EditorPage() {
-  return (
-    <FileUpload
-      store={fileStore}
-      accept="image/*"
-      name="images"
-      multiple
-      required
-      onChange={console.log}
-    />
-  );
-}
+export const EditorPage = () => (
+  <FileUploader
+    store={fileStore}
+    accept="image/*"
+    name="images"
+    multiple
+    required
+    onChange={console.log}
+  />
+);
 ```
 
 [1]: https://en.wikipedia.org/wiki/Create,_read,_update_and_delete

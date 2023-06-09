@@ -69,9 +69,28 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
   pickIndex?: number;
 
   componentDidMount() {
+    super.componentDidMount();
+
     const { defaultValue, store } = this.props;
 
-    if (defaultValue instanceof Array) store.files = defaultValue as string[];
+    store.files =
+      defaultValue instanceof Array
+        ? (defaultValue as string[])
+        : defaultValue
+        ? [defaultValue as string]
+        : [];
+  }
+
+  componentDidUpdate(prevProps: Readonly<FileUploaderProps>) {
+    const { value, store } = this.props;
+
+    if (prevProps.value !== value)
+      store.files =
+        value instanceof Array
+          ? (value as string[])
+          : value
+          ? [value as string]
+          : [];
   }
 
   handleDrop = (index: number) => (event: DragEvent<HTMLElement>) => {
@@ -79,7 +98,7 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
 
     const { pickIndex } = this;
 
-    if (pickIndex != null) this.props.store.move(pickIndex, index);
+    if (pickIndex != null) return this.props.store.move(pickIndex, index);
   };
 
   handleChange =
@@ -95,7 +114,7 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
 
   render() {
     const {
-      className = '',
+      className = 'm-0',
       style,
       multiple,
       store,
@@ -105,13 +124,15 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
       ...props
     } = this.props;
 
+    const { files } = store;
+
     return (
       <ol
         className={`list-inline d-flex ${className}`}
         style={style}
         onDragOver={event => event.preventDefault()}
       >
-        {store.files.map((file, index) => (
+        {files.map((file, index) => (
           <li
             key={file}
             className="list-inline-item"
@@ -127,7 +148,7 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
             />
           </li>
         ))}
-        {multiple && (
+        {(multiple || !files[0]) && (
           <li className="list-inline-item">
             <FilePicker
               {...props}
