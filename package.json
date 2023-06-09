@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A Pagination Table & Scroll List component suite for CRUD operation, which is based on MobX RESTful & React.",
@@ -29,16 +29,16 @@
     "@swc/helpers": "^0.4.14",
     "classnames": "^2.3.2",
     "lodash": "^4.17.21",
-    "mobx-i18n": "^0.3.14",
-    "mobx-react": "^6.3.1",
-    "mobx-restful": "^0.6.5",
     "react-bootstrap": "^2.7.4",
     "regenerator-runtime": "^0.13.11",
     "web-utility": "^4.0.0"
   },
   "peerDependencies": {
     "mobx": ">=4 <6",
-    "react": ">=16 <18"
+    "mobx-i18n": "^0.3",
+    "mobx-react": "^6",
+    "mobx-restful": "^0.6",
+    "react": ">=16.8"
   },
   "devDependencies": {
     "@parcel/packager-ts": "~2.8.3",
@@ -48,6 +48,9 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "mobx": "^5.15.7",
+    "mobx-i18n": "^0.3.15",
+    "mobx-react": "^6.3.1",
+    "mobx-restful": "^0.6.5",
     "parcel": "~2.8.3",
     "prettier": "^2.8.8",
     "react": "^17.0.2",
