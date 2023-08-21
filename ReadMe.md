@@ -2,9 +2,10 @@
 
 A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1], which is based on [MobX RESTful][2] & [React][3].
 
-[![CI & CD](https://github.com/idea2app/MobX-RESTful-table/actions/workflows/main.yml/badge.svg)][4]
+[![NPM Dependency](https://img.shields.io/librariesio/github/idea2app/MobX-RESTful-table.svg)][4]
+[![CI & CD](https://github.com/idea2app/MobX-RESTful-table/actions/workflows/main.yml/badge.svg)][5]
 
-[![NPM](https://nodei.co/npm/mobx-restful-table.png?downloads=true&downloadRank=true&stars=true)][5]
+[![NPM](https://nodei.co/npm/mobx-restful-table.png?downloads=true&downloadRank=true&stars=true)][6]
 
 ## Components
 
@@ -51,13 +52,13 @@ npm i react \
 
 ### Internationalization
 
-1. [set up Text in UI][6]
-2. [import Text files][7]
+1. [set up Text in UI][7]
+2. [import Text files][8]
 
 ### Data source
 
-1. [set up HTTP client][8]
-2. [implement Model class][9]
+1. [set up HTTP client][9]
+2. [implement Model class][10]
 
 ## Initialization
 
@@ -65,8 +66,8 @@ npm i react \
 
 Inspired by [Ant Design - Pro Table](https://procomponents.ant.design/components/table)
 
-- [Source Code][10]
-- [Preview Link][11]
+- [Source Code][11]
+- [Preview Link][12]
 
 ```tsx
 import { computed } from 'mobx';
@@ -141,11 +142,11 @@ export default class PaginationPage extends PureComponent {
 
 ### Scroll List
 
-[Preview Link][12]
+[Preview Link][13]
 
 #### `pages/scroll-list.tsx`
 
-[Source Code][13]
+[Source Code][14]
 
 ```tsx
 import { observer } from 'mobx-react';
@@ -227,13 +228,14 @@ export const EditorPage = () => (
 [1]: https://en.wikipedia.org/wiki/Create,_read,_update_and_delete
 [2]: https://github.com/idea2app/MobX-RESTful
 [3]: https://reactjs.org/
-[4]: https://github.com/idea2app/MobX-RESTful-table/actions/workflows/main.yml
-[5]: https://nodei.co/npm/mobx-restful-table/
-[6]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Translation.ts
-[7]: https://github.com/idea2app/Next-Bootstrap-TS/tree/main/translation
-[8]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Base.ts#L12-L24
-[9]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Repository.ts
-[10]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/pages/pagination.tsx
-[11]: https://next-bootstrap-ts.vercel.app/pagination/
-[12]: https://next-bootstrap-ts.vercel.app/scroll-list/
-[13]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/pages/scroll-list.tsx
+[4]: https://libraries.io/npm/mobx-restful-table
+[5]: https://github.com/idea2app/MobX-RESTful-table/actions/workflows/main.yml
+[6]: https://nodei.co/npm/mobx-restful-table/
+[7]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Translation.ts
+[8]: https://github.com/idea2app/Next-Bootstrap-TS/tree/main/translation
+[9]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Base.ts#L12-L24
+[10]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Repository.ts
+[11]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/pages/pagination.tsx
+[12]: https://next-bootstrap-ts.vercel.app/pagination/
+[13]: https://next-bootstrap-ts.vercel.app/scroll-list/
+[14]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/pages/scroll-list.tsx

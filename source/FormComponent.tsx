@@ -1,4 +1,4 @@
-import { computed, observable } from 'mobx';
+import { computed, makeObservable, observable } from 'mobx';
 import { Component, createRef, InputHTMLAttributes } from 'react';
 
 export interface FormComponentProps
@@ -14,6 +14,12 @@ export abstract class FormComponent<
   S = {},
   SS = any,
 > extends Component<P, S, SS> {
+  constructor(props: P) {
+    super(props);
+
+    makeObservable?.(this);
+  }
+
   ref = createRef<HTMLInputElement & HTMLTextAreaElement & HTMLSelectElement>();
 
   @observable

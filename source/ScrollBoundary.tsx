@@ -1,15 +1,16 @@
 import classNames from 'classnames';
-import { FC, ReactNode } from 'react';
+import { FC, PropsWithChildren, ReactNode } from 'react';
 
 export type EdgePosition = 'top' | 'bottom' | 'left' | 'right';
 
 export type TouchHandler = (edge: EdgePosition) => any;
 
-export interface ScrollBoundaryProps
-  extends Partial<Record<EdgePosition, ReactNode>> {
-  className?: string;
-  onTouch: TouchHandler;
-}
+export type ScrollBoundaryProps = PropsWithChildren<
+  Partial<Record<EdgePosition, ReactNode>> & {
+    className?: string;
+    onTouch: TouchHandler;
+  }
+>;
 
 function touch(edge: EdgePosition, onTouch: TouchHandler) {
   return (node: HTMLElement | null) =>

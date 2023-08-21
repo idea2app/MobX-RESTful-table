@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { BaseModel } from 'mobx-restful';
 import { DragEvent } from 'react';
@@ -65,8 +65,14 @@ export interface FileUploaderProps extends FormComponentProps {
 
 @observer
 export class FileUploader extends FormComponent<FileUploaderProps> {
+  constructor(props: FileUploaderProps) {
+    super(props);
+
+    makeObservable?.(this);
+  }
+
   @observable
-  pickIndex?: number;
+  pickIndex?: number = undefined;
 
   componentDidMount() {
     super.componentDidMount();

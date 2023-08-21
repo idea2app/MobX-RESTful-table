@@ -1,7 +1,7 @@
 import { isEmpty } from 'web-utility';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import { computed, observable } from 'mobx';
+import { computed, makeObservable, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { DataObject, IDType } from 'mobx-restful';
 import { observer } from 'mobx-react';
@@ -45,6 +45,12 @@ export class RestTable<T extends DataObject> extends PureComponent<
   RestTableProps<T>
 > {
   static displayName = 'RestTable';
+
+  constructor(props: RestTableProps<T>) {
+    super(props);
+
+    makeObservable?.(this);
+  }
 
   @observable
   checkedKeys: IDType[] = [];
@@ -171,7 +177,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
                     <FilePreview type={accept} path={value} />
                   )
                 : undefined),
-          } as Column<T>),
+          }) as Column<T>,
       ),
 
       (editable || deletable) && this.operateColumn,
@@ -226,7 +232,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
                     <th key={key?.toString() || index}>
                       {typeof renderHead === 'function'
                         ? renderHead(key)
-                        : renderHead || key}
+                        : renderHead || (key as string)}
                     </th>
                   ),
               )}
@@ -265,7 +271,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
                     <td key={key?.toString() || index}>
                       {typeof renderFoot === 'function'
                         ? renderFoot(key)
-                        : renderFoot || key}
+                        : renderFoot || (key as string)}
                     </td>
                   ),
               )}
@@ -327,7 +333,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
               {...{ pageSize, pageIndex, pageCount }}
               onChange={this.getList}
             />
-            {totalCount && (
+            {!!totalCount && (
               <span className="mx-3 fs14">
                 {t('total_x_rows', { totalCount })}
               </span>

@@ -107,7 +107,7 @@ export class RestForm<T extends DataObject> extends PureComponent<
     const label =
       typeof renderLabel === 'function'
         ? renderLabel?.(key)
-        : renderLabel || key;
+        : renderLabel || key as string;
 
     return (
       renderInput?.(currentOne, { key, ...props }) ||
