@@ -10,19 +10,22 @@ import {
   ScrollBoundaryProps,
 } from './ScrollBoundary';
 
-export interface ScrollListProps<T extends DataObject = DataObject>
-  extends Pick<ScrollBoundaryProps, 'className'> {
+export interface ScrollListProps<
+  D extends DataObject,
+  F extends Filter<D> = Filter<D>,
+> extends Pick<ScrollBoundaryProps, 'className'> {
   translator: TranslationModel<string, 'load_more' | 'no_more'>;
-  store: ListModel<T>;
-  filter?: Filter<T>;
-  defaultData?: T[];
-  renderList(allItems: T[]): ReactNode;
+  store: ListModel<D, F>;
+  filter?: F;
+  defaultData?: D[];
+  renderList(allItems: D[]): ReactNode;
 }
 
 @observer
-export class ScrollList<T extends DataObject = DataObject> extends Component<
-  ScrollListProps<T>
-> {
+export class ScrollList<
+  D extends DataObject = DataObject,
+  F extends Filter<D> = Filter<D>,
+> extends Component<ScrollListProps<D, F>> {
   async componentDidMount() {
     const BaseStream = Stream<DataObject>,
       { filter, defaultData } = this.props;

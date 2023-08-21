@@ -1,11 +1,17 @@
 import classNames from 'classnames';
-import { observable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PureComponent } from 'react';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 
 @observer
 export class ImagePreview extends PureComponent<ImageProps> {
+  constructor(props: ImageProps) {
+    super(props);
+
+    makeObservable?.(this);
+  }
+
   @observable
   downloading = false;
 
@@ -60,7 +66,7 @@ export class ImagePreview extends PureComponent<ImageProps> {
       <figure
         className={classNames(
           'm-0',
-          downloading && 'p-5 d-flex justify-content-center align-items-center',
+          downloading && 'd-flex justify-content-center align-items-center',
           className,
         )}
         {...props}
