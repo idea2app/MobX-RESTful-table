@@ -3,13 +3,18 @@ import { ChangeEvent, MouseEvent } from 'react';
 import { CloseButton } from 'react-bootstrap';
 
 import { FilePreview } from './FilePreview';
-import { FormComponent, FormComponentProps } from './FormComponent';
+import {
+  FormComponent,
+  FormComponentProps,
+  observePropsState,
+} from './FormComponent';
 
 export interface FilePickerProps extends FormComponentProps {
   onChange?: (value: FormComponentProps['value'], file?: File) => any;
 }
 
 @observer
+@observePropsState
 export class FilePicker extends FormComponent<FilePickerProps> {
   static readonly displayName = 'FilePicker';
 

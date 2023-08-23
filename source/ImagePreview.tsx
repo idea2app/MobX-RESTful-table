@@ -8,7 +8,6 @@ import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 export class ImagePreview extends PureComponent<ImageProps> {
   constructor(props: ImageProps) {
     super(props);
-
     makeObservable?.(this);
   }
 

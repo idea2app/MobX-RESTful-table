@@ -1,22 +1,23 @@
-import { isEmpty } from 'web-utility';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
 import { computed, makeObservable, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
-import { DataObject, IDType } from 'mobx-restful';
 import { observer } from 'mobx-react';
-import { PureComponent, ReactNode } from 'react';
+import { DataObject, IDType } from 'mobx-restful';
+import { Component, ReactNode } from 'react';
 import {
-  Table,
-  TableProps,
-  Spinner,
   Button,
   Form,
   Modal,
+  Spinner,
+  Table,
+  TableProps,
 } from 'react-bootstrap';
+import { isEmpty } from 'web-utility';
 
-import { Pager } from './Pager';
 import { FilePreview } from './FilePreview';
+import { observePropsState } from './FormComponent';
+import { Pager } from './Pager';
 import { Field, RestForm, RestFormProps } from './RestForm';
 
 export interface Column<T extends DataObject>
@@ -41,16 +42,25 @@ export interface RestTableProps<T extends DataObject>
 }
 
 @observer
-export class RestTable<T extends DataObject> extends PureComponent<
+@observePropsState
+export class RestTable<T extends DataObject> extends Component<
   RestTableProps<T>
 > {
   static displayName = 'RestTable';
 
   constructor(props: RestTableProps<T>) {
     super(props);
-
     makeObservable?.(this);
   }
+
+  componentDidMount() {
+    const { store } = this.props;
+
+    store.clear();
+    store.getList();
+  }
+
+  declare observedProps: RestTableProps<T>;
 
   @observable
   checkedKeys: IDType[] = [];
@@ -81,7 +91,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
   @computed
   get checkColumn(): Column<T> {
     const { checkedKeys, toggleCheckAll } = this,
-      { indexKey, currentPage } = this.props.store;
+      { indexKey, currentPage } = this.observedProps.store;
 
     return {
       renderHead: () => (
@@ -118,7 +128,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
 
   @computed
   get operateColumn(): Column<T> {
-    const { editable, deletable, store, translator } = this.props;
+    const { editable, deletable, store, translator } = this.observedProps;
     const { t } = translator;
 
     return {
@@ -152,7 +162,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
 
   @computed
   get columns(): Column<T>[] {
-    const { editable, deletable, columns, onCheck } = this.props;
+    const { editable, deletable, columns, onCheck } = this.observedProps;
 
     return [
       onCheck && this.checkColumn,
@@ -196,14 +206,7 @@ export class RestTable<T extends DataObject> extends PureComponent<
 
   @computed
   get editing() {
-    return !isEmpty(this.props.store.currentOne);
-  }
-
-  componentDidMount() {
-    const { store } = this.props;
-
-    store.clear();
-    store.getList();
+    return !isEmpty(this.observedProps.store.currentOne);
   }
 
   renderTable() {

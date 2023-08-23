@@ -4,9 +4,18 @@ import { BaseModel } from 'mobx-restful';
 import { DragEvent } from 'react';
 
 import { FilePicker } from './FilePicker';
-import { FormComponentProps, FormComponent } from './FormComponent';
+import {
+  FormComponent,
+  FormComponentProps,
+  observePropsState,
+} from './FormComponent';
 
 export abstract class FileModel extends BaseModel {
+  constructor() {
+    super();
+    makeObservable?.(this);
+  }
+
   @observable
   files: string[] = [];
 
@@ -64,10 +73,10 @@ export interface FileUploaderProps extends FormComponentProps {
 }
 
 @observer
+@observePropsState
 export class FileUploader extends FormComponent<FileUploaderProps> {
   constructor(props: FileUploaderProps) {
     super(props);
-
     makeObservable?.(this);
   }
 

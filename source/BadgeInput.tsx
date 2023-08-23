@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { InputHTMLAttributes, KeyboardEvent, PureComponent } from 'react';
 import { Badge, CloseButton } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
+import { observePropsState } from './FormComponent';
 
 export const TextInputTypes = [
   'text',
@@ -24,10 +25,10 @@ export interface BadgeInputProps
 }
 
 @observer
+@observePropsState
 export class BadgeInput extends PureComponent<BadgeInputProps> {
   constructor(props: BadgeInputProps) {
     super(props);
-
     makeObservable?.(this);
   }
 
@@ -38,9 +39,11 @@ export class BadgeInput extends PureComponent<BadgeInputProps> {
   @observable
   innerValue = this.props.defaultValue || [];
 
+  declare observedProps: BadgeInputProps;
+
   @computed
   get value() {
-    return this.props.value || this.innerValue;
+    return this.observedProps.value || this.innerValue;
   }
 
   handleInput = (event: KeyboardEvent<HTMLInputElement>) => {
