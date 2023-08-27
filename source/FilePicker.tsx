@@ -1,13 +1,13 @@
 import { observer } from 'mobx-react';
-import { ChangeEvent, MouseEvent } from 'react';
-import { CloseButton } from 'react-bootstrap';
-
-import { FilePreview } from './FilePreview';
 import {
   FormComponent,
   FormComponentProps,
   observePropsState,
-} from './FormComponent';
+} from 'mobx-react-helper';
+import { ChangeEvent, MouseEvent } from 'react';
+import { CloseButton } from 'react-bootstrap';
+
+import { FilePreview } from './FilePreview';
 
 export interface FilePickerProps extends FormComponentProps {
   onChange?: (value: FormComponentProps['value'], file?: File) => any;

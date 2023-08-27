@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { makeObservable, observable } from 'mobx';
+import * as MobX from 'mobx';
 import { observer } from 'mobx-react';
 import { PureComponent } from 'react';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
@@ -8,16 +8,16 @@ import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 export class ImagePreview extends PureComponent<ImageProps> {
   constructor(props: ImageProps) {
     super(props);
-    makeObservable?.(this);
+    MobX.makeObservable?.(this);
   }
 
-  @observable
+  @MobX.observable
   downloading = false;
 
-  @observable
+  @MobX.observable
   loadedPath = '';
 
-  @observable
+  @MobX.observable
   viewing = false;
 
   componentDidMount() {

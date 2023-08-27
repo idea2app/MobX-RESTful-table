@@ -1,8 +1,10 @@
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import { computed, makeObservable, observable } from 'mobx';
+import * as MobX from 'mobx';
+import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
+import { observePropsState } from 'mobx-react-helper';
 import { DataObject, IDType } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
 import {
@@ -16,7 +18,6 @@ import {
 import { isEmpty } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
-import { observePropsState } from './FormComponent';
 import { Pager } from './Pager';
 import { Field, RestForm, RestFormProps } from './RestForm';
 
@@ -50,7 +51,7 @@ export class RestTable<T extends DataObject> extends Component<
 
   constructor(props: RestTableProps<T>) {
     super(props);
-    makeObservable?.(this);
+    MobX.makeObservable?.(this);
   }
 
   componentDidMount() {

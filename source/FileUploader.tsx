@@ -1,22 +1,22 @@
-import { makeObservable, observable } from 'mobx';
+import * as MobX from 'mobx';
 import { observer } from 'mobx-react';
-import { BaseModel } from 'mobx-restful';
-import { DragEvent } from 'react';
-
-import { FilePicker } from './FilePicker';
 import {
   FormComponent,
   FormComponentProps,
   observePropsState,
-} from './FormComponent';
+} from 'mobx-react-helper';
+import { BaseModel } from 'mobx-restful';
+import { DragEvent } from 'react';
+
+import { FilePicker } from './FilePicker';
 
 export abstract class FileModel extends BaseModel {
   constructor() {
     super();
-    makeObservable?.(this);
+    MobX.makeObservable?.(this);
   }
 
-  @observable
+  @MobX.observable
   files: string[] = [];
 
   clear() {
@@ -77,10 +77,10 @@ export interface FileUploaderProps extends FormComponentProps {
 export class FileUploader extends FormComponent<FileUploaderProps> {
   constructor(props: FileUploaderProps) {
     super(props);
-    makeObservable?.(this);
+    MobX.makeObservable?.(this);
   }
 
-  @observable
+  @MobX.observable
   pickIndex?: number = undefined;
 
   componentDidMount() {
