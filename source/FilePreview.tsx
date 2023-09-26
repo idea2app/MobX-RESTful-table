@@ -16,19 +16,20 @@ export const FilePreview: FC<FilePreviewProps> = ({
   path,
   ...props
 }) => {
-  const [kind] = type.split('/'),
-    [name, ...rest] =
-      new URL(path, 'http://localhost').pathname
-        .split('/')
-        .at(-1)
-        ?.split('.') || [];
-  const extension = rest.join('.');
+  const [category, ...kind] = type.split(/\W+/);
 
-  return kind === 'image' ? (
+  const extension =
+    new URL(path, 'http://localhost').pathname
+      .split('/')
+      .at(-1)
+      ?.split('.')
+      .at(-1) || kind.at(-1);
+
+  return category === 'image' ? (
     <ImagePreview fluid loading="lazy" src={path} {...props} />
-  ) : kind === 'audio' ? (
+  ) : category === 'audio' ? (
     <audio controls src={path} {...props} />
-  ) : kind === 'video' ? (
+  ) : category === 'video' ? (
     <video
       muted
       src={path}
