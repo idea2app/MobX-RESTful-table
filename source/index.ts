@@ -3,6 +3,7 @@ export * from './FilePreview';
 export * from './FilePicker';
 export * from './FileUploader';
 export * from './FormField';
+export * from './RangeInput';
 export * from './BadgeInput';
 export * from './RestForm';
 export * from './Pager';
