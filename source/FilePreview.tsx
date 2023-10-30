@@ -11,19 +11,27 @@ export type FilePreviewProps = ImageProps &
     path: string;
   };
 
-export const FilePreview: FC<FilePreviewProps> = ({
-  type = '*/*',
-  path,
-  ...props
-}) => {
-  const [category, ...kind] = type.split(/\W+/);
+export const FileTypeMap = {
+  stream: 'binary',
+  compressed: 'zip',
+  msword: 'doc',
+  document: 'docx',
+  powerpoint: 'ppt',
+  presentation: 'pptx',
+  excel: 'xls',
+  sheet: 'xlsx',
+};
+
+export const FilePreview: FC<FilePreviewProps> = ({ type, path, ...props }) => {
+  const [category, ...kind] = type?.split(/\W+/) || [];
 
   const extension =
+    FileTypeMap[kind.at(-1)] ||
     new URL(path, 'http://localhost').pathname
       .split('/')
       .at(-1)
       ?.split('.')
-      .at(-1) || kind.at(-1);
+      .at(-1);
 
   return category === 'image' ? (
     <ImagePreview fluid loading="lazy" src={path} {...props} />
