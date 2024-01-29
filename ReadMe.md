@@ -2,11 +2,18 @@
 
 A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1], which is based on [MobX RESTful][2] & [React][3].
 
-[![MobX compatibility](https://img.shields.io/badge/Compatible-1?logo=mobx&label=MobX%204%2F5%2F6)][4]
+[![MobX compatibility](https://img.shields.io/badge/Compatible-1?logo=mobx&label=MobX%206%2F7)][4]
 [![NPM Dependency](https://img.shields.io/librariesio/github/idea2app/MobX-RESTful-table.svg)][5]
 [![CI & CD](https://github.com/idea2app/MobX-RESTful-table/actions/workflows/main.yml/badge.svg)][6]
 
 [![NPM](https://nodei.co/npm/mobx-restful-table.png?downloads=true&downloadRank=true&stars=true)][7]
+
+## Versions
+
+| SemVer |    status    | ES decorator |    MobX     |
+| :----: | :----------: | :----------: | :---------: |
+| `>=2`  | ✅developing |   stage-3    |  `>=6.11`   |
+|  `<2`  | ❌deprecated |   stage-2    | `>=4 <6.11` |
 
 ## Components
 
@@ -41,13 +48,13 @@ npm i react \
 ```json
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES6",
     "module": "ES6",
     "moduleResolution": "Node",
-    "experimentalDecorators": true,
+    "useDefineForClassFields": true,
     "jsx": "react-jsx",
     "skipLibCheck": true,
-    "lib": ["ES2022", "DOM"]
+    "lib": ["ES2023", "DOM"]
   }
 }
 ```

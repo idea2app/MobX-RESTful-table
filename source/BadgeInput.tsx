@@ -1,4 +1,4 @@
-import * as MobX from 'mobx';
+import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { observePropsState } from 'mobx-react-helper';
 import { InputHTMLAttributes, KeyboardEvent, PureComponent } from 'react';
@@ -27,21 +27,16 @@ export interface BadgeInputProps
 @observer
 @observePropsState
 export class BadgeInput extends PureComponent<BadgeInputProps> {
-  constructor(props: BadgeInputProps) {
-    super(props);
-    MobX.makeObservable?.(this);
-  }
-
   static match(type: string): type is BadgeInputProps['type'] {
     return TextInputTypes.includes(type as BadgeInputProps['type']);
   }
 
-  @MobX.observable
-  innerValue = this.props.defaultValue || [];
+  @observable
+  accessor innerValue = this.props.defaultValue || [];
 
   declare observedProps: BadgeInputProps;
 
-  @MobX.computed
+  @computed
   get value() {
     return this.observedProps.value || this.innerValue;
   }

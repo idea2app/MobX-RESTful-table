@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { debounce } from 'lodash';
-import * as MobX from 'mobx';
 import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
@@ -49,11 +48,6 @@ export class RestTable<T extends DataObject> extends Component<
 > {
   static displayName = 'RestTable';
 
-  constructor(props: RestTableProps<T>) {
-    super(props);
-    MobX.makeObservable?.(this);
-  }
-
   componentDidMount() {
     const { store } = this.props;
 
@@ -64,7 +58,7 @@ export class RestTable<T extends DataObject> extends Component<
   declare observedProps: RestTableProps<T>;
 
   @observable
-  checkedKeys: IDType[] = [];
+  accessor checkedKeys: IDType[] = [];
 
   toggleCheck(key: IDType) {
     const { checkedKeys } = this;
@@ -184,10 +178,10 @@ export class RestTable<T extends DataObject> extends Component<
                       </a>
                     )
                 : type === 'file'
-                ? ({ [key]: value }) => (
-                    <FilePreview type={accept} path={value} />
-                  )
-                : undefined),
+                  ? ({ [key]: value }) => (
+                      <FilePreview type={accept} path={value} />
+                    )
+                  : undefined),
           }) as Column<T>,
       ),
 

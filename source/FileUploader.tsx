@@ -1,4 +1,4 @@
-import * as MobX from 'mobx';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   FormComponent,
@@ -11,13 +11,8 @@ import { DragEvent } from 'react';
 import { FilePicker } from './FilePicker';
 
 export abstract class FileModel extends BaseModel {
-  constructor() {
-    super();
-    MobX.makeObservable?.(this);
-  }
-
-  @MobX.observable
-  files: string[] = [];
+  @observable
+  accessor files: string[] = [];
 
   clear() {
     super.clear();
@@ -75,13 +70,8 @@ export interface FileUploaderProps extends FormComponentProps {
 @observer
 @observePropsState
 export class FileUploader extends FormComponent<FileUploaderProps> {
-  constructor(props: FileUploaderProps) {
-    super(props);
-    MobX.makeObservable?.(this);
-  }
-
-  @MobX.observable
-  pickIndex?: number = undefined;
+  @observable
+  accessor pickIndex: number | undefined;
 
   componentDidMount() {
     super.componentDidMount();
@@ -92,8 +82,8 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
       defaultValue instanceof Array
         ? (defaultValue as string[])
         : defaultValue
-        ? [defaultValue as string]
-        : [];
+          ? [defaultValue as string]
+          : [];
   }
 
   componentDidUpdate(prevProps: Readonly<FileUploaderProps>) {
@@ -104,8 +94,8 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
         value instanceof Array
           ? (value as string[])
           : value
-          ? [value as string]
-          : [];
+            ? [value as string]
+            : [];
   }
 
   handleDrop = (index: number) => (event: DragEvent<HTMLElement>) => {
