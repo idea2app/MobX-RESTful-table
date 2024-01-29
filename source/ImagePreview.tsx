@@ -1,24 +1,19 @@
 import classNames from 'classnames';
-import * as MobX from 'mobx';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PureComponent } from 'react';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 
 @observer
 export class ImagePreview extends PureComponent<ImageProps> {
-  constructor(props: ImageProps) {
-    super(props);
-    MobX.makeObservable?.(this);
-  }
+  @observable
+  accessor downloading = false;
 
-  @MobX.observable
-  downloading = false;
+  @observable
+  accessor loadedPath = '';
 
-  @MobX.observable
-  loadedPath = '';
-
-  @MobX.observable
-  viewing = false;
+  @observable
+  accessor viewing = false;
 
   componentDidMount() {
     const { src } = this.props;
