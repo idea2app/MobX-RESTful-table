@@ -41,6 +41,9 @@ npm i react \
   mobx-restful-table
 ```
 
+> Some **Node.js** tips about the upstream `mobx-restful` you should know:
+> https://github.com/idea2app/MobX-RESTful?tab=readme-ov-file#usage
+
 ## Configuration
 
 ### `tsconfig.json`
