@@ -147,7 +147,6 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
           >
             <FilePicker
               {...props}
-              style={{ height: '10rem' }}
               value={file}
               onChange={this.handleChange(file)}
             />
@@ -157,7 +156,6 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
           <li className="list-inline-item">
             <FilePicker
               {...props}
-              style={{ width: '10rem', height: '10rem' }}
               name={undefined}
               value=""
               required={!store.files[0] && props.required}

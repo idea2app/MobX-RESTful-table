@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 
 @observer
-export class ImagePreview extends PureComponent<ImageProps> {
+export class ImagePreview extends Component<ImageProps> {
   @observable
   accessor downloading = false;
 

@@ -1,3 +1,4 @@
+import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   FormComponent,
@@ -18,10 +19,21 @@ export interface FilePickerProps extends FormComponentProps {
 export class FilePicker extends FormComponent<FilePickerProps> {
   static readonly displayName = 'FilePicker';
 
+  @observable
+  accessor file: File | undefined;
+
+  @computed
+  get fileType() {
+    const { accept } = this.observedProps,
+      { file } = this;
+
+    return file?.type || file?.name.match(/\.\w+$/)?.[0] || accept;
+  }
+
   handleAdd = (event: ChangeEvent<HTMLInputElement>) => {
     const file = (event.currentTarget as HTMLInputElement).files?.[0];
 
-    this.innerValue = file ? URL.createObjectURL(file) : '';
+    this.innerValue = (this.file = file) ? URL.createObjectURL(file) : '';
 
     this.props.onChange?.(this.innerValue, file);
   };
@@ -38,7 +50,8 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   };
 
   renderInput() {
-    const { id, name, value, required, disabled, accept } = this.props;
+    const { id, name, value, required, disabled, accept, multiple } =
+      this.props;
 
     return (
       <>
@@ -48,7 +61,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           type="file"
           name={value ? undefined : name}
           required={!value && required}
-          {...{ id, disabled, accept }}
+          {...{ id, disabled, accept, multiple }}
           onChange={this.handleAdd}
         />
         {value && <input type="hidden" name={name} value={value} />}
@@ -57,18 +70,18 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   }
 
   render() {
-    const { value } = this,
-      { className = '', style, accept } = this.props;
+    const { value, fileType } = this,
+      { className = '', style } = this.props;
 
     return (
       <div
-        className={`form-control position-relative ${className}`}
-        style={style}
+        className={`d-inline-block border rounded position-relative ${className}`}
+        style={{ width: '10rem', height: '10rem', ...style }}
       >
         {value ? (
           <FilePreview
             className="w-100 h-100 object-fit-contain"
-            type={accept}
+            type={fileType}
             path={value + ''}
           />
         ) : (

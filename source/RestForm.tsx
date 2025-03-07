@@ -4,7 +4,7 @@ import { DataObject, IDType, ListModel } from 'mobx-restful';
 import {
   FormEvent,
   InputHTMLAttributes,
-  PureComponent,
+  Component,
   ReactNode,
 } from 'react';
 import { Button, Form } from 'react-bootstrap';
@@ -43,7 +43,7 @@ export interface RestFormProps<T extends DataObject> {
 }
 
 @observer
-export class RestForm<T extends DataObject> extends PureComponent<
+export class RestForm<T extends DataObject> extends Component<
   RestFormProps<T>
 > {
   componentDidMount() {

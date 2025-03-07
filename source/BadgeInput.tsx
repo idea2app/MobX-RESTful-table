@@ -1,7 +1,7 @@
 import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { observePropsState } from 'mobx-react-helper';
-import { InputHTMLAttributes, KeyboardEvent, PureComponent } from 'react';
+import { InputHTMLAttributes, KeyboardEvent, Component } from 'react';
 import { Badge, CloseButton } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
@@ -26,7 +26,7 @@ export interface BadgeInputProps
 
 @observer
 @observePropsState
-export class BadgeInput extends PureComponent<BadgeInputProps> {
+export class BadgeInput extends Component<BadgeInputProps> {
   static match(type: string): type is BadgeInputProps['type'] {
     return TextInputTypes.includes(type as BadgeInputProps['type']);
   }

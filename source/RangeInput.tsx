@@ -7,7 +7,7 @@ import {
 import { ChangeEvent, ReactNode } from 'react';
 
 export interface RangeInputProps extends Omit<FormComponentProps, 'type'> {
-  icon?: ReactNode | ((value: number) => ReactNode);
+  icon?: ReactNode | ((itemValue: number) => ReactNode);
 }
 
 @observer
@@ -22,6 +22,19 @@ export class RangeInput extends FormComponent<RangeInputProps> {
 
     this.props.onChange?.(value);
   };
+
+  renderItem(index: number) {
+    const { value } = this,
+      { icon, step } = this.observedProps;
+    const fullValue = +step * index;
+    const itemValue = Math.max(Math.min(+value - fullValue, +step), 0);
+
+    return (
+      <li key={index} className="text-center">
+        {typeof icon === 'function' ? icon(itemValue) : icon}
+      </li>
+    );
+  }
 
   render() {
     const {
@@ -39,18 +52,13 @@ export class RangeInput extends FormComponent<RangeInputProps> {
         <input
           {...{ min, max, value, ...props }}
           className={icon ? 'opacity-0' : ''}
+          style={{ margin: '0 -0.5rem', cursor: 'pointer' }}
           type="range"
           onChange={this.handleChange}
         />
-        <div className="position-absolute start-0 top-0 w-100 h-100 pe-none d-flex">
-          {Array.from({ length: Math.ceil(+value) }, (_, index) => (
-            <div className="text-center" style={{ width: 100 / +max + '%' }}>
-              {typeof icon === 'function'
-                ? icon(+value - index > 1 ? 1 : +value - index)
-                : icon}
-            </div>
-          ))}
-        </div>
+        <ol className="list-unstyled user-select-none position-absolute start-0 top-0 w-100 h-100 pe-none d-flex justify-content-around">
+          {Array.from({ length: +max }, (_, index) => this.renderItem(index))}
+        </ol>
       </div>
     );
   }

@@ -33,7 +33,7 @@ export const Pager: FC<PagerProps> = ({
 
   return (
     <form
-      className="d-flex align-items-center gap-3"
+      className="m-0 d-flex align-items-center gap-2"
       onSubmit={onChange && (event => event.preventDefault())}
     >
       <Form.Control
@@ -60,7 +60,7 @@ export const Pager: FC<PagerProps> = ({
           onChange?.({ pageSize, pageIndex: +input.value })
         }
       />
-      <Pagination className="my-0">
+      <Pagination>
         {pageIndex > 1 && <Pagination.Item {...propsOf(1)}>1</Pagination.Item>}
         {pageIndex > 3 && <Pagination.Ellipsis />}
         {pageIndex > 2 && (

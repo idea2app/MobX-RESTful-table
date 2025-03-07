@@ -41,9 +41,6 @@ npm i react \
   mobx-restful-table
 ```
 
-> Some **Node.js** tips about the upstream `mobx-restful` you should know:
-> https://github.com/idea2app/MobX-RESTful?tab=readme-ov-file#usage
-
 ## Configuration
 
 ### `tsconfig.json`
@@ -84,7 +81,7 @@ Inspired by [Ant Design - Pro Table](https://procomponents.ant.design/components
 ```tsx
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { PureComponent } from 'react';
+import { Component } from 'react';
 import { Container, Button, Badge } from 'react-bootstrap';
 import { Column, RestTable } from 'mobx-restful-table';
 
@@ -92,7 +89,7 @@ import repositoryStore, { Repository } from '../models/Repository';
 import { i18n } from '../models/Translation';
 
 @observer
-export default class PaginationPage extends PureComponent {
+export default class PaginationPage extends Component {
   @computed
   get columns(): Column<Repository>[] {
     const { t } = i18n;
