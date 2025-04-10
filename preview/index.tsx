@@ -36,9 +36,8 @@ export class App extends Component {
           <Icon name="list" />
         </Button>
         <Collapse in={screenPortrait ? menuOpen : true}>
-          <div>
+          <div className="sticky-top">
             <PageNav
-              className="sticky-top"
               onClick={() => screenPortrait && (this.menuOpen = false)}
             />
           </div>
@@ -49,18 +48,16 @@ export class App extends Component {
 
   render() {
     return (
-      <div className="bg-light">
-        <Container className="pb-3 py-md-5" fluid="md">
-          <Row>
-            <Col xs={12} md={3} className="sticky-top bg-light">
-              {this.renderMenu()}
-            </Col>
-            <Col xs={12} md={9}>
-              <Content />
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Container className="pb-3 py-md-5" fluid="md">
+        <Row>
+          <Col xs={12} md={3} className="sticky-top bg-light">
+            {this.renderMenu()}
+          </Col>
+          <Col xs={12} md={9}>
+            <Content />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

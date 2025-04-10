@@ -1,12 +1,7 @@
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { DataObject, IDType, ListModel } from 'mobx-restful';
-import {
-  FormEvent,
-  InputHTMLAttributes,
-  Component,
-  ReactNode,
-} from 'react';
+import { FormEvent, InputHTMLAttributes, Component, ReactNode } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { formToJSON } from 'web-utility';
 
@@ -46,6 +41,8 @@ export interface RestFormProps<T extends DataObject> {
 export class RestForm<T extends DataObject> extends Component<
   RestFormProps<T>
 > {
+  static readonly displayName = 'RestForm';
+
   componentDidMount() {
     const { id, store } = this.props;
 
@@ -107,7 +104,7 @@ export class RestForm<T extends DataObject> extends Component<
     const label =
       typeof renderLabel === 'function'
         ? renderLabel?.(key)
-        : renderLabel || key as string;
+        : renderLabel || (key as string);
 
     return (
       renderInput?.(currentOne, { key, ...props }) ||

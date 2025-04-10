@@ -10,3 +10,4 @@ export * from './Pager';
 export * from './RestTable';
 export * from './ScrollBoundary';
 export * from './ScrollList';
+export * from './SearchableInput';

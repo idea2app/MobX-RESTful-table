@@ -70,6 +70,8 @@ export interface FileUploaderProps extends FormComponentProps {
 @observer
 @observePropsState
 export class FileUploader extends FormComponent<FileUploaderProps> {
+  static readonly displayName = 'FileUploader';
+
   @observable
   accessor pickIndex: number | undefined;
 

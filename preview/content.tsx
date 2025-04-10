@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
-import { BadgeInput } from '../source';
+import { BadgeInput, SearchableInput } from '../source';
+import { i18n, topicStore } from './model';
 import { CodeExample, Section } from './utility';
 
 export const Content: FC = () => (
@@ -10,6 +11,18 @@ export const Content: FC = () => (
     <Section title="Badge Input">
       <CodeExample>
         <BadgeInput placeholder="type some words, then press Enter key to add it" />
+      </CodeExample>
+    </Section>
+
+    <Section title="Searchable Input">
+      <CodeExample>
+        <SearchableInput
+          translator={i18n}
+          store={topicStore}
+          labelKey="name"
+          valueKey="name"
+          placeholder="search GitHub topics"
+        />
       </CodeExample>
     </Section>
   </>

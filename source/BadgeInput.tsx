@@ -27,7 +27,7 @@ export interface BadgeInputProps
 @observer
 @observePropsState
 export class BadgeInput extends Component<BadgeInputProps> {
-  static displayName = 'BadgeInput';
+  static readonly displayName = 'BadgeInput';
 
   static match(type: string): type is BadgeInputProps['type'] {
     return TextInputTypes.includes(type as BadgeInputProps['type']);

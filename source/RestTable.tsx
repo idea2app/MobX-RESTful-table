@@ -46,7 +46,7 @@ export interface RestTableProps<T extends DataObject>
 export class RestTable<T extends DataObject> extends Component<
   RestTableProps<T>
 > {
-  static displayName = 'RestTable';
+  static readonly displayName = 'RestTable';
 
   componentDidMount() {
     const { store } = this.props;

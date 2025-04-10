@@ -13,6 +13,8 @@ export interface RangeInputProps extends Omit<FormComponentProps, 'type'> {
 @observer
 @observePropsState
 export class RangeInput extends FormComponent<RangeInputProps> {
+  static readonly displayName = 'RangeInput';
+
   declare observedProps: RangeInputProps;
 
   handleChange = ({

@@ -1,22 +1,22 @@
 import classNames from 'classnames';
-import { FC, PropsWithChildren, ReactNode } from 'react';
+import { FC, HTMLAttributes, ReactNode } from 'react';
 
 export type EdgePosition = 'top' | 'bottom' | 'left' | 'right';
 
 export type TouchHandler = (edge: EdgePosition) => any;
 
-export type ScrollBoundaryProps = PropsWithChildren<
-  Partial<Record<EdgePosition, ReactNode>> & {
-    className?: string;
-    onTouch: TouchHandler;
-  }
->;
+export interface ScrollBoundaryProps
+  extends HTMLAttributes<HTMLDivElement>,
+    Partial<Record<EdgePosition, ReactNode>> {
+  onTouch: TouchHandler;
+}
 
 function touch(edge: EdgePosition, onTouch: TouchHandler) {
   return (node: HTMLElement | null) =>
     node &&
     new IntersectionObserver(
       ([{ isIntersecting }]) => isIntersecting && onTouch(edge),
+      { root: node.parentElement?.parentElement },
     ).observe(node);
 }
 
@@ -28,8 +28,9 @@ export const ScrollBoundary: FC<ScrollBoundaryProps> = ({
   right,
   bottom,
   children,
+  ...props
 }) => (
-  <div className={classNames('position-relative', className)}>
+  <div className={classNames('position-relative', className)} {...props}>
     <div
       className="position-absolute top-0 left-0 w-100"
       ref={touch('top', onTouch)}

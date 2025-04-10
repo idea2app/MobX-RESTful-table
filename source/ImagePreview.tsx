@@ -6,6 +6,8 @@ import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 
 @observer
 export class ImagePreview extends Component<ImageProps> {
+  static readonly displayName = 'ImagePreview';
+
   @observable
   accessor downloading = false;
 
