@@ -99,11 +99,11 @@ export class RestTable<T extends DataObject> extends Component<
             currentPage.every(({ [indexKey]: ID }) => checkedKeys.includes(ID))
           }
           // https://github.com/facebook/react/issues/1798
-          ref={(input: HTMLInputElement | null) =>
-            input &&
-            (input.indeterminate =
-              !!checkedKeys.length && checkedKeys.length < currentPage.length)
-          }
+          ref={(input: HTMLInputElement | null) => {
+            if (input)
+              input.indeterminate =
+                !!checkedKeys.length && checkedKeys.length < currentPage.length;
+          }}
           onClick={toggleCheckAll}
           onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
         />

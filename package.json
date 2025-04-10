@@ -28,7 +28,7 @@
     "@swc/helpers": "^0.5.15",
     "classnames": "^2.5.1",
     "lodash": "^4.17.21",
-    "mobx": "^6.13.6",
+    "mobx": "^6.13.7",
     "mobx-i18n": "^0.6.0",
     "mobx-react": "^9.2.0",
     "mobx-react-helper": "^0.3.1",
@@ -41,20 +41,33 @@
     "react": ">=16.8"
   },
   "devDependencies": {
-    "@parcel/config-default": "~2.13.3",
-    "@parcel/packager-ts": "~2.13.3",
-    "@parcel/transformer-typescript-tsc": "~2.13.3",
-    "@parcel/transformer-typescript-types": "~2.13.3",
+    "@parcel/config-default": "~2.14.4",
+    "@parcel/packager-ts": "~2.14.4",
+    "@parcel/transformer-typescript-tsc": "~2.14.4",
+    "@parcel/transformer-typescript-types": "~2.14.4",
     "@types/lodash": "^4.17.16",
-    "@types/react": "^18.3.18",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.2",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
-    "parcel": "~2.13.3",
+    "idea-react": "^2.0.0-rc.8",
+    "lint-staged": "^15.5.0",
+    "parcel": "~2.14.4",
     "prettier": "^3.5.3",
-    "react": "^18.3.1",
-    "typedoc": "^0.27.9",
+    "prismjs": "^1.30.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "rimraf": "^6.0.1",
+    "typedoc": "^0.28.2",
     "typedoc-plugin-mdn-links": "^5.0.1",
-    "typescript": "~5.8.2"
+    "typescript": "~5.8.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "lmdb",
+      "msgpackr-extract"
+    ]
   },
   "prettier": {
     "singleQuote": true,
@@ -73,8 +86,10 @@
   },
   "scripts": {
     "prepare": "husky",
+    "preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel --open",
     "test": "lint-staged",
-    "build": "rm -rf dist/ docs/  &&  parcel build  &&  typedoc source/",
+    "pack-preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel build --public-url=. --dist-dir=../docs/preview/",
+    "build": "rm -rf dist/ docs/  &&  parcel build  &&  typedoc source/  &&  npm run pack-preview",
     "prepublishOnly": "npm test  &&  npm run build"
   }
 }

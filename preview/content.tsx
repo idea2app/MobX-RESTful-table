@@ -1,0 +1,16 @@
+import { FC } from 'react';
+
+import { BadgeInput } from '../source';
+import { CodeExample, Section } from './utility';
+
+export const Content: FC = () => (
+  <>
+    <h1>MobX RESTful table examples</h1>
+
+    <Section title="Badge Input">
+      <CodeExample>
+        <BadgeInput placeholder="type some words, then press Enter key to add it" />
+      </CodeExample>
+    </Section>
+  </>
+);
