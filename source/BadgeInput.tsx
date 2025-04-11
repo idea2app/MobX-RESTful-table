@@ -1,7 +1,7 @@
-import { computed, observable } from 'mobx';
+import { computed, observable, reaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { observePropsState } from 'mobx-react-helper';
-import { InputHTMLAttributes, KeyboardEvent, Component } from 'react';
+import { Component, InputHTMLAttributes, KeyboardEvent } from 'react';
 import { Badge, CloseButton } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
@@ -46,28 +46,28 @@ export class BadgeInput extends Component<BadgeInputProps> {
     return this.observedProps.value || this.innerValue;
   }
 
+  componentWillUnmount =
+    this.props.onChange &&
+    reaction(
+      () => this.innerValue,
+      value => this.props.onChange(toJS(value)),
+    );
+
   handleInput = (event: KeyboardEvent<HTMLInputElement>) => {
     const input = event.currentTarget;
-    const { value } = input,
-      { onChange } = this.props;
+    const { value } = input;
 
     switch (event.key) {
       case 'Enter': {
         event.preventDefault();
         input.value = '';
 
-        if (value) {
-          this.innerValue = [...this.innerValue, value];
-          onChange?.(this.innerValue);
-        }
+        if (value) this.innerValue = [...this.innerValue, value];
+
         break;
       }
       case 'Backspace': {
-        if (value) return;
-
-        this.innerValue = this.innerValue.slice(0, -1);
-
-        onChange?.(this.innerValue);
+        if (!value) this.innerValue = this.innerValue.slice(0, -1);
       }
     }
   };
@@ -79,7 +79,6 @@ export class BadgeInput extends Component<BadgeInputProps> {
       ...innerValue.slice(0, index),
       ...innerValue.slice(index + 1),
     ];
-    this.props.onChange?.(this.innerValue);
   }
 
   render() {

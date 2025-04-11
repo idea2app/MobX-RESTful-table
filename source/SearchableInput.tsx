@@ -1,5 +1,5 @@
 import { debounce } from 'lodash';
-import { observable, reaction } from 'mobx';
+import { computed, observable, reaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { observePropsState } from 'mobx-react-helper';
 import { DataObject, Filter, ListModel } from 'mobx-restful';
@@ -13,7 +13,7 @@ import {
 } from 'react-bootstrap';
 import { Second } from 'web-utility';
 
-import { BaseInputProps } from './BadgeInput';
+import { BaseInputProps, TextInputTypes } from './BadgeInput';
 import { ScrollList, ScrollListProps } from './ScrollList';
 
 export type OptionData = Record<'label' | 'value', string>;
@@ -30,6 +30,7 @@ export interface SearchableInputProps<
   labelKey: keyof D;
   valueKey: keyof D;
   renderList?: ScrollListProps<D, F>['renderList'];
+  type?: (typeof TextInputTypes)[number];
 }
 
 @observer
@@ -46,12 +47,19 @@ export class SearchableInput<
   accessor filter = {} as F;
 
   @observable
-  accessor selectedOptions: OptionData[] = this.props.defaultValue || [];
+  accessor innerValue = this.props.defaultValue || [];
 
-  componentWillUnmount = reaction(
-    () => this.selectedOptions,
-    this.props.onChange,
-  );
+  @computed
+  get selectedOptions() {
+    return this.observedProps.value || this.innerValue;
+  }
+
+  componentWillUnmount =
+    this.props.onChange &&
+    reaction(
+      () => this.innerValue,
+      value => this.props.onChange(toJS(value)),
+    );
 
   search = debounce((value: string) => {
     const { store, labelKey } = this.props;
@@ -69,11 +77,11 @@ export class SearchableInput<
     const { selectedOptions } = this;
 
     if (!selectedOptions.find(({ value: v }) => v === value))
-      selectedOptions.push({ label, value });
+      this.innerValue = [...selectedOptions, { label, value }];
   };
 
   delete = (value: string) =>
-    (this.selectedOptions = this.selectedOptions.filter(
+    (this.innerValue = this.selectedOptions.filter(
       option => option.value !== value,
     ));
 
@@ -103,6 +111,7 @@ export class SearchableInput<
   render() {
     const { filter, selectedOptions } = this,
       {
+        type = 'search',
         name,
         required,
         placeholder,
@@ -144,7 +153,7 @@ export class SearchableInput<
           value={JSON.stringify(selectedOptions.map(({ value }) => value))}
         />
         <Form.Control
-          {...{ placeholder, required }}
+          {...{ type, placeholder, required }}
           onChange={({ currentTarget: { value } }) => this.search(value)}
         />
       </InputGroup>

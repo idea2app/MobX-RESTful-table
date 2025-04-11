@@ -10,7 +10,10 @@ export const Content: FC = () => (
 
     <Section title="Badge Input">
       <CodeExample>
-        <BadgeInput placeholder="type some words, then press Enter key to add it" />
+        <BadgeInput
+          placeholder="type some words, then press Enter key to add it"
+          onChange={console.log}
+        />
       </CodeExample>
     </Section>
 
@@ -22,6 +25,7 @@ export const Content: FC = () => (
           labelKey="name"
           valueKey="name"
           placeholder="search GitHub topics"
+          onChange={console.log}
         />
       </CodeExample>
     </Section>
