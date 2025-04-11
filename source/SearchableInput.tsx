@@ -1,8 +1,9 @@
 import { debounce } from 'lodash';
-import { observable } from 'mobx';
+import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
+import { observePropsState } from 'mobx-react-helper';
 import { DataObject, Filter, ListModel } from 'mobx-restful';
-import { Component, InputHTMLAttributes } from 'react';
+import { Component } from 'react';
 import {
   Badge,
   CloseButton,
@@ -10,26 +11,25 @@ import {
   InputGroup,
   ListGroup,
 } from 'react-bootstrap';
+import { Second } from 'web-utility';
 
+import { BaseInputProps } from './BadgeInput';
 import { ScrollList, ScrollListProps } from './ScrollList';
-import { observePropsState } from 'mobx-react-helper';
 
 export type OptionData = Record<'label' | 'value', string>;
 
 export interface SearchableInputProps<
   D extends DataObject,
   F extends Filter<D> = Filter<D>,
-> extends Omit<ScrollListProps<D, F>, 'defaultData' | 'renderList'>,
-    Pick<
-      InputHTMLAttributes<HTMLInputElement>,
-      'name' | 'required' | 'placeholder'
-    > {
+> extends Omit<
+      ScrollListProps<D, F>,
+      'defaultValue' | 'onChange' | 'defaultData' | 'renderList'
+    >,
+    BaseInputProps<OptionData[]> {
   store: ListModel<D, F>;
   labelKey: keyof D;
   valueKey: keyof D;
   renderList?: ScrollListProps<D, F>['renderList'];
-  defaultValue?: string[];
-  value?: string[];
 }
 
 @observer
@@ -46,7 +46,12 @@ export class SearchableInput<
   accessor filter = {} as F;
 
   @observable
-  accessor selectedOptions: OptionData[] = [];
+  accessor selectedOptions: OptionData[] = this.props.defaultValue || [];
+
+  componentWillUnmount = reaction(
+    () => this.selectedOptions,
+    this.props.onChange,
+  );
 
   search = debounce((value: string) => {
     const { store, labelKey } = this.props;
@@ -58,7 +63,7 @@ export class SearchableInput<
     if (store.downloading < 1)
       if (value) store.getList(this.filter, 1);
       else store.clearList();
-  });
+  }, Second);
 
   add = (label: string, value: string) => {
     const { selectedOptions } = this;
@@ -83,6 +88,8 @@ export class SearchableInput<
         return (
           <ListGroup.Item
             key={value}
+            as="button"
+            type="button"
             action
             onClick={() => this.add(label, value)}
           >
@@ -103,6 +110,7 @@ export class SearchableInput<
         value,
         labelKey,
         renderList = this.renderList,
+        onChange,
         ...props
       } = this.props;
 
@@ -113,7 +121,7 @@ export class SearchableInput<
             <Badge
               key={value}
               className="d-inline-flex align-items-center gap-1"
-              bg="light"
+              bg="info"
               text="dark"
             >
               {label}
@@ -124,7 +132,7 @@ export class SearchableInput<
 
         {filter[labelKey] && (
           <div
-            className="position-absolute start-0 bg-white overflow-auto py-1"
+            className="position-absolute start-0 z-1 bg-white overflow-auto py-1"
             style={{ top: '100%', maxHeight: '30vh' }}
           >
             <ScrollList {...props} {...{ filter, renderList }} />
@@ -136,7 +144,7 @@ export class SearchableInput<
           value={JSON.stringify(selectedOptions.map(({ value }) => value))}
         />
         <Form.Control
-          {...{ placeholder, required, defaultValue }}
+          {...{ placeholder, required }}
           onChange={({ currentTarget: { value } }) => this.search(value)}
         />
       </InputGroup>

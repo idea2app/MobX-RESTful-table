@@ -13,15 +13,18 @@ export const TextInputTypes = [
   'url',
 ] as const;
 
-export interface BadgeInputProps
+export interface BaseInputProps<V>
   extends Pick<
     InputHTMLAttributes<HTMLInputElement>,
     'className' | 'style' | 'name' | 'required' | 'placeholder'
   > {
+  defaultValue?: V;
+  value?: V;
+  onChange?: (value: V) => any;
+}
+
+export interface BadgeInputProps extends BaseInputProps<string[]> {
   type?: (typeof TextInputTypes)[number];
-  defaultValue?: string[];
-  value?: string[];
-  onChange?: (value: string[]) => any;
 }
 
 @observer

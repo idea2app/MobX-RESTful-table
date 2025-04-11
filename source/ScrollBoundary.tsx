@@ -11,14 +11,23 @@ export interface ScrollBoundaryProps
   onTouch: TouchHandler;
 }
 
-function touch(edge: EdgePosition, onTouch: TouchHandler) {
-  return (node: HTMLElement | null) =>
-    node &&
+const touch =
+  (edge: EdgePosition, onTouch: TouchHandler) => (node: HTMLElement | null) => {
+    if (!node) return;
+
+    const anchor = node.parentElement?.parentElement;
+
+    const { overflowX, overflowY } = anchor ? getComputedStyle(anchor) : {};
+
+    const root = `${overflowX}${overflowY}`.match(/auto|scroll/)
+      ? anchor
+      : document;
+
     new IntersectionObserver(
       ([{ isIntersecting }]) => isIntersecting && onTouch(edge),
-      { root: node.parentElement?.parentElement },
+      { root },
     ).observe(node);
-}
+  };
 
 export const ScrollBoundary: FC<ScrollBoundaryProps> = ({
   className,
