@@ -3,7 +3,7 @@ import { computed, observable, reaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { observePropsState } from 'mobx-react-helper';
 import { DataObject, Filter, ListModel } from 'mobx-restful';
-import { Component } from 'react';
+import { Component, FocusEvent } from 'react';
 import {
   Badge,
   CloseButton,
@@ -31,6 +31,7 @@ export interface SearchableInputProps<
   valueKey: keyof D;
   renderList?: ScrollListProps<D, F>['renderList'];
   type?: (typeof TextInputTypes)[number];
+  multiple?: boolean;
 }
 
 @observer
@@ -54,6 +55,9 @@ export class SearchableInput<
     return this.observedProps.value || this.innerValue;
   }
 
+  @observable
+  accessor listShown = false;
+
   componentWillUnmount =
     this.props.onChange &&
     reaction(
@@ -61,7 +65,7 @@ export class SearchableInput<
       value => this.props.onChange(toJS(value)),
     );
 
-  search = debounce((value: string) => {
+  search = debounce(async (value: string) => {
     const { store, labelKey } = this.props;
 
     value = value.trim();
@@ -69,21 +73,34 @@ export class SearchableInput<
     this.filter = (value ? { [labelKey]: value } : {}) as F;
 
     if (store.downloading < 1)
-      if (value) store.getList(this.filter, 1);
-      else store.clearList();
+      if (value) {
+        if (!this.listShown) this.listShown = true;
+        else await store.getList(this.filter, 1);
+      } else {
+        this.listShown = false;
+        store.clearList();
+      }
   }, Second);
 
   add = (label: string, value: string) => {
     const { selectedOptions } = this;
 
-    if (!selectedOptions.find(({ value: v }) => v === value))
-      this.innerValue = [...selectedOptions, { label, value }];
+    if (selectedOptions.find(({ value: v }) => v === value)) return;
+
+    this.innerValue = [...selectedOptions, { label, value }];
+
+    if (!this.props.multiple) this.listShown = false;
   };
 
   delete = (value: string) =>
     (this.innerValue = this.selectedOptions.filter(
       option => option.value !== value,
     ));
+
+  handleBlur = ({ target, relatedTarget }: FocusEvent<HTMLElement>) => {
+    if (target.parentElement !== relatedTarget?.parentElement)
+      this.listShown = false;
+  };
 
   renderList: ScrollListProps<D, F>['renderList'] = allItems => (
     <ListGroup>
@@ -109,7 +126,7 @@ export class SearchableInput<
   );
 
   render() {
-    const { filter, selectedOptions } = this,
+    const { filter, selectedOptions, listShown } = this,
       {
         type = 'search',
         name,
@@ -139,10 +156,11 @@ export class SearchableInput<
           ))}
         </InputGroup.Text>
 
-        {filter[labelKey] && (
+        {listShown && (
           <div
             className="position-absolute start-0 z-1 bg-white overflow-auto py-1"
             style={{ top: '100%', maxHeight: '30vh' }}
+            onBlurCapture={this.handleBlur}
           >
             <ScrollList {...props} {...{ filter, renderList }} />
           </div>

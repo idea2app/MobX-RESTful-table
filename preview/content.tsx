@@ -25,6 +25,7 @@ export const Content: FC = () => (
           labelKey="name"
           valueKey="name"
           placeholder="search GitHub topics"
+          multiple
           onChange={console.log}
         />
       </CodeExample>
