@@ -2,10 +2,11 @@ import { debounce } from 'lodash';
 import { computed, observable, reaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { observePropsState } from 'mobx-react-helper';
-import { DataObject, Filter, ListModel } from 'mobx-restful';
+import { DataObject, Filter } from 'mobx-restful';
 import { Component, FocusEvent } from 'react';
 import {
   Badge,
+  Button,
   CloseButton,
   Form,
   InputGroup,
@@ -14,6 +15,8 @@ import {
 import { Second } from 'web-utility';
 
 import { BaseInputProps, TextInputTypes } from './BadgeInput';
+import { RestFormProps } from './RestForm';
+import { RestFormModal } from './RestFormModal';
 import { ScrollList, ScrollListProps } from './ScrollList';
 
 export type OptionData = Record<'label' | 'value', string>;
@@ -23,10 +26,13 @@ export interface SearchableInputProps<
   F extends Filter<D> = Filter<D>,
 > extends Omit<
       ScrollListProps<D, F>,
-      'defaultValue' | 'onChange' | 'defaultData' | 'renderList'
+      'id' | 'defaultValue' | 'onChange' | 'defaultData' | 'renderList'
     >,
-    BaseInputProps<OptionData[]> {
-  store: ListModel<D, F>;
+    BaseInputProps<OptionData[]>,
+    Omit<RestFormProps<D, F>, 'fields'> {
+  translator: RestFormProps<D, F>['translator'] &
+    ScrollListProps<D, F>['translator'];
+  fields?: RestFormProps<D, F>['fields'];
   labelKey: keyof D;
   valueKey: keyof D;
   renderList?: ScrollListProps<D, F>['renderList'];
@@ -125,19 +131,55 @@ export class SearchableInput<
     </ListGroup>
   );
 
+  renderOverlay() {
+    const { filter } = this;
+    const {
+      translator,
+      fields,
+      store,
+      labelKey,
+      renderList = this.renderList,
+    } = this.props;
+
+    const keyword = filter[labelKey] as string;
+
+    const needNew = !store.allItems.some(
+      ({ [labelKey]: label }) => label === keyword,
+    );
+
+    return (
+      <div
+        className="position-absolute start-0 z-1 bg-white overflow-auto py-1"
+        style={{ top: '100%', maxHeight: '30vh' }}
+        onBlurCapture={this.handleBlur}
+      >
+        {needNew && fields && (
+          <Button
+            className="w-100 sticky-top"
+            variant="warning"
+            size="sm"
+            type="button"
+            onClick={() => (store.currentOne = { [labelKey]: keyword } as D)}
+          >
+            + {keyword}
+          </Button>
+        )}
+        <ScrollList {...{ translator, store, filter, renderList }} />
+      </div>
+    );
+  }
+
   render() {
-    const { filter, selectedOptions, listShown } = this,
+    const { selectedOptions, listShown } = this,
       {
+        translator,
+        fields,
+        store,
+        uploader,
         type = 'search',
         name,
         required,
         placeholder,
-        defaultValue,
-        value,
-        labelKey,
-        renderList = this.renderList,
-        onChange,
-        ...props
       } = this.props;
 
     return (
@@ -156,14 +198,10 @@ export class SearchableInput<
           ))}
         </InputGroup.Text>
 
-        {listShown && (
-          <div
-            className="position-absolute start-0 z-1 bg-white overflow-auto py-1"
-            style={{ top: '100%', maxHeight: '30vh' }}
-            onBlurCapture={this.handleBlur}
-          >
-            <ScrollList {...props} {...{ filter, renderList }} />
-          </div>
+        {listShown && this.renderOverlay()}
+
+        {fields && (
+          <RestFormModal {...{ translator, fields, store, uploader }} />
         )}
         <input
           type="hidden"

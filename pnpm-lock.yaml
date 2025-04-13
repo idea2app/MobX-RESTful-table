@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
+overrides:
+  '@octokit/openapi-types': ^25.0.0
+
 importers:
 
   .:
@@ -81,6 +84,9 @@ importers:
       lint-staged:
         specifier: ^15.5.0
         version: 15.5.0
+      mobx-github:
+        specifier: ^0.3.5
+        version: 0.3.5(typescript@5.8.3)
       parcel:
         specifier: ~2.14.4
         version: 2.14.4(@swc/helpers@0.5.15)(typescript@5.8.3)
@@ -1263,6 +1269,9 @@ packages:
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  mobx-github@0.3.5:
+    resolution: {integrity: sha512-7F2hErcsHTeBLRyVg7n+Vtm/Ftf94DPn35JwX05igjppvWB9t1tV2cZ2bGzv5NFKhvC49ArWDEzOx9IaQLqgHA==}
 
   mobx-i18n@0.6.0:
     resolution: {integrity: sha512-dooxek8Iq+RKbM0qGwCsAhQI/j8MtdwiC9gzFNzx+cCnn0bBDDgwK9Inie8UFw6XmOiy+T2kPzeaFvr72KLKQw==}
@@ -3105,6 +3114,21 @@ snapshots:
       brace-expansion: 2.0.1
 
   minipass@7.1.2: {}
+
+  mobx-github@0.3.5(typescript@5.8.3):
+    dependencies:
+      '@octokit/openapi-types': 25.0.0
+      '@swc/helpers': 0.5.15
+      '@types/lodash': 4.17.16
+      koajax: 3.1.2(typescript@5.8.3)
+      lodash: 4.17.21
+      mobx: 6.13.7
+      mobx-restful: 2.1.0(mobx@6.13.7)(typescript@5.8.3)
+      web-utility: 4.4.3(typescript@5.8.3)
+    transitivePeerDependencies:
+      - core-js
+      - jsdom
+      - typescript
 
   mobx-i18n@0.6.0(mobx@6.13.7)(typescript@5.8.3):
     dependencies:

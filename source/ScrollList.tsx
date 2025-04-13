@@ -37,7 +37,7 @@ export class ScrollList<
     >;
     await when(() => store.downloading < 1);
 
-    store.clear();
+    store.clearList();
 
     if (defaultData) await store.restoreList({ allItems: defaultData, filter });
 
@@ -45,7 +45,7 @@ export class ScrollList<
   }
 
   componentWillUnmount() {
-    this.props.store.clear();
+    this.props.store.clearList();
   }
 
   loadMore = debounce((edge: EdgePosition) => {

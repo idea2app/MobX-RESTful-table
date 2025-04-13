@@ -1,6 +1,6 @@
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
-import { DataObject, IDType, ListModel } from 'mobx-restful';
+import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import { FormEvent, InputHTMLAttributes, Component, ReactNode } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { formToJSON } from 'web-utility';
@@ -29,18 +29,22 @@ export interface Field<T extends DataObject>
   renderInput?: (data: T, meta: Field<T>) => ReactNode;
 }
 
-export interface RestFormProps<T extends DataObject> {
+export interface RestFormProps<
+  D extends DataObject,
+  F extends Filter<D> = Filter<D>,
+> {
   id?: IDType;
-  fields: Field<T>[];
-  store: ListModel<T>;
+  fields: Field<D>[];
+  store: ListModel<D, F>;
   translator: TranslationModel<string, 'submit' | 'cancel'>;
   uploader?: FileModel;
 }
 
 @observer
-export class RestForm<T extends DataObject> extends Component<
-  RestFormProps<T>
-> {
+export class RestForm<
+  D extends DataObject,
+  F extends Filter<D> = Filter<D>,
+> extends Component<RestFormProps<D, F>> {
   static readonly displayName = 'RestForm';
 
   componentDidMount() {
@@ -59,7 +63,7 @@ export class RestForm<T extends DataObject> extends Component<
     store.clearCurrent();
   };
 
-  get fields(): Field<T>[] {
+  get fields(): Field<D>[] {
     const { fields, uploader } = this.props;
 
     return fields.map(
@@ -99,7 +103,7 @@ export class RestForm<T extends DataObject> extends Component<
     );
   }
 
-  renderInput = ({ key, renderLabel, renderInput, ...props }: Field<T>) => {
+  renderInput = ({ key, renderLabel, renderInput, ...props }: Field<D>) => {
     const { currentOne } = this.props.store;
     const label =
       typeof renderLabel === 'function'
