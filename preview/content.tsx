@@ -3,9 +3,20 @@ import { GitRepository } from 'mobx-github';
 import { FC } from 'react';
 import { Badge } from 'react-bootstrap';
 
-import { BadgeInput, Column, RestTable, SearchableInput } from '../source';
+import {
+  BadgeInput,
+  Column,
+  FileModel,
+  FilePicker,
+  FileUploader,
+  RangeInput,
+  RestTable,
+  SearchableInput,
+} from '../source';
 import { i18n, repositoryStore, topicStore } from './model';
 import { CodeExample, Section } from './utility';
+
+class MyFileModel extends FileModel {}
 
 const columns: Column<GitRepository>[] = [
   {
@@ -53,6 +64,14 @@ export const Content: FC = () => (
           onChange={console.log}
         />
       </CodeExample>
+
+      <CodeExample>
+        <BadgeInput
+          placeholder="type some words, then press Enter key to add it"
+          defaultValue={['JavaScript', 'TypeScript']}
+          onChange={console.log}
+        />
+      </CodeExample>
     </Section>
 
     <Section title="Searchable Input">
@@ -68,21 +87,55 @@ export const Content: FC = () => (
           onChange={console.log}
         />
       </CodeExample>
+    </Section>
 
-      <Section title="REST table">
-        <CodeExample>
-          <RestTable
-            striped
-            hover
-            editable
-            deletable
-            columns={columns}
-            store={repositoryStore}
-            translator={i18n}
-            onCheck={console.log}
-          />
-        </CodeExample>
-      </Section>
+    <Section title="Range Input">
+      <CodeExample>
+        <RangeInput
+          min={0}
+          max={5}
+          icon={value => (value ? '★' : '☆')}
+          onChange={console.log}
+        />
+      </CodeExample>
+    </Section>
+
+    <Section title="File Picker">
+      <CodeExample>
+        <FilePicker accept="image/*" onChange={console.log} />
+      </CodeExample>
+      <CodeExample>
+        <FilePicker
+          accept="image/*"
+          defaultValue="https://github.com/idea2app.png"
+          onChange={console.log}
+        />
+      </CodeExample>
+    </Section>
+
+    <Section title="File Uploader">
+      <CodeExample>
+        <FileUploader
+          accept="image/*"
+          store={new MyFileModel()}
+          onChange={console.log}
+        />
+      </CodeExample>
+    </Section>
+
+    <Section title="REST table">
+      <CodeExample>
+        <RestTable
+          striped
+          hover
+          editable
+          deletable
+          columns={columns}
+          store={repositoryStore}
+          translator={i18n}
+          onCheck={console.log}
+        />
+      </CodeExample>
     </Section>
   </>
 );

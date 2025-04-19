@@ -1,9 +1,13 @@
 import { debounce } from 'lodash';
-import { computed, observable, reaction, toJS } from 'mobx';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { observePropsState } from 'mobx-react-helper';
+import {
+  FormComponent,
+  FormComponentProps,
+  observePropsState,
+} from 'mobx-react-helper';
 import { DataObject, Filter } from 'mobx-restful';
-import { Component, FocusEvent } from 'react';
+import { FocusEvent } from 'react';
 import {
   Badge,
   Button,
@@ -11,65 +15,49 @@ import {
   Form,
   InputGroup,
   ListGroup,
+  Spinner,
 } from 'react-bootstrap';
 import { Second } from 'web-utility';
 
-import { BaseInputProps, TextInputTypes } from './BadgeInput';
+import { TextInputTypes } from './BadgeInput';
 import { RestFormProps } from './RestForm';
 import { RestFormModal } from './RestFormModal';
 import { ScrollList, ScrollListProps } from './ScrollList';
 
 export type OptionData = Record<'label' | 'value', string>;
 
-export interface SearchableInputProps<
+export type SearchableInputProps<
   D extends DataObject,
   F extends Filter<D> = Filter<D>,
-> extends Omit<
-      ScrollListProps<D, F>,
-      'id' | 'defaultValue' | 'onChange' | 'defaultData' | 'renderList'
-    >,
-    BaseInputProps<OptionData[]>,
-    Omit<RestFormProps<D, F>, 'fields'> {
-  translator: RestFormProps<D, F>['translator'] &
-    ScrollListProps<D, F>['translator'];
-  fields?: RestFormProps<D, F>['fields'];
-  labelKey: keyof D;
-  valueKey: keyof D;
-  renderList?: ScrollListProps<D, F>['renderList'];
-  type?: (typeof TextInputTypes)[number];
-  multiple?: boolean;
-}
+> = Omit<
+  ScrollListProps<D, F>,
+  'id' | 'defaultValue' | 'onChange' | 'defaultData' | 'renderList'
+> &
+  FormComponentProps<OptionData[]> &
+  Omit<RestFormProps<D, F>, 'fields'> & {
+    translator: RestFormProps<D, F>['translator'] &
+      ScrollListProps<D, F>['translator'];
+    fields?: RestFormProps<D, F>['fields'];
+    labelKey: keyof D;
+    valueKey: keyof D;
+    renderList?: ScrollListProps<D, F>['renderList'];
+    type?: (typeof TextInputTypes)[number];
+    multiple?: boolean;
+  };
 
 @observer
 @observePropsState
 export class SearchableInput<
   D extends DataObject,
   F extends Filter<D> = Filter<D>,
-> extends Component<SearchableInputProps<D, F>> {
+> extends FormComponent<SearchableInputProps<D, F>> {
   static readonly displayName = 'SearchableInput';
-
-  declare observedProps: SearchableInputProps<D, F>;
 
   @observable
   accessor filter = {} as F;
 
   @observable
-  accessor innerValue = this.props.defaultValue || [];
-
-  @computed
-  get selectedOptions() {
-    return this.observedProps.value || this.innerValue;
-  }
-
-  @observable
   accessor listShown = false;
-
-  componentWillUnmount =
-    this.props.onChange &&
-    reaction(
-      () => this.innerValue,
-      value => this.props.onChange(toJS(value)),
-    );
 
   search = debounce(async (value: string) => {
     const { store, labelKey } = this.props;
@@ -89,7 +77,7 @@ export class SearchableInput<
   }, Second);
 
   add = (label: string, value: string) => {
-    const { selectedOptions } = this;
+    const selectedOptions = this.value || [];
 
     if (selectedOptions.find(({ value: v }) => v === value)) return;
 
@@ -99,37 +87,40 @@ export class SearchableInput<
   };
 
   delete = (value: string) =>
-    (this.innerValue = this.selectedOptions.filter(
-      option => option.value !== value,
-    ));
+    (this.innerValue = this.value.filter(option => option.value !== value));
 
   handleBlur = ({ target, relatedTarget }: FocusEvent<HTMLElement>) => {
     if (target.parentElement !== relatedTarget?.parentElement)
       this.listShown = false;
   };
 
-  renderList: ScrollListProps<D, F>['renderList'] = allItems => (
-    <ListGroup>
-      {allItems.map(data => {
-        const { labelKey, valueKey } = this.observedProps;
+  renderList: ScrollListProps<D, F>['renderList'] = allItems =>
+    allItems[0] ? (
+      <ListGroup>
+        {allItems.map(data => {
+          const { labelKey, valueKey } = this.observedProps;
 
-        const label = data[labelKey],
-          value = data[valueKey];
+          const label = data[labelKey],
+            value = data[valueKey];
 
-        return (
-          <ListGroup.Item
-            key={value}
-            as="button"
-            type="button"
-            action
-            onClick={() => this.add(label, value)}
-          >
-            {label}
-          </ListGroup.Item>
-        );
-      })}
-    </ListGroup>
-  );
+          return (
+            <ListGroup.Item
+              key={value}
+              as="button"
+              type="button"
+              action
+              onClick={() => this.add(label, value)}
+            >
+              {label}
+            </ListGroup.Item>
+          );
+        })}
+      </ListGroup>
+    ) : (
+      <div className="text-center my-3">
+        <Spinner />
+      </div>
+    );
 
   renderOverlay() {
     const { filter } = this;
@@ -170,7 +161,7 @@ export class SearchableInput<
   }
 
   render() {
-    const { selectedOptions, listShown } = this,
+    const { value, listShown } = this,
       {
         translator,
         fields,
@@ -185,7 +176,7 @@ export class SearchableInput<
     return (
       <InputGroup className="position-relative">
         <InputGroup.Text className="d-flex flex-wrap align-items-center gap-2">
-          {selectedOptions.map(({ value, label }) => (
+          {value?.map(({ value, label }) => (
             <Badge
               key={value}
               className="d-inline-flex align-items-center gap-1"
@@ -206,7 +197,7 @@ export class SearchableInput<
         <input
           type="hidden"
           name={name}
-          value={JSON.stringify(selectedOptions.map(({ value }) => value))}
+          value={JSON.stringify(value?.map(({ value }) => value))}
         />
         <Form.Control
           {...{ type, placeholder, required }}

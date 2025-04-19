@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   FormComponent,
@@ -63,7 +63,7 @@ export abstract class FileModel extends BaseModel {
   }
 }
 
-export interface FileUploaderProps extends FormComponentProps {
+export interface FileUploaderProps extends FormComponentProps<string[]> {
   store: FileModel;
 }
 
@@ -75,29 +75,26 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
   @observable
   accessor pickIndex: number | undefined;
 
+  #disposer?: IReactionDisposer;
+
   componentDidMount() {
     super.componentDidMount();
 
-    const { defaultValue, store } = this.props;
+    const { store } = this.props;
 
-    store.files =
-      defaultValue instanceof Array
-        ? (defaultValue as string[])
-        : defaultValue
-          ? [defaultValue as string]
-          : [];
+    store.files = this.value || [];
+
+    this.#disposer = reaction(
+      () => store.files,
+      value => (this.innerValue = value),
+    );
   }
 
-  componentDidUpdate(prevProps: Readonly<FileUploaderProps>) {
-    const { value, store } = this.props;
+  componentWillUnmount() {
+    super.componentWillUnmount();
 
-    if (prevProps.value !== value)
-      store.files =
-        value instanceof Array
-          ? (value as string[])
-          : value
-            ? [value as string]
-            : [];
+    this.#disposer?.();
+    this.#disposer = undefined;
   }
 
   handleDrop = (index: number) => (event: DragEvent<HTMLElement>) => {
@@ -110,13 +107,11 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
 
   handleChange =
     (oldURI = '') =>
-    async (URI: string, file?: File) => {
-      const { store, onChange } = this.props;
+    async (URI: string) => {
+      const { store } = this.props;
 
       if (oldURI) await store.delete(oldURI);
-      if (file) await store.upload(file);
-
-      onChange?.([...store.files]);
+      if (URI) await store.upload(URI);
     };
 
   render() {

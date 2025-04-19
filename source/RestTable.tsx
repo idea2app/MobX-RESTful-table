@@ -22,7 +22,7 @@ export interface Column<T extends DataObject>
 }
 
 export interface RestTableProps<T extends DataObject>
-  extends TableProps,
+  extends Omit<TableProps, 'onSubmit'>,
     Omit<RestFormProps<T>, 'id' | 'fields' | 'translator'> {
   editable?: boolean;
   deletable?: boolean;
@@ -207,6 +207,7 @@ export class RestTable<T extends DataObject> extends Component<
         editable,
         deletable,
         onCheck,
+        onSubmit,
         responsive = true,
         ...tableProps
       } = this.props,
@@ -288,8 +289,15 @@ export class RestTable<T extends DataObject> extends Component<
   }
 
   render() {
-    const { className, editable, deletable, store, translator, uploader } =
-      this.props;
+    const {
+      className,
+      editable,
+      deletable,
+      store,
+      translator,
+      uploader,
+      onSubmit,
+    } = this.props;
     const { indexKey, pageSize, pageIndex, pageCount, totalCount } = store,
       { t } = translator;
 
@@ -335,7 +343,7 @@ export class RestTable<T extends DataObject> extends Component<
               ...field,
               renderLabel: renderHead,
             }))}
-            {...{ store, translator, uploader }}
+            {...{ store, translator, uploader, onSubmit }}
           />
         )}
       </div>

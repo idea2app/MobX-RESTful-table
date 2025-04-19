@@ -1,7 +1,10 @@
-import { computed, observable, reaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import { observePropsState } from 'mobx-react-helper';
-import { Component, InputHTMLAttributes, KeyboardEvent } from 'react';
+import {
+  FormComponent,
+  FormComponentProps,
+  observePropsState,
+} from 'mobx-react-helper';
+import { KeyboardEvent } from 'react';
 import { Badge, CloseButton } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
@@ -13,61 +16,35 @@ export const TextInputTypes = [
   'url',
 ] as const;
 
-export interface BaseInputProps<V>
-  extends Pick<
-    InputHTMLAttributes<HTMLInputElement>,
-    'className' | 'style' | 'name' | 'required' | 'placeholder'
-  > {
-  defaultValue?: V;
-  value?: V;
-  onChange?: (value: V) => any;
-}
-
-export interface BadgeInputProps extends BaseInputProps<string[]> {
+export interface BadgeInputProps extends FormComponentProps<string[]> {
   type?: (typeof TextInputTypes)[number];
 }
 
 @observer
 @observePropsState
-export class BadgeInput extends Component<BadgeInputProps> {
+export class BadgeInput extends FormComponent<BadgeInputProps> {
   static readonly displayName = 'BadgeInput';
 
   static match(type: string): type is BadgeInputProps['type'] {
     return TextInputTypes.includes(type as BadgeInputProps['type']);
   }
 
-  @observable
-  accessor innerValue = this.props.defaultValue || [];
-
-  declare observedProps: BadgeInputProps;
-
-  @computed
-  get value() {
-    return this.observedProps.value || this.innerValue;
-  }
-
-  componentWillUnmount =
-    this.props.onChange &&
-    reaction(
-      () => this.innerValue,
-      value => this.props.onChange(toJS(value)),
-    );
-
   handleInput = (event: KeyboardEvent<HTMLInputElement>) => {
     const input = event.currentTarget;
-    const { value } = input;
+    const { value } = input,
+      innerValue = this.innerValue || [];
 
     switch (event.key) {
       case 'Enter': {
         event.preventDefault();
         input.value = '';
 
-        if (value) this.innerValue = [...this.innerValue, value];
+        if (value) this.innerValue = [...innerValue, value];
 
         break;
       }
       case 'Backspace': {
-        if (!value) this.innerValue = this.innerValue.slice(0, -1);
+        if (!value) this.innerValue = innerValue.slice(0, -1);
       }
     }
   };
@@ -90,7 +67,7 @@ export class BadgeInput extends Component<BadgeInputProps> {
         className={`form-control p-2 d-flex flex-wrap gap-2 ${className}`}
         style={style}
       >
-        {value.map((item, index) => (
+        {value?.map((item, index) => (
           <Badge
             key={item}
             className="d-flex align-items-center gap-2"

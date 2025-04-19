@@ -1,7 +1,7 @@
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
-import { FormEvent, InputHTMLAttributes, Component, ReactNode } from 'react';
+import { Component, FormEvent, InputHTMLAttributes, ReactNode } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { formToJSON } from 'web-utility';
 
@@ -38,6 +38,7 @@ export interface RestFormProps<
   store: ListModel<D, F>;
   translator: TranslationModel<string, 'submit' | 'cancel'>;
   uploader?: FileModel;
+  onSubmit?: (data: D) => any;
 }
 
 @observer
@@ -56,9 +57,11 @@ export class RestForm<
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { id, store } = this.props;
+    const { id, store, onSubmit } = this.props;
 
-    await store.updateOne(formToJSON(event.currentTarget), id);
+    const updated = await store.updateOne(formToJSON(event.currentTarget), id);
+
+    onSubmit?.(updated);
 
     store.clearCurrent();
   };
