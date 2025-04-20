@@ -1,12 +1,12 @@
-import { computed, observable } from 'mobx';
+import { computed, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   FormComponent,
   FormComponentProps,
   observePropsState,
 } from 'mobx-react-helper';
-import { ChangeEvent, MouseEvent } from 'react';
 import { CloseButton } from 'react-bootstrap';
+import { blobOf } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
 
@@ -30,24 +30,45 @@ export class FilePicker extends FormComponent<FilePickerProps> {
     return file?.type || file?.name.match(/\.\w+$/)?.[0] || accept;
   }
 
-  handleAdd = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = (event.currentTarget as HTMLInputElement).files?.[0];
+  #disposer?: IReactionDisposer;
 
-    this.innerValue = (this.file = file) ? URL.createObjectURL(file) : '';
+  #restoreFile = async (URI = '') => {
+    if (URI)
+      try {
+        const blob = await blobOf(URI),
+          name = URI.split('/').at(-1);
 
-    this.props.onChange?.(this.innerValue, file);
+        return (this.file = new File([blob], name, { type: blob.type }));
+      } catch {}
+
+    return (this.file = undefined);
   };
 
-  handleClear = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  #handleURI = (file?: File) => {
+    this.file = file;
 
-    if (this.innerValue) {
-      URL.revokeObjectURL(this.innerValue + '');
+    if (file) this.innerValue = URL.createObjectURL(file);
+    else if (this.value) {
+      URL.revokeObjectURL(this.innerValue);
 
       this.innerValue = '';
     }
-    this.props.onChange?.(this.innerValue);
   };
+
+  componentDidMount() {
+    super.componentDidMount();
+
+    this.#restoreFile(this.value);
+
+    this.#disposer = reaction(() => this.value, this.#restoreFile);
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+
+    this.#disposer?.();
+    this.#disposer = undefined;
+  }
 
   renderInput() {
     const { id, name, value, required, disabled, accept, multiple } =
@@ -62,7 +83,9 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           name={value ? undefined : name}
           required={!value && required}
           {...{ id, disabled, accept, multiple }}
-          onChange={this.handleAdd}
+          onChange={({ currentTarget: { files } }) =>
+            this.#handleURI(files?.[0])
+          }
         />
         {value && <input type="hidden" name={name} value={value} />}
       </>
@@ -94,7 +117,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           <CloseButton
             className="position-absolute top-0 end-0"
             style={{ width: '0.5rem', height: '0.5rem' }}
-            onClick={this.handleClear}
+            onClick={() => this.#handleURI()}
           />
         )}
       </div>

@@ -8,6 +8,9 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 
 [![NPM](https://nodei.co/npm/mobx-restful-table.png?downloads=true&downloadRank=true&stars=true)][7]
 
+- API document: https://idea2app.github.io/MobX-RESTful-table/
+- Preview site: https://idea2app.github.io/MobX-RESTful-table/preview/
+
 ## Versions
 
 | SemVer |    status    | ES decorator |    MobX     |
@@ -29,6 +32,7 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 10. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
 11. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
 12. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
+13. [Searchable Input](https://idea2app.github.io/MobX-RESTful-table/classes/SearchableInput.html)
 
 ## Installation
 

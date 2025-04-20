@@ -4,7 +4,7 @@ import {
   FormComponentProps,
   observePropsState,
 } from 'mobx-react-helper';
-import { ChangeEvent, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 export interface RangeInputProps extends Omit<FormComponentProps, 'type'> {
   icon?: ReactNode | ((itemValue: number) => ReactNode);
@@ -13,19 +13,11 @@ export interface RangeInputProps extends Omit<FormComponentProps, 'type'> {
 @observer
 @observePropsState
 export class RangeInput extends FormComponent<RangeInputProps> {
-  declare observedProps: RangeInputProps;
-
-  handleChange = ({
-    currentTarget: { value },
-  }: ChangeEvent<HTMLInputElement>) => {
-    this.innerValue = value;
-
-    this.props.onChange?.(value);
-  };
+  static readonly displayName = 'RangeInput';
 
   renderItem(index: number) {
-    const { value } = this,
-      { icon, step } = this.observedProps;
+    const { value = 0 } = this,
+      { icon, step = 1 } = this.observedProps;
     const fullValue = +step * index;
     const itemValue = Math.max(Math.min(+value - fullValue, +step), 0);
 
@@ -54,7 +46,7 @@ export class RangeInput extends FormComponent<RangeInputProps> {
           className={icon ? 'opacity-0' : ''}
           style={{ margin: '0 -0.5rem', cursor: 'pointer' }}
           type="range"
-          onChange={this.handleChange}
+          onChange={({ currentTarget: { value } }) => (this.innerValue = value)}
         />
         <ol className="list-unstyled user-select-none position-absolute start-0 top-0 w-100 h-100 pe-none d-flex justify-content-around">
           {Array.from({ length: +max }, (_, index) => this.renderItem(index))}

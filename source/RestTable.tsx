@@ -6,19 +6,13 @@ import { observer } from 'mobx-react';
 import { observePropsState } from 'mobx-react-helper';
 import { DataObject, IDType } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
-import {
-  Button,
-  Form,
-  Modal,
-  Spinner,
-  Table,
-  TableProps,
-} from 'react-bootstrap';
+import { Button, Form, Spinner, Table, TableProps } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
 import { Pager } from './Pager';
-import { Field, RestForm, RestFormProps } from './RestForm';
+import { Field, RestFormProps } from './RestForm';
+import { RestFormModal } from './RestFormModal';
 
 export interface Column<T extends DataObject>
   extends Omit<Field<T>, 'renderLabel'> {
@@ -28,7 +22,7 @@ export interface Column<T extends DataObject>
 }
 
 export interface RestTableProps<T extends DataObject>
-  extends TableProps,
+  extends Omit<TableProps, 'onSubmit'>,
     Omit<RestFormProps<T>, 'id' | 'fields' | 'translator'> {
   editable?: boolean;
   deletable?: boolean;
@@ -46,7 +40,7 @@ export interface RestTableProps<T extends DataObject>
 export class RestTable<T extends DataObject> extends Component<
   RestTableProps<T>
 > {
-  static displayName = 'RestTable';
+  static readonly displayName = 'RestTable';
 
   componentDidMount() {
     const { store } = this.props;
@@ -99,11 +93,11 @@ export class RestTable<T extends DataObject> extends Component<
             currentPage.every(({ [indexKey]: ID }) => checkedKeys.includes(ID))
           }
           // https://github.com/facebook/react/issues/1798
-          ref={(input: HTMLInputElement | null) =>
-            input &&
-            (input.indeterminate =
-              !!checkedKeys.length && checkedKeys.length < currentPage.length)
-          }
+          ref={(input: HTMLInputElement | null) => {
+            if (input)
+              input.indeterminate =
+                !!checkedKeys.length && checkedKeys.length < currentPage.length;
+          }}
           onClick={toggleCheckAll}
           onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
         />
@@ -213,6 +207,7 @@ export class RestTable<T extends DataObject> extends Component<
         editable,
         deletable,
         onCheck,
+        onSubmit,
         responsive = true,
         ...tableProps
       } = this.props,
@@ -280,31 +275,6 @@ export class RestTable<T extends DataObject> extends Component<
     );
   }
 
-  renderDialog() {
-    const { columns, store, translator, uploader } = this.props,
-      { editing } = this;
-    const { indexKey, currentOne } = store;
-
-    const ID = currentOne[indexKey];
-
-    return (
-      <Modal show={editing} onHide={() => store.clearCurrent()}>
-        <Modal.Header closeButton>{ID}</Modal.Header>
-
-        <Modal.Body>
-          <RestForm
-            id={ID}
-            fields={columns.map(({ renderHead, ...field }) => ({
-              ...field,
-              renderLabel: renderHead,
-            }))}
-            {...{ store, translator, uploader }}
-          />
-        </Modal.Body>
-      </Modal>
-    );
-  }
-
   getList = debounce(({ pageIndex, pageSize }) => {
     const { store } = this.props;
 
@@ -319,7 +289,15 @@ export class RestTable<T extends DataObject> extends Component<
   }
 
   render() {
-    const { className, editable, deletable, store, translator } = this.props;
+    const {
+      className,
+      editable,
+      deletable,
+      store,
+      translator,
+      uploader,
+      onSubmit,
+    } = this.props;
     const { indexKey, pageSize, pageIndex, pageCount, totalCount } = store,
       { t } = translator;
 
@@ -359,7 +337,15 @@ export class RestTable<T extends DataObject> extends Component<
 
         {this.renderTable()}
 
-        {editable && this.renderDialog()}
+        {editable && (
+          <RestFormModal
+            fields={this.columns.map(({ renderHead, ...field }) => ({
+              ...field,
+              renderLabel: renderHead,
+            }))}
+            {...{ store, translator, uploader, onSubmit }}
+          />
+        )}
       </div>
     );
   }

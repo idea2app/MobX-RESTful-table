@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   FormComponent,
@@ -63,58 +63,61 @@ export abstract class FileModel extends BaseModel {
   }
 }
 
-export interface FileUploaderProps extends FormComponentProps {
+export interface FileUploaderProps extends FormComponentProps<string[]> {
   store: FileModel;
 }
 
 @observer
 @observePropsState
 export class FileUploader extends FormComponent<FileUploaderProps> {
+  static readonly displayName = 'FileUploader';
+
   @observable
   accessor pickIndex: number | undefined;
+
+  #disposer?: IReactionDisposer;
 
   componentDidMount() {
     super.componentDidMount();
 
-    const { defaultValue, store } = this.props;
+    const { store } = this.props;
 
-    store.files =
-      defaultValue instanceof Array
-        ? (defaultValue as string[])
-        : defaultValue
-          ? [defaultValue as string]
-          : [];
+    store.files = this.value || [];
+
+    this.#disposer = reaction(
+      () => this.value,
+      value => (store.files = value),
+    );
   }
 
-  componentDidUpdate(prevProps: Readonly<FileUploaderProps>) {
-    const { value, store } = this.props;
+  componentWillUnmount() {
+    super.componentWillUnmount();
 
-    if (prevProps.value !== value)
-      store.files =
-        value instanceof Array
-          ? (value as string[])
-          : value
-            ? [value as string]
-            : [];
+    this.#disposer?.();
+    this.#disposer = undefined;
   }
 
   handleDrop = (index: number) => (event: DragEvent<HTMLElement>) => {
     event.preventDefault();
 
-    const { pickIndex } = this;
+    const { props, pickIndex } = this;
 
-    if (pickIndex != null) return this.props.store.move(pickIndex, index);
+    if (!(pickIndex != null)) return;
+
+    props.store.move(pickIndex, index);
+
+    this.innerValue = props.store.files;
   };
 
   handleChange =
     (oldURI = '') =>
-    async (URI: string, file?: File) => {
-      const { store, onChange } = this.props;
+    async (URI: string) => {
+      const { store } = this.props;
 
       if (oldURI) await store.delete(oldURI);
-      if (file) await store.upload(file);
+      if (URI) await store.upload(URI);
 
-      onChange?.([...store.files]);
+      this.innerValue = store.files;
     };
 
   render() {
@@ -123,13 +126,13 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
       style,
       multiple,
       store,
-      value,
+      value: _,
       defaultValue,
       onChange,
       ...props
     } = this.props;
 
-    const { files } = store;
+    const { value } = this;
 
     return (
       <ol
@@ -137,7 +140,7 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
         style={style}
         onDragOver={event => event.preventDefault()}
       >
-        {files.map((file, index) => (
+        {value?.map((file, index) => (
           <li
             key={file}
             className="list-inline-item"
@@ -152,13 +155,13 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
             />
           </li>
         ))}
-        {(multiple || !files[0]) && (
+        {(multiple || !value?.[0]) && (
           <li className="list-inline-item">
             <FilePicker
               {...props}
               name={undefined}
               value=""
-              required={!store.files[0] && props.required}
+              required={!value?.[0] && props.required}
               onChange={this.handleChange()}
             />
           </li>

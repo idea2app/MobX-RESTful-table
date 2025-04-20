@@ -13,7 +13,7 @@ import {
 export interface ScrollListProps<
   D extends DataObject,
   F extends Filter<D> = Filter<D>,
-> extends Pick<ScrollBoundaryProps, 'className'> {
+> extends Omit<ScrollBoundaryProps, 'onTouch'> {
   translator: TranslationModel<string, 'load_more' | 'no_more'>;
   store: ListModel<D, F>;
   filter?: F;
@@ -26,6 +26,8 @@ export class ScrollList<
   D extends DataObject = DataObject,
   F extends Filter<D> = Filter<D>,
 > extends Component<ScrollListProps<D, F>> {
+  static readonly displayName = 'ScrollList';
+
   async componentDidMount() {
     const BaseStream = Stream<DataObject>,
       { filter, defaultData } = this.props;
@@ -35,7 +37,7 @@ export class ScrollList<
     >;
     await when(() => store.downloading < 1);
 
-    store.clear();
+    store.clearList();
 
     if (defaultData) await store.restoreList({ allItems: defaultData, filter });
 
@@ -43,7 +45,7 @@ export class ScrollList<
   }
 
   componentWillUnmount() {
-    this.props.store.clear();
+    this.props.store.clearList();
   }
 
   loadMore = debounce((edge: EdgePosition) => {
@@ -54,16 +56,16 @@ export class ScrollList<
   });
 
   render() {
-    const { className, translator, store, renderList } = this.props;
+    const { translator, store, renderList, ...props } = this.props;
     const { t } = translator,
       { noMore, allItems } = store;
 
     return (
-      <ScrollBoundary className={className} onTouch={this.loadMore}>
+      <ScrollBoundary {...props} onTouch={this.loadMore}>
         <div>
           {renderList(allItems)}
 
-          <footer className="mt-4 text-center text-muted small">
+          <footer className="mt-2 text-center text-muted small">
             {noMore || !allItems.length ? t('no_more') : t('load_more')}
           </footer>
         </div>
