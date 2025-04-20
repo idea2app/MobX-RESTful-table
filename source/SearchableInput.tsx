@@ -117,9 +117,11 @@ export class SearchableInput<
         })}
       </ListGroup>
     ) : (
-      <div className="text-center my-3">
-        <Spinner />
-      </div>
+      this.props.store.downloading > 0 && (
+        <div className="text-center my-3">
+          <Spinner />
+        </div>
+      )
     );
 
   renderOverlay() {
@@ -167,6 +169,8 @@ export class SearchableInput<
         fields,
         store,
         uploader,
+        labelKey,
+        valueKey,
         type = 'search',
         name,
         required,
@@ -192,7 +196,13 @@ export class SearchableInput<
         {listShown && this.renderOverlay()}
 
         {fields && (
-          <RestFormModal {...{ translator, fields, store, uploader }} />
+          <RestFormModal
+            {...{ translator, fields, store, uploader }}
+            onSubmit={({ [labelKey]: label, [valueKey]: value }) => {
+              this.add(label, value);
+              this.listShown = false;
+            }}
+          />
         )}
         <input
           type="hidden"

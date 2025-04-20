@@ -2,7 +2,7 @@ import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import { Component, FormEvent, InputHTMLAttributes, ReactNode } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, FormProps } from 'react-bootstrap';
 import { formToJSON } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
@@ -32,7 +32,7 @@ export interface Field<T extends DataObject>
 export interface RestFormProps<
   D extends DataObject,
   F extends Filter<D> = Filter<D>,
-> {
+> extends Pick<FormProps, 'className' | 'style'> {
   id?: IDType;
   fields: Field<D>[];
   store: ListModel<D, F>;
@@ -56,6 +56,7 @@ export class RestForm<
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    event.stopPropagation();
 
     const { id, store, onSubmit } = this.props;
 
@@ -118,7 +119,6 @@ export class RestForm<
       (key && (
         <FormField
           {...props}
-          className="mb-3"
           key={key.toString()}
           label={label}
           name={key.toString()}
@@ -130,13 +130,18 @@ export class RestForm<
 
   render() {
     const { fields } = this,
-      { store, translator } = this.props;
+      { id, className = '', store, translator, ...props } = this.props;
     const { downloading, uploading } = store,
       { t } = translator;
     const loading = downloading > 0 || uploading > 0;
 
     return (
-      <Form onSubmit={this.handleSubmit} onReset={() => store.clearCurrent()}>
+      <Form
+        className={`d-flex flex-column gap-3 ${className}`}
+        {...props}
+        onSubmit={this.handleSubmit}
+        onReset={() => store.clearCurrent()}
+      >
         {fields.map(this.renderInput)}
 
         <footer className="d-flex gap-3">

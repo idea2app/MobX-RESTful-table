@@ -34,7 +34,9 @@ export const Pager: FC<PagerProps> = ({
   return (
     <form
       className="m-0 d-flex align-items-center gap-2"
-      onSubmit={onChange && (event => event.preventDefault())}
+      onSubmit={
+        onChange && (event => (event.preventDefault(), event.stopPropagation()))
+      }
     >
       <Form.Control
         type="number"
