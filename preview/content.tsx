@@ -118,6 +118,8 @@ export const Content: FC = () => (
         <FileUploader
           accept="image/*"
           store={new MyFileModel()}
+          multiple
+          defaultValue={['https://web-cell.dev/WebCell-0.f9823b00.png']}
           onChange={console.log}
         />
       </CodeExample>

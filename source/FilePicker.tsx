@@ -6,6 +6,7 @@ import {
   observePropsState,
 } from 'mobx-react-helper';
 import { CloseButton } from 'react-bootstrap';
+import { blobOf } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
 
@@ -31,9 +32,23 @@ export class FilePicker extends FormComponent<FilePickerProps> {
 
   #disposer?: IReactionDisposer;
 
-  #handleURI = (file: File) => {
+  #restoreFile = async (URI = '') => {
+    if (URI)
+      try {
+        const blob = await blobOf(URI),
+          name = URI.split('/').at(-1);
+
+        return (this.file = new File([blob], name, { type: blob.type }));
+      } catch {}
+
+    return (this.file = undefined);
+  };
+
+  #handleURI = (file?: File) => {
+    this.file = file;
+
     if (file) this.innerValue = URL.createObjectURL(file);
-    else if (this.innerValue) {
+    else if (this.value) {
       URL.revokeObjectURL(this.innerValue);
 
       this.innerValue = '';
@@ -43,7 +58,9 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   componentDidMount() {
     super.componentDidMount();
 
-    this.#disposer = reaction(() => this.file, this.#handleURI);
+    this.#restoreFile(this.value);
+
+    this.#disposer = reaction(() => this.value, this.#restoreFile);
   }
 
   componentWillUnmount() {
@@ -66,8 +83,8 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           name={value ? undefined : name}
           required={!value && required}
           {...{ id, disabled, accept, multiple }}
-          onChange={({ currentTarget }) =>
-            (this.file = currentTarget.files?.[0])
+          onChange={({ currentTarget: { files } }) =>
+            this.#handleURI(files?.[0])
           }
         />
         {value && <input type="hidden" name={name} value={value} />}
@@ -100,7 +117,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           <CloseButton
             className="position-absolute top-0 end-0"
             style={{ width: '0.5rem', height: '0.5rem' }}
-            onClick={() => (this.file = undefined)}
+            onClick={() => this.#handleURI()}
           />
         )}
       </div>

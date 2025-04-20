@@ -140,7 +140,7 @@ export class SearchableInput<
 
     return (
       <div
-        className="position-absolute start-0 z-1 bg-white overflow-auto py-1"
+        className="position-absolute start-0 z-3 overflow-auto py-1 bg-white shadow-sm"
         style={{ top: '100%', maxHeight: '30vh' }}
         onBlurCapture={this.handleBlur}
       >

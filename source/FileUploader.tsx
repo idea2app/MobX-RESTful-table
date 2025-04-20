@@ -85,8 +85,8 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
     store.files = this.value || [];
 
     this.#disposer = reaction(
-      () => store.files,
-      value => (this.innerValue = value),
+      () => this.value,
+      value => (store.files = value),
     );
   }
 
@@ -100,9 +100,13 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
   handleDrop = (index: number) => (event: DragEvent<HTMLElement>) => {
     event.preventDefault();
 
-    const { pickIndex } = this;
+    const { props, pickIndex } = this;
 
-    if (pickIndex != null) return this.props.store.move(pickIndex, index);
+    if (!(pickIndex != null)) return;
+
+    props.store.move(pickIndex, index);
+
+    this.innerValue = props.store.files;
   };
 
   handleChange =
@@ -112,6 +116,8 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
 
       if (oldURI) await store.delete(oldURI);
       if (URI) await store.upload(URI);
+
+      this.innerValue = store.files;
     };
 
   render() {
@@ -120,13 +126,13 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
       style,
       multiple,
       store,
-      value,
+      value: _,
       defaultValue,
       onChange,
       ...props
     } = this.props;
 
-    const { files } = store;
+    const { value } = this;
 
     return (
       <ol
@@ -134,7 +140,7 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
         style={style}
         onDragOver={event => event.preventDefault()}
       >
-        {files.map((file, index) => (
+        {value?.map((file, index) => (
           <li
             key={file}
             className="list-inline-item"
@@ -149,13 +155,13 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
             />
           </li>
         ))}
-        {(multiple || !files[0]) && (
+        {(multiple || !value?.[0]) && (
           <li className="list-inline-item">
             <FilePicker
               {...props}
               name={undefined}
               value=""
-              required={!store.files[0] && props.required}
+              required={!value?.[0] && props.required}
               onChange={this.handleChange()}
             />
           </li>
