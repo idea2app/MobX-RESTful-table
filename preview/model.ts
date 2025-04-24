@@ -1,8 +1,7 @@
 import { components, operations } from '@octokit/openapi-types';
-import { HTTPClient } from 'koajax';
+import { githubClient, RepositoryModel } from 'mobx-github';
 import { TranslationModel } from 'mobx-i18n';
 import { Filter, IDType, ListModel } from 'mobx-restful';
-import { githubClient, RepositoryModel } from 'mobx-github';
 import { buildURLData } from 'web-utility';
 
 export const i18n = new TranslationModel({

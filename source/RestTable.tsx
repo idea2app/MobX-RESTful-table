@@ -289,15 +289,8 @@ export class RestTable<T extends DataObject> extends Component<
   }
 
   render() {
-    const {
-      className,
-      editable,
-      deletable,
-      store,
-      translator,
-      uploader,
-      onSubmit,
-    } = this.props;
+    const { className, editable, deletable, store, translator, onSubmit } =
+      this.props;
     const { indexKey, pageSize, pageIndex, pageCount, totalCount } = store,
       { t } = translator;
 
@@ -343,7 +336,7 @@ export class RestTable<T extends DataObject> extends Component<
               ...field,
               renderLabel: renderHead,
             }))}
-            {...{ store, translator, uploader, onSubmit }}
+            {...{ store, translator, onSubmit }}
           />
         )}
       </div>
