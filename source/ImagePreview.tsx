@@ -59,7 +59,7 @@ export class ImagePreview extends Component<ImageProps> {
       } = this.props;
 
     return (
-      <figure
+      <div
         className={classNames(
           'm-0',
           downloading && 'd-flex justify-content-center align-items-center',
@@ -80,11 +80,12 @@ export class ImagePreview extends Component<ImageProps> {
           )
         )}
         <Modal centered show={viewing} onHide={() => (this.viewing = false)}>
+          <Modal.Header>{loadedPath}</Modal.Header>
           <Modal.Body>
             <Image fluid src={loadedPath} />
           </Modal.Body>
         </Modal>
-      </figure>
+      </div>
     );
   }
 }

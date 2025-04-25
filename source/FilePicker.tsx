@@ -121,12 +121,12 @@ export class FilePicker extends FormComponent<FilePickerProps> {
 
     return (
       <div
-        className={`d-inline-block border rounded overflow-hidden position-relative ${className}`}
+        className={`d-inline-block border rounded position-relative ${className}`}
         style={{ width: '10rem', height: '10rem', ...style }}
       >
         {filePath ? (
           <FilePreview
-            className="w-100 h-100 object-fit-contain"
+            className="w-100 h-100"
             type={fileType}
             path={filePath}
           />

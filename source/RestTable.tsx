@@ -118,10 +118,11 @@ export class RestTable<T extends DataObject> extends Component<
 
   @computed
   get operateColumn(): Column<T> {
-    const { editable, deletable, store, translator } = this.observedProps;
+    const { editable, deletable, columns, store, translator } =
+      this.observedProps;
     const { t } = translator,
-      readOnly = this.columns.every(({ readOnly }) => readOnly),
-      disabled = this.columns.every(({ disabled }) => disabled);
+      readOnly = columns.every(({ readOnly }) => readOnly),
+      disabled = columns.every(({ disabled }) => disabled);
 
     return {
       renderHead: () => <></>,

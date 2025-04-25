@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "2.2.0-rc.0",
+  "version": "2.2.0",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A Pagination Table & Scroll List component suite for CRUD operation, which is based on MobX RESTful & React.",
@@ -47,7 +47,7 @@
     "@parcel/transformer-typescript-tsc": "~2.14.4",
     "@parcel/transformer-typescript-types": "~2.14.4",
     "@types/lodash": "^4.17.16",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "husky": "^9.1.7",
@@ -61,7 +61,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "rimraf": "^6.0.1",
-    "typedoc": "^0.28.2",
+    "typedoc": "^0.28.3",
     "typedoc-plugin-mdn-links": "^5.0.1",
     "typescript": "~5.8.3"
   },

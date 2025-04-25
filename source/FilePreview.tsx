@@ -23,7 +23,7 @@ export const FileTypeMap = {
 };
 
 export const FilePreview: FC<FilePreviewProps> = ({
-  className,
+  className = '',
   style,
   hidden,
   type,
@@ -31,15 +31,26 @@ export const FilePreview: FC<FilePreviewProps> = ({
   ...props
 }) => {
   const [category, ...kind] = type?.split(/\W+/) || [],
-    fileName = new URL(path, 'http://localhost').pathname.split('/').at(-1);
+    fileName = decodeURIComponent(
+      new URL(path, 'http://localhost').pathname.split('/').at(-1),
+    );
   const extension =
     FileTypeMap[kind.at(-1)] ||
     (fileName?.includes('.') ? fileName.split('.').at(-1) : kind.at(-1));
 
   return (
-    <figure {...{ className, style, hidden }}>
+    <figure
+      className={`d-flex flex-column align-items-center justify-content-center m-0 ${className}`}
+      {...{ style, hidden }}
+    >
       {category === 'image' ? (
-        <ImagePreview fluid loading="lazy" src={path} {...props} />
+        <ImagePreview
+          className="h-100"
+          fluid
+          loading="lazy"
+          src={path}
+          {...props}
+        />
       ) : category === 'audio' ? (
         <audio controls src={path} {...props} />
       ) : category === 'video' ? (
@@ -51,16 +62,20 @@ export const FilePreview: FC<FilePreviewProps> = ({
           {...props}
         />
       ) : (
-        <a
-          className="d-inline-flex justify-content-center align-items-center"
-          download={fileName}
-          href={path}
-          {...props}
-        >
-          <i className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`} />
-        </a>
+        <>
+          <a
+            className="d-inline-flex justify-content-center align-items-center"
+            download={fileName}
+            href={path}
+            {...props}
+          >
+            <i
+              className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`}
+            />
+          </a>
+          <figcaption className="text-truncate">{fileName}</figcaption>
+        </>
       )}
-      <figcaption>{fileName}</figcaption>
     </figure>
   );
 };
