@@ -24,44 +24,60 @@ export const FileTypeMap = {
 
 export const FilePreview: FC<FilePreviewProps> = ({
   className = '',
+  style,
+  hidden,
   type,
   path,
   ...props
 }) => {
   const [category, ...kind] = type?.split(/\W+/) || [],
-    fileName = new URL(path, 'http://localhost').pathname.split('/').at(-1);
+    fileName = decodeURIComponent(
+      new URL(path, 'http://localhost').pathname.split('/').at(-1),
+    );
   const extension =
     FileTypeMap[kind.at(-1)] ||
     (fileName?.includes('.') ? fileName.split('.').at(-1) : kind.at(-1));
 
-  return category === 'image' ? (
-    <ImagePreview
-      className={className}
-      fluid
-      loading="lazy"
-      src={path}
-      {...props}
-    />
-  ) : category === 'audio' ? (
-    <audio className={className} controls src={path} {...props} />
-  ) : category === 'video' ? (
-    <video
-      className={className}
-      muted
-      src={path}
-      onMouseEnter={({ currentTarget }) => currentTarget.play()}
-      onMouseLeave={({ currentTarget }) => currentTarget.pause()}
-      {...props}
-    />
-  ) : (
-    <a
-      className={`d-inline-flex justify-content-center align-items-center ${className}`}
-      download={fileName}
-      href={path}
-      {...props}
+  return (
+    <figure
+      className={`d-flex flex-column align-items-center justify-content-center m-0 ${className}`}
+      {...{ style, hidden }}
     >
-      {extension ? <i className={`bi bi-filetype-${extension} fs-1`} /> : path}
-    </a>
+      {category === 'image' ? (
+        <ImagePreview
+          className="h-100"
+          fluid
+          loading="lazy"
+          src={path}
+          {...props}
+        />
+      ) : category === 'audio' ? (
+        <audio controls src={path} {...props} />
+      ) : category === 'video' ? (
+        <video
+          muted
+          src={path}
+          onMouseEnter={({ currentTarget }) => currentTarget.play()}
+          onMouseLeave={({ currentTarget }) => currentTarget.pause()}
+          {...props}
+        />
+      ) : (
+        <>
+          <a
+            className="d-inline-flex justify-content-center align-items-center"
+            href={path}
+            target="_blank"
+            download={fileName}
+            {...props}
+          >
+            <i
+              className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`}
+            />
+          </a>
+          <figcaption className="text-truncate">{fileName}</figcaption>
+        </>
+      )}
+    </figure>
   );
 };
 

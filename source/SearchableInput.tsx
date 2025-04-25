@@ -117,7 +117,7 @@ export class SearchableInput<
         })}
       </ListGroup>
     ) : (
-      this.props.store.downloading > 0 && (
+      this.observedProps.store.downloading > 0 && (
         <div className="text-center my-3">
           <Spinner />
         </div>
@@ -168,12 +168,13 @@ export class SearchableInput<
         translator,
         fields,
         store,
-        uploader,
         labelKey,
         valueKey,
         type = 'search',
         name,
         required,
+        readOnly,
+        disabled,
         placeholder,
       } = this.props;
 
@@ -197,7 +198,7 @@ export class SearchableInput<
 
         {fields && (
           <RestFormModal
-            {...{ translator, fields, store, uploader }}
+            {...{ translator, fields, store }}
             onSubmit={({ [labelKey]: label, [valueKey]: value }) => {
               this.add(label, value);
               this.listShown = false;
@@ -210,7 +211,7 @@ export class SearchableInput<
           value={JSON.stringify(value?.map(({ value }) => value))}
         />
         <Form.Control
-          {...{ type, placeholder, required }}
+          {...{ type, placeholder, required, readOnly, disabled }}
           onChange={({ currentTarget: { value } }) => this.search(value)}
         />
       </InputGroup>

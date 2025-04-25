@@ -111,11 +111,11 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
 
   handleChange =
     (oldURI = '') =>
-    async (URI: string) => {
+    async (file: File) => {
       const { store } = this.props;
 
       if (oldURI) await store.delete(oldURI);
-      if (URI) await store.upload(URI);
+      if (file) await store.upload(file);
 
       this.innerValue = store.files;
     };

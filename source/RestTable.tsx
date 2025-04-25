@@ -21,17 +21,18 @@ export interface Column<T extends DataObject>
   renderFoot?: ReactNode | ((data: keyof T) => ReactNode);
 }
 
+type Translator<T extends DataObject> = RestFormProps<T>['translator'] &
+  TranslationModel<
+    string,
+    'create' | 'view' | 'edit' | 'delete' | 'total_x_rows' | 'sure_to_delete_x'
+  >;
 export interface RestTableProps<T extends DataObject>
   extends Omit<TableProps, 'onSubmit'>,
     Omit<RestFormProps<T>, 'id' | 'fields' | 'translator'> {
   editable?: boolean;
   deletable?: boolean;
   columns: Column<T>[];
-  translator: RestFormProps<T>['translator'] &
-    TranslationModel<
-      string,
-      'create' | 'edit' | 'delete' | 'total_x_rows' | 'sure_to_delete_x'
-    >;
+  translator: Translator<T>;
   onCheck?: (keys: IDType[]) => any;
 }
 
@@ -117,22 +118,29 @@ export class RestTable<T extends DataObject> extends Component<
 
   @computed
   get operateColumn(): Column<T> {
-    const { editable, deletable, store, translator } = this.observedProps;
-    const { t } = translator;
+    const { editable, deletable, columns, store, translator } =
+      this.observedProps;
+    const { t } = translator,
+      readOnly = columns.every(({ readOnly }) => readOnly),
+      disabled = columns.every(({ disabled }) => disabled);
 
     return {
       renderHead: () => <></>,
       renderBody: data => (
         <>
-          {editable && (
-            <Button
-              className="text-nowrap m-1"
-              variant="warning"
-              size="sm"
-              onClick={() => (store.currentOne = data)}
-            >
-              {t('edit')}
-            </Button>
+          {disabled ? (
+            <></>
+          ) : (
+            editable && (
+              <Button
+                className="text-nowrap m-1"
+                variant={readOnly ? 'primary' : 'warning'}
+                size="sm"
+                onClick={() => (store.currentOne = data)}
+              >
+                {readOnly ? t('view') : t('edit')}
+              </Button>
+            )
           )}
           {deletable && (
             <Button
@@ -289,15 +297,8 @@ export class RestTable<T extends DataObject> extends Component<
   }
 
   render() {
-    const {
-      className,
-      editable,
-      deletable,
-      store,
-      translator,
-      uploader,
-      onSubmit,
-    } = this.props;
+    const { className, editable, deletable, store, translator, onSubmit } =
+      this.props;
     const { indexKey, pageSize, pageIndex, pageCount, totalCount } = store,
       { t } = translator;
 
@@ -343,7 +344,7 @@ export class RestTable<T extends DataObject> extends Component<
               ...field,
               renderLabel: renderHead,
             }))}
-            {...{ store, translator, uploader, onSubmit }}
+            {...{ store, translator, onSubmit }}
           />
         )}
       </div>
