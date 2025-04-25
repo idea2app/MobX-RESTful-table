@@ -65,8 +65,9 @@ export const FilePreview: FC<FilePreviewProps> = ({
         <>
           <a
             className="d-inline-flex justify-content-center align-items-center"
-            download={fileName}
             href={path}
+            target="_blank"
+            download={fileName}
             {...props}
           >
             <i

@@ -72,7 +72,7 @@ export class ImagePreview extends Component<ImageProps> {
         ) : (
           loadedPath && (
             <Image
-              className="w-100 h-100 object-fit-contain"
+              className="object-fit-contain"
               {...{ loading, fluid, rounded, roundedCircle, thumbnail }}
               src={loadedPath}
               onClick={() => (this.viewing = true)}
@@ -80,10 +80,18 @@ export class ImagePreview extends Component<ImageProps> {
           )
         )}
         <Modal centered show={viewing} onHide={() => (this.viewing = false)}>
-          <Modal.Header>{loadedPath}</Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="text-center">
             <Image fluid src={loadedPath} />
           </Modal.Body>
+          <Modal.Footer
+            className="justify-content-center"
+            as="a"
+            href={loadedPath}
+            target="_blank"
+            download={loadedPath.split('/').pop()}
+          >
+            {loadedPath}
+          </Modal.Footer>
         </Modal>
       </div>
     );

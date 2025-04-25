@@ -8,7 +8,9 @@ import {
   Column,
   FileModel,
   FilePicker,
+  FilePreview,
   FileUploader,
+  ImagePreview,
   RangeInput,
   RestTable,
   SearchableInput,
@@ -97,6 +99,18 @@ export const Content: FC = () => (
           icon={value => (value ? '★' : '☆')}
           onChange={console.log}
         />
+      </CodeExample>
+    </Section>
+
+    <Section title="Image Preview">
+      <CodeExample>
+        <ImagePreview src="https://github.com/idea2app.png" />
+      </CodeExample>
+    </Section>
+
+    <Section title="File Preview">
+      <CodeExample>
+        <FilePreview path="https://idea2app.github.io/MobX-RESTful-table/index.html" />
       </CodeExample>
     </Section>
 
