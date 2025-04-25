@@ -22,6 +22,7 @@ export interface Field<T extends DataObject>
       InputHTMLAttributes<HTMLInputElement>,
       | 'type'
       | 'readOnly'
+      | 'disabled'
       | 'required'
       | 'min'
       | 'minLength'
@@ -93,6 +94,11 @@ export class RestForm<
     }));
   }
 
+  @computed
+  get readOnly() {
+    return this.fields.every(({ readOnly, disabled }) => readOnly || disabled);
+  }
+
   renderFile =
     ({ key, type, readOnly, required, multiple, accept, uploader }: Field<D>) =>
     ({ [key]: path }: D) =>
@@ -129,7 +135,7 @@ export class RestForm<
   };
 
   render() {
-    const { fields } = this,
+    const { fields, readOnly } = this,
       { id, className = '', store, translator, ...props } = this.observedProps;
     const { downloading, uploading, currentOne } = store,
       { t } = translator;
@@ -145,19 +151,21 @@ export class RestForm<
         {fields.map(({ renderInput, ...meta }) =>
           renderInput?.(currentOne, meta),
         )}
-        <footer className="d-flex gap-3">
-          <Button className="flex-fill" type="submit" disabled={loading}>
-            {t('submit')}
-          </Button>
-          <Button
-            className="flex-fill"
-            type="reset"
-            variant="danger"
-            disabled={loading}
-          >
-            {t('cancel')}
-          </Button>
-        </footer>
+        {readOnly && (
+          <footer className="d-flex gap-3">
+            <Button className="flex-fill" type="submit" disabled={loading}>
+              {t('submit')}
+            </Button>
+            <Button
+              className="flex-fill"
+              type="reset"
+              variant="danger"
+              disabled={loading}
+            >
+              {t('cancel')}
+            </Button>
+          </footer>
+        )}
       </Form>
     );
   }

@@ -10,9 +10,9 @@ import { blobOf } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
 
-export interface FilePickerProps extends FormComponentProps {
-  onChange?: (value: FormComponentProps['value'], file?: File) => any;
-}
+export type FilePickerProps = FormComponentProps<string | File>;
+
+const blobCache = new WeakMap<File, string>();
 
 @observer
 @observePropsState
@@ -30,26 +30,48 @@ export class FilePicker extends FormComponent<FilePickerProps> {
     return file?.type || file?.name.match(/\.\w+$/)?.[0] || accept;
   }
 
+  @computed
+  get filePath() {
+    const { value } = this;
+
+    return typeof value === 'string' ? value : blobCache.get(value);
+  }
+
   #disposer?: IReactionDisposer;
 
-  #restoreFile = async (URI = '') => {
-    if (URI)
+  #restoreFile = async (data: FilePickerProps['value']) => {
+    if (typeof data === 'string')
       try {
-        const blob = await blobOf(URI),
-          name = URI.split('/').at(-1);
+        const blob = await blobOf(data),
+          name = data.split('/').at(-1);
+        const file = new File([blob], name, { type: blob.type });
 
-        return (this.file = new File([blob], name, { type: blob.type }));
+        blobCache.set(file, data);
+
+        return (this.file = file);
       } catch {}
 
+    if (data instanceof File) {
+      if (!blobCache.has(data)) blobCache.set(data, URL.createObjectURL(data));
+
+      return (this.file = data);
+    }
     return (this.file = undefined);
   };
 
-  #handleURI = (file?: File) => {
-    this.file = file;
+  #changeFile = (data?: File) => {
+    this.file = data;
 
-    if (file) this.innerValue = URL.createObjectURL(file);
-    else if (this.value) {
-      URL.revokeObjectURL(this.innerValue);
+    if (data) {
+      this.innerValue = data;
+
+      blobCache.set(data, URL.createObjectURL(data));
+    } else if (this.value) {
+      const { innerValue } = this;
+
+      if (typeof innerValue === 'string' && innerValue.startsWith('blob:'))
+        URL.revokeObjectURL(innerValue);
+      else if (innerValue instanceof File) blobCache.delete(innerValue);
 
       this.innerValue = '';
     }
@@ -72,7 +94,8 @@ export class FilePicker extends FormComponent<FilePickerProps> {
 
   renderInput() {
     const { id, name, value, required, disabled, accept, multiple } =
-      this.props;
+        this.props,
+      { filePath } = this;
 
     return (
       <>
@@ -84,28 +107,28 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           required={!value && required}
           {...{ id, disabled, accept, multiple }}
           onChange={({ currentTarget: { files } }) =>
-            this.#handleURI(files?.[0])
+            this.#changeFile(files?.[0])
           }
         />
-        {value && <input type="hidden" name={name} value={value} />}
+        {filePath && <input type="hidden" name={name} value={filePath} />}
       </>
     );
   }
 
   render() {
-    const { value, fileType } = this,
+    const { filePath, fileType } = this,
       { className = '', style } = this.props;
 
     return (
       <div
-        className={`d-inline-block border rounded position-relative ${className}`}
+        className={`d-inline-block border rounded overflow-hidden position-relative ${className}`}
         style={{ width: '10rem', height: '10rem', ...style }}
       >
-        {value ? (
+        {filePath ? (
           <FilePreview
             className="w-100 h-100 object-fit-contain"
             type={fileType}
-            path={value + ''}
+            path={filePath}
           />
         ) : (
           <div className="w-100 h-100 d-flex justify-content-center align-items-center display-1">
@@ -113,11 +136,11 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           </div>
         )}
         {this.renderInput()}
-        {value && (
+        {filePath && (
           <CloseButton
             className="position-absolute top-0 end-0"
             style={{ width: '0.5rem', height: '0.5rem' }}
-            onClick={() => this.#handleURI()}
+            onClick={() => this.#changeFile()}
           />
         )}
       </div>

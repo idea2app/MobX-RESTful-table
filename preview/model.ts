@@ -9,6 +9,7 @@ export const i18n = new TranslationModel({
     load_more: 'Load more',
     no_more: 'No more',
     create: 'Create',
+    view: 'View',
     submit: 'Submit',
     cancel: 'Cancel',
     edit: 'Edit',

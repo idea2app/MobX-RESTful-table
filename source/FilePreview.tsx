@@ -23,7 +23,9 @@ export const FileTypeMap = {
 };
 
 export const FilePreview: FC<FilePreviewProps> = ({
-  className = '',
+  className,
+  style,
+  hidden,
   type,
   path,
   ...props
@@ -34,34 +36,32 @@ export const FilePreview: FC<FilePreviewProps> = ({
     FileTypeMap[kind.at(-1)] ||
     (fileName?.includes('.') ? fileName.split('.').at(-1) : kind.at(-1));
 
-  return category === 'image' ? (
-    <ImagePreview
-      className={className}
-      fluid
-      loading="lazy"
-      src={path}
-      {...props}
-    />
-  ) : category === 'audio' ? (
-    <audio className={className} controls src={path} {...props} />
-  ) : category === 'video' ? (
-    <video
-      className={className}
-      muted
-      src={path}
-      onMouseEnter={({ currentTarget }) => currentTarget.play()}
-      onMouseLeave={({ currentTarget }) => currentTarget.pause()}
-      {...props}
-    />
-  ) : (
-    <a
-      className={`d-inline-flex justify-content-center align-items-center ${className}`}
-      download={fileName}
-      href={path}
-      {...props}
-    >
-      {extension ? <i className={`bi bi-filetype-${extension} fs-1`} /> : path}
-    </a>
+  return (
+    <figure {...{ className, style, hidden }}>
+      {category === 'image' ? (
+        <ImagePreview fluid loading="lazy" src={path} {...props} />
+      ) : category === 'audio' ? (
+        <audio controls src={path} {...props} />
+      ) : category === 'video' ? (
+        <video
+          muted
+          src={path}
+          onMouseEnter={({ currentTarget }) => currentTarget.play()}
+          onMouseLeave={({ currentTarget }) => currentTarget.pause()}
+          {...props}
+        />
+      ) : (
+        <a
+          className="d-inline-flex justify-content-center align-items-center"
+          download={fileName}
+          href={path}
+          {...props}
+        >
+          <i className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`} />
+        </a>
+      )}
+      <figcaption>{fileName}</figcaption>
+    </figure>
   );
 };
 
