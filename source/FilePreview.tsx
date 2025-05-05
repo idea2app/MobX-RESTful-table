@@ -31,7 +31,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
   ...props
 }) => {
   const [category, ...kind] = type?.split(/\W+/) || [],
-    fileName = decodeURIComponent(
+    fileName = decodeURI(
       new URL(path, 'http://localhost').pathname.split('/').at(-1),
     );
   const extension =
@@ -74,7 +74,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
               className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`}
             />
           </a>
-          <figcaption className="text-truncate">{fileName}</figcaption>
+          <figcaption className="mw-100 text-truncate">{fileName}</figcaption>
         </>
       )}
     </figure>

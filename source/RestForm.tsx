@@ -90,7 +90,8 @@ export class RestForm<
         renderInput ??
         (meta.type === 'file'
           ? this.renderFile(meta)
-          : this.renderField(meta, meta.rows ? { as: 'textarea' } : {})),
+          : meta.key &&
+            this.renderField(meta, meta.rows ? { as: 'textarea' } : {})),
     }));
   }
 
