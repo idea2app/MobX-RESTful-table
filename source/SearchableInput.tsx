@@ -1,11 +1,7 @@
 import { debounce } from 'lodash';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  FormComponent,
-  FormComponentProps,
-  observePropsState,
-} from 'mobx-react-helper';
+import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject, Filter } from 'mobx-restful';
 import { FocusEvent } from 'react';
 import {
@@ -46,7 +42,6 @@ export type SearchableInputProps<
   };
 
 @observer
-@observePropsState
 export class SearchableInput<
   D extends DataObject,
   F extends Filter<D> = Filter<D>,

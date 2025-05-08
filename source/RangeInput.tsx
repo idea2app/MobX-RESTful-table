@@ -1,9 +1,5 @@
 import { observer } from 'mobx-react';
-import {
-  FormComponent,
-  FormComponentProps,
-  observePropsState,
-} from 'mobx-react-helper';
+import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { ReactNode } from 'react';
 
 export interface RangeInputProps extends Omit<FormComponentProps, 'type'> {
@@ -11,7 +7,6 @@ export interface RangeInputProps extends Omit<FormComponentProps, 'type'> {
 }
 
 @observer
-@observePropsState
 export class RangeInput extends FormComponent<RangeInputProps> {
   static readonly displayName = 'RangeInput';
 

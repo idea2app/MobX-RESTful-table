@@ -1,10 +1,6 @@
 import { IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  FormComponent,
-  FormComponentProps,
-  observePropsState,
-} from 'mobx-react-helper';
+import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { BaseModel } from 'mobx-restful';
 import { DragEvent } from 'react';
 
@@ -68,7 +64,6 @@ export interface FileUploaderProps extends FormComponentProps<string[]> {
 }
 
 @observer
-@observePropsState
 export class FileUploader extends FormComponent<FileUploaderProps> {
   static readonly displayName = 'FileUploader';
 

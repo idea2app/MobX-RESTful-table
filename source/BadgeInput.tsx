@@ -1,9 +1,5 @@
 import { observer } from 'mobx-react';
-import {
-  FormComponent,
-  FormComponentProps,
-  observePropsState,
-} from 'mobx-react-helper';
+import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { KeyboardEvent } from 'react';
 import { Badge, CloseButton } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
@@ -21,7 +17,6 @@ export interface BadgeInputProps extends FormComponentProps<string[]> {
 }
 
 @observer
-@observePropsState
 export class BadgeInput extends FormComponent<BadgeInputProps> {
   static readonly displayName = 'BadgeInput';
 

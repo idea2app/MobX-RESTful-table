@@ -1,7 +1,7 @@
 import { computed } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
-import { observePropsState } from 'mobx-react-helper';
+import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import {
   Component,
@@ -52,14 +52,11 @@ export interface RestFormProps<
 }
 
 @observer
-@observePropsState
 export class RestForm<
   D extends DataObject,
   F extends Filter<D> = Filter<D>,
-> extends Component<RestFormProps<D, F>> {
+> extends ObservedComponent<RestFormProps<D, F>> {
   static readonly displayName = 'RestForm';
-
-  declare observedProps: RestFormProps<D, F>;
 
   componentDidMount() {
     const { id, store } = this.props;

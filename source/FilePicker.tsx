@@ -1,10 +1,6 @@
 import { computed, IReactionDisposer, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  FormComponent,
-  FormComponentProps,
-  observePropsState,
-} from 'mobx-react-helper';
+import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { CloseButton } from 'react-bootstrap';
 import { blobOf } from 'web-utility';
 
@@ -15,7 +11,6 @@ export type FilePickerProps = FormComponentProps<string | File>;
 const blobCache = new WeakMap<File, string>();
 
 @observer
-@observePropsState
 export class FilePicker extends FormComponent<FilePickerProps> {
   static readonly displayName = 'FilePicker';
 

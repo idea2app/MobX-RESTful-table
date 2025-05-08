@@ -3,7 +3,7 @@ import { debounce } from 'lodash';
 import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
-import { observePropsState } from 'mobx-react-helper';
+import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, IDType } from 'mobx-restful';
 import { Component, ReactNode } from 'react';
 import { Button, Form, Spinner, Table, TableProps } from 'react-bootstrap';
@@ -37,8 +37,7 @@ export interface RestTableProps<T extends DataObject>
 }
 
 @observer
-@observePropsState
-export class RestTable<T extends DataObject> extends Component<
+export class RestTable<T extends DataObject> extends ObservedComponent<
   RestTableProps<T>
 > {
   static readonly displayName = 'RestTable';
@@ -49,8 +48,6 @@ export class RestTable<T extends DataObject> extends Component<
     store.clear();
     store.getList();
   }
-
-  declare observedProps: RestTableProps<T>;
 
   @observable
   accessor checkedKeys: IDType[] = [];
