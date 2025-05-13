@@ -10,6 +10,7 @@ import {
   FilePicker,
   FilePreview,
   FileUploader,
+  FormField,
   ImagePreview,
   RangeInput,
   RestTable,
@@ -36,20 +37,20 @@ const columns: Column<GitRepository>[] = [
     key: 'topics',
     renderHead: 'Topic',
     renderBody: ({ topics }) => (
-      <>
+      <div className="d-flex flex-wrap gap-2">
         {topics?.map(topic => (
           <Badge
             key={topic}
             bg={text2color(topic, ['light'])}
             as="a"
-            className="text-decoration-none me-2"
+            className="text-decoration-none"
             target="_blank"
             href={`https://github.com/topics/${topic}`}
           >
             {topic}
           </Badge>
         ))}
-      </>
+      </div>
     ),
   },
   { key: 'stargazers_count', type: 'number', renderHead: 'Star Count' },
@@ -58,6 +59,20 @@ const columns: Column<GitRepository>[] = [
 export const Content: FC = () => (
   <>
     <h1>MobX RESTful table examples</h1>
+
+    <Section title="Form Field">
+      <CodeExample>
+        <FormField label="Input" />
+      </CodeExample>
+
+      <CodeExample>
+        <FormField label="Text Area" as="textarea" />
+      </CodeExample>
+
+      <CodeExample>
+        <FormField label="Select" options={[{ value: 'idea2app' }, { value: 'WebCell' }]} />
+      </CodeExample>
+    </Section>
 
     <Section title="Badge Input">
       <CodeExample>
@@ -93,12 +108,7 @@ export const Content: FC = () => (
 
     <Section title="Range Input">
       <CodeExample>
-        <RangeInput
-          min={0}
-          max={5}
-          icon={value => (value ? '★' : '☆')}
-          onChange={console.log}
-        />
+        <RangeInput min={0} max={5} icon={value => (value ? '★' : '☆')} onChange={console.log} />
       </CodeExample>
     </Section>
 

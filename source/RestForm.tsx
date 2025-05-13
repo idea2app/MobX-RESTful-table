@@ -3,13 +3,7 @@ import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
-import {
-  Component,
-  FormEvent,
-  InputHTMLAttributes,
-  ReactNode,
-  TextareaHTMLAttributes,
-} from 'react';
+import { FormEvent, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 import { Button, Form, FormProps } from 'react-bootstrap';
 import { formToJSON } from 'web-utility';
 
@@ -33,17 +27,16 @@ export interface Field<T extends DataObject>
       | 'accept'
       | 'placeholder'
     >,
-    Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'> {
+    Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'>,
+    Pick<FormFieldProps, 'options'> {
   key?: keyof T;
   renderLabel?: ReactNode | ((data: keyof T) => ReactNode);
   renderInput?: (data: T, meta: Field<T>) => ReactNode;
   uploader?: FileModel;
 }
 
-export interface RestFormProps<
-  D extends DataObject,
-  F extends Filter<D> = Filter<D>,
-> extends Pick<FormProps, 'className' | 'style'> {
+export interface RestFormProps<D extends DataObject, F extends Filter<D> = Filter<D>>
+  extends Pick<FormProps, 'className' | 'style'> {
   id?: IDType;
   fields: Field<D>[];
   store: ListModel<D, F>;
@@ -87,8 +80,7 @@ export class RestForm<
         renderInput ??
         (meta.type === 'file'
           ? this.renderFile(meta)
-          : meta.key &&
-            this.renderField(meta, meta.rows ? { as: 'textarea' } : {})),
+          : meta.key && this.renderField(meta, meta.rows ? { as: 'textarea' } : {})),
     }));
   }
 
@@ -98,27 +90,31 @@ export class RestForm<
   }
 
   renderFile =
-    ({ key, type, readOnly, required, multiple, accept, uploader }: Field<D>) =>
-    ({ [key]: path }: D) =>
-      uploader ? (
-        <FileUploader
-          store={uploader}
-          name={key?.toString()}
-          {...{ required, multiple, accept }}
-          defaultValue={path}
-        />
-      ) : (
-        readOnly && <FilePreview {...{ type, path }} />
-      );
+    ({ key, renderLabel, type, readOnly, required, multiple, accept, uploader }: Field<D>) =>
+    ({ [key]: path }: D) => (
+      <Form.Group>
+        <Form.Label>
+          {typeof renderLabel === 'function' ? renderLabel?.(key) : renderLabel || (key as string)}
+        </Form.Label>
+        {uploader ? (
+          <FileUploader
+            store={uploader}
+            name={key?.toString()}
+            {...{ required, multiple, accept }}
+            defaultValue={path}
+          />
+        ) : (
+          readOnly && <FilePreview {...{ type, path }} />
+        )}
+      </Form.Group>
+    );
 
   renderField = (
     { key, renderLabel, renderInput, ...meta }: Field<D>,
     props: Partial<FormFieldProps> = {},
   ) => {
     const label =
-      typeof renderLabel === 'function'
-        ? renderLabel?.(key)
-        : renderLabel || (key as string);
+      typeof renderLabel === 'function' ? renderLabel?.(key) : renderLabel || (key as string);
 
     return (data: D) => (
       <FormField
@@ -146,20 +142,13 @@ export class RestForm<
         onSubmit={this.handleSubmit}
         onReset={() => store.clearCurrent()}
       >
-        {fields.map(({ renderInput, ...meta }) =>
-          renderInput?.(currentOne, meta),
-        )}
+        {fields.map(({ renderInput, ...meta }) => renderInput?.(currentOne, meta))}
         {readOnly && (
           <footer className="d-flex gap-3">
             <Button className="flex-fill" type="submit" disabled={loading}>
               {t('submit')}
             </Button>
-            <Button
-              className="flex-fill"
-              type="reset"
-              variant="danger"
-              disabled={loading}
-            >
+            <Button className="flex-fill" type="reset" variant="danger" disabled={loading}>
               {t('cancel')}
             </Button>
           </footer>
