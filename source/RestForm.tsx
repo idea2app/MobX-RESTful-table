@@ -90,7 +90,7 @@ export class RestForm<
   }
 
   renderFile =
-    ({ key, renderLabel, type, readOnly, required, multiple, accept, uploader }: Field<D>) =>
+    ({ key, renderLabel, type, required, multiple, accept, uploader }: Field<D>) =>
     ({ [key]: path }: D) => (
       <Form.Group>
         <Form.Label>
@@ -104,7 +104,7 @@ export class RestForm<
             defaultValue={path}
           />
         ) : (
-          readOnly && <FilePreview {...{ type, path }} />
+          <FilePreview {...{ type, path }} />
         )}
       </Form.Group>
     );
@@ -143,7 +143,7 @@ export class RestForm<
         onReset={() => store.clearCurrent()}
       >
         {fields.map(({ renderInput, ...meta }) => renderInput?.(currentOne, meta))}
-        {readOnly && (
+        {!readOnly && (
           <footer className="d-flex gap-3">
             <Button className="flex-fill" type="submit" disabled={loading}>
               {t('submit')}
