@@ -70,7 +70,11 @@ export const Content: FC = () => (
       </CodeExample>
 
       <CodeExample>
-        <FormField label="Select" options={[{ value: 'idea2app' }, { value: 'WebCell' }]} />
+        <FormField
+          label="Select"
+          options={[{ value: 'idea2app' }, { value: 'WebCell' }]}
+          defaultValue="WebCell"
+        />
       </CodeExample>
     </Section>
 

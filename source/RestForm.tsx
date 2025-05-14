@@ -91,23 +91,29 @@ export class RestForm<
 
   renderFile =
     ({ key, renderLabel, type, required, multiple, accept, uploader }: Field<D>) =>
-    ({ [key]: path }: D) => (
-      <Form.Group>
-        <Form.Label>
-          {typeof renderLabel === 'function' ? renderLabel?.(key) : renderLabel || (key as string)}
-        </Form.Label>
-        {uploader ? (
-          <FileUploader
-            store={uploader}
-            name={key?.toString()}
-            {...{ required, multiple, accept }}
-            defaultValue={path}
-          />
-        ) : (
-          <FilePreview {...{ type, path }} />
-        )}
-      </Form.Group>
-    );
+    ({ [key]: paths }: D) => {
+      const value = ((Array.isArray(paths) ? paths : [paths]) as string[]).filter(Boolean);
+
+      return (
+        <Form.Group>
+          <Form.Label>
+            {typeof renderLabel === 'function'
+              ? renderLabel?.(key)
+              : renderLabel || (key as string)}
+          </Form.Label>
+          {uploader ? (
+            <FileUploader
+              store={uploader}
+              name={key?.toString()}
+              {...{ required, multiple, accept }}
+              defaultValue={value}
+            />
+          ) : (
+            value.map(path => <FilePreview {...{ type, path }} />)
+          )}
+        </Form.Group>
+      );
+    };
 
   renderField = (
     { key, renderLabel, renderInput, ...meta }: Field<D>,
