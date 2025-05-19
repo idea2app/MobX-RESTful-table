@@ -57,13 +57,15 @@ export class RestForm<
   static readonly displayName = 'RestForm';
 
   static dateValueOf = <D extends DataObject>({ type, step = '60' }: Field<D>, raw: D[keyof D]) =>
-    type === 'month'
-      ? !isEmpty(raw) && formatDate(raw, 'YYYY-MM')
-      : type === 'date'
-        ? !isEmpty(raw) && formatDate(raw, 'YYYY-MM-DD')
-        : type === 'datetime-local'
-          ? !isEmpty(raw) && formatDate(raw, `YYYY-MM-DDTHH:mm${+step < 60 ? ':ss' : ''}`)
-          : raw;
+    isEmpty(raw)
+      ? raw
+      : type === 'month'
+        ? formatDate(raw, 'YYYY-MM')
+        : type === 'date'
+          ? formatDate(raw, 'YYYY-MM-DD')
+          : type === 'datetime-local'
+            ? formatDate(raw, `YYYY-MM-DDTHH:mm${+step < 60 ? ':ss' : ''}`)
+            : raw;
 
   static FieldBox = <D extends DataObject>({
     name,
