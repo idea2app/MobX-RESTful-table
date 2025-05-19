@@ -56,6 +56,15 @@ export class RestForm<
 > extends ObservedComponent<RestFormProps<D, F>> {
   static readonly displayName = 'RestForm';
 
+  static dateValueOf = <D extends DataObject>({ type, step = '60' }: Field<D>, raw: D[keyof D]) =>
+    type === 'month'
+      ? (raw ?? formatDate(raw, 'YYYY-MM'))
+      : type === 'date'
+        ? (raw ?? formatDate(raw, 'YYYY-MM-DD'))
+        : type === 'datetime-local'
+          ? (raw ?? formatDate(raw, `YYYY-MM-DDTHH:mm${+step < 60 ? ':ss' : ''}`))
+          : raw;
+
   static FieldBox = <D extends DataObject>({
     name,
     renderLabel,
@@ -131,7 +140,7 @@ export class RestForm<
     };
 
   renderField = (
-    { key, type, renderLabel, renderInput, ...meta }: Field<D>,
+    { key, type, step, renderLabel, renderInput, ...meta }: Field<D>,
     props: Partial<FormFieldProps> = {},
   ) => {
     const label =
@@ -141,17 +150,9 @@ export class RestForm<
       <FormField
         {...props}
         {...meta}
-        {...{ type, label }}
+        {...{ type, step, label }}
         name={key.toString()}
-        defaultValue={
-          type === 'month'
-            ? formatDate(data[key], 'YYYY-MM')
-            : type === 'date'
-              ? formatDate(data[key], 'YYYY-MM-DD')
-              : type === 'datetime-local'
-                ? formatDate(data[key], 'YYYY-MM-DDTHH:mm:ss')
-                : data[key]
-        }
+        defaultValue={RestForm.dateValueOf({ type, step }, data[key])}
       />
     );
   };
