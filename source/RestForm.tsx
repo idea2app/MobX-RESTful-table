@@ -5,7 +5,7 @@ import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import { FormEvent, Fragment, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 import { Button, Form, FormGroupProps, FormProps } from 'react-bootstrap';
-import { formatDate, formToJSON } from 'web-utility';
+import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
 import { FileModel, FileUploader } from './FileUploader';
@@ -58,11 +58,11 @@ export class RestForm<
 
   static dateValueOf = <D extends DataObject>({ type, step = '60' }: Field<D>, raw: D[keyof D]) =>
     type === 'month'
-      ? (raw ?? formatDate(raw, 'YYYY-MM'))
+      ? !isEmpty(raw) && formatDate(raw, 'YYYY-MM')
       : type === 'date'
-        ? (raw ?? formatDate(raw, 'YYYY-MM-DD'))
+        ? !isEmpty(raw) && formatDate(raw, 'YYYY-MM-DD')
         : type === 'datetime-local'
-          ? (raw ?? formatDate(raw, `YYYY-MM-DDTHH:mm${+step < 60 ? ':ss' : ''}`))
+          ? !isEmpty(raw) && formatDate(raw, `YYYY-MM-DDTHH:mm${+step < 60 ? ':ss' : ''}`)
           : raw;
 
   static FieldBox = <D extends DataObject>({
