@@ -3,9 +3,9 @@ import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
-import { FormEvent, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
+import { FormEvent, Fragment, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 import { Button, Form, FormGroupProps, FormProps } from 'react-bootstrap';
-import { formToJSON } from 'web-utility';
+import { formatDate, formToJSON } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
 import { FileModel, FileUploader } from './FileUploader';
@@ -131,7 +131,7 @@ export class RestForm<
     };
 
   renderField = (
-    { key, renderLabel, renderInput, ...meta }: Field<D>,
+    { key, type, renderLabel, renderInput, ...meta }: Field<D>,
     props: Partial<FormFieldProps> = {},
   ) => {
     const label =
@@ -141,10 +141,17 @@ export class RestForm<
       <FormField
         {...props}
         {...meta}
-        key={key.toString()}
-        label={label}
+        {...{ type, label }}
         name={key.toString()}
-        defaultValue={data[key]}
+        defaultValue={
+          type === 'month'
+            ? formatDate(data[key], 'YYYY-MM')
+            : type === 'date'
+              ? formatDate(data[key], 'YYYY-MM-DD')
+              : type === 'datetime-local'
+                ? formatDate(data[key], 'YYYY-MM-DDTHH:mm:ss')
+                : data[key]
+        }
       />
     );
   };
@@ -163,7 +170,9 @@ export class RestForm<
         onSubmit={this.handleSubmit}
         onReset={() => store.clearCurrent()}
       >
-        {fields.map(({ renderInput, ...meta }) => renderInput?.(currentOne, meta))}
+        {fields.map(({ renderInput, ...meta }) => (
+          <Fragment key={meta.key.toString()}>{renderInput?.(currentOne, meta)}</Fragment>
+        ))}
         {!readOnly && (
           <footer className="d-flex gap-3">
             <Button className="flex-fill" type="submit" disabled={loading}>
