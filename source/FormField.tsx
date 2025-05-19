@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, TextareaHTMLAttributes } from 'react';
 import { FloatingLabelProps, Form, FormControlProps, FormSelectProps } from 'react-bootstrap';
 
 export interface SelectOption
@@ -8,6 +8,7 @@ export interface SelectOption
 
 export type FormFieldProps = FormControlProps &
   FormSelectProps &
+  Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'> &
   Pick<FloatingLabelProps, 'label'> & {
     options?: SelectOption[];
   };
@@ -20,11 +21,16 @@ export const FormField: FC<FormFieldProps> = ({
   id,
   name,
   options,
+  multiple,
+  rows,
   ...controlProps
 }) => (
   <Form.FloatingLabel {...{ className, style, label }} controlId={name || id}>
     {options ? (
-      <Form.Select name={name} {...controlProps}>
+      <Form.Select
+        className={multiple ? 'h-auto' : ''}
+        {...{ name, multiple, htmlSize: rows, ...controlProps }}
+      >
         {options.map(({ value, text, label, disabled }) => (
           <option key={value} {...{ value, label, disabled }}>
             {text || value}
@@ -33,9 +39,8 @@ export const FormField: FC<FormFieldProps> = ({
       </Form.Select>
     ) : (
       <Form.Control
-        name={name}
+        {...{ name, multiple, rows, ...controlProps }}
         placeholder={placeholder || (typeof label === 'string' ? label : name || id)}
-        {...controlProps}
       />
     )}
   </Form.FloatingLabel>

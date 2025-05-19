@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import { FormEvent, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
-import { Button, Form, FormProps } from 'react-bootstrap';
+import { Button, Form, FormGroupProps, FormProps } from 'react-bootstrap';
 import { formToJSON } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
@@ -27,12 +27,17 @@ export interface Field<T extends DataObject>
       | 'accept'
       | 'placeholder'
     >,
-    Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'>,
-    Pick<FormFieldProps, 'options'> {
+    Pick<FormFieldProps, 'options' | 'rows'> {
   key?: keyof T;
   renderLabel?: ReactNode | ((data: keyof T) => ReactNode);
   renderInput?: (data: T, meta: Field<T>) => ReactNode;
   uploader?: FileModel;
+}
+
+export interface FieldBoxProps<D extends DataObject>
+  extends FormGroupProps,
+    Required<Pick<Field<D>, 'renderLabel'>> {
+  name: Field<D>['key'];
 }
 
 export interface RestFormProps<D extends DataObject, F extends Filter<D> = Filter<D>>
@@ -50,6 +55,20 @@ export class RestForm<
   F extends Filter<D> = Filter<D>,
 > extends ObservedComponent<RestFormProps<D, F>> {
   static readonly displayName = 'RestForm';
+
+  static FieldBox = <D extends DataObject>({
+    name,
+    renderLabel,
+    children,
+    ...props
+  }: FieldBoxProps<D>) => (
+    <Form.Group {...props}>
+      <Form.Label>
+        {typeof renderLabel === 'function' ? renderLabel?.(name) : renderLabel || (name as string)}
+      </Form.Label>
+      {children}
+    </Form.Group>
+  );
 
   componentDidMount() {
     const { id, store } = this.props;
@@ -80,7 +99,8 @@ export class RestForm<
         renderInput ??
         (meta.type === 'file'
           ? this.renderFile(meta)
-          : meta.key && this.renderField(meta, meta.rows ? { as: 'textarea' } : {})),
+          : meta.key &&
+            this.renderField(meta, meta.rows && !meta.options ? { as: 'textarea' } : {})),
     }));
   }
 
@@ -95,12 +115,7 @@ export class RestForm<
       const value = ((Array.isArray(paths) ? paths : [paths]) as string[]).filter(Boolean);
 
       return (
-        <Form.Group>
-          <Form.Label>
-            {typeof renderLabel === 'function'
-              ? renderLabel?.(key)
-              : renderLabel || (key as string)}
-          </Form.Label>
+        <RestForm.FieldBox name={key} renderLabel={renderLabel}>
           {uploader ? (
             <FileUploader
               store={uploader}
@@ -111,7 +126,7 @@ export class RestForm<
           ) : (
             value.map(path => <FilePreview {...{ type, path }} />)
           )}
-        </Form.Group>
+        </RestForm.FieldBox>
       );
     };
 
