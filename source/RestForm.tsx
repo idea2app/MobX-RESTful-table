@@ -3,8 +3,9 @@ import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
-import { FormEvent, Fragment, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
+import { FormEvent, Fragment, InputHTMLAttributes, ReactNode } from 'react';
 import { Button, Form, FormGroupProps, FormProps } from 'react-bootstrap';
+import { Editor, EditorProps } from 'react-bootstrap-editor';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
 import { FilePreview } from './FilePreview';
@@ -27,7 +28,8 @@ export interface Field<T extends DataObject>
       | 'accept'
       | 'placeholder'
     >,
-    Pick<FormFieldProps, 'options' | 'rows'> {
+    Pick<FormFieldProps, 'options' | 'rows' | 'contentEditable'>,
+    Pick<EditorProps, 'tools'> {
   key?: keyof T;
   renderLabel?: ReactNode | ((data: keyof T) => ReactNode);
   renderInput?: (data: T, meta: Field<T>) => ReactNode;
@@ -112,8 +114,10 @@ export class RestForm<
           ? this.renderFile(meta)
           : (meta.type === 'radio' || meta.type === 'checkbox') && meta.options
             ? this.renderCheckGroup(meta)
-            : meta.key &&
-              this.renderField(meta, meta.rows && !meta.options ? { as: 'textarea' } : {})),
+            : meta.contentEditable
+              ? this.renderHTMLEditor(meta)
+              : meta.key &&
+                this.renderField(meta, meta.rows && !meta.options ? { as: 'textarea' } : {})),
     }));
   }
 
@@ -151,11 +155,11 @@ export class RestForm<
     };
   renderCheckGroup =
     ({ key, type, options, renderLabel }: Field<D>) =>
-    (data: D) =>
-      this.fieldReady && (
-        <RestForm.FieldBox name={key} renderLabel={renderLabel}>
-          <div>
-            {options.map(({ value, text = value }) => (
+    (data: D) => (
+      <RestForm.FieldBox name={key} renderLabel={renderLabel}>
+        <div>
+          {this.fieldReady &&
+            options.map(({ value, text = value }) => (
               <Form.Check
                 key={value}
                 id={[key, value] + ''}
@@ -167,9 +171,17 @@ export class RestForm<
                 defaultChecked={data[key]?.includes(value)}
               />
             ))}
-          </div>
-        </RestForm.FieldBox>
-      );
+        </div>
+      </RestForm.FieldBox>
+    );
+
+  renderHTMLEditor =
+    ({ key, renderLabel }: Field<D>) =>
+    (data: D) => (
+      <RestForm.FieldBox name={key} renderLabel={renderLabel}>
+        {this.fieldReady && <Editor name={key?.toString()} defaultValue={data[key!] as string} />}
+      </RestForm.FieldBox>
+    );
 
   renderField = (
     { key, type, step, renderLabel, renderInput, ...meta }: Field<D>,
@@ -205,7 +217,7 @@ export class RestForm<
         onReset={() => store.clearCurrent()}
       >
         {fields.map(({ renderInput, ...meta }) => (
-          <Fragment key={meta.key.toString()}>{renderInput?.(currentOne, meta)}</Fragment>
+          <Fragment key={meta.key?.toString()}>{renderInput?.(currentOne, meta)}</Fragment>
         ))}
         {!readOnly && (
           <footer className="d-flex gap-3">

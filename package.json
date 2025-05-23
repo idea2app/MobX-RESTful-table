@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A Pagination Table & Scroll List component suite for CRUD operation, which is based on MobX RESTful & React.",
@@ -34,6 +34,7 @@
     "mobx-react-helper": "^0.4.1",
     "mobx-restful": "^2.1.0",
     "react-bootstrap": "^2.10.10",
+    "react-bootstrap-editor": "^2.1.1",
     "regenerator-runtime": "^0.14.1",
     "web-utility": "^4.4.3"
   },
