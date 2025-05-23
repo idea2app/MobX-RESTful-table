@@ -5,6 +5,7 @@ export * from './FileUploader';
 export * from './FormField';
 export * from './RangeInput';
 export * from './BadgeInput';
+export * from './ArrayField';
 export * from './RestForm';
 export * from './Pager';
 export * from './RestTable';

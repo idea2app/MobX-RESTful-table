@@ -27,12 +27,13 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 5. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
 6. [Range Input](https://idea2app.github.io/MobX-RESTful-table/classes/RangeInput.html)
 7. [Badge Input](https://idea2app.github.io/MobX-RESTful-table/classes/BadgeInput.html)
-8. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
-9. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
-10. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
-11. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
-12. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
-13. [Searchable Input](https://idea2app.github.io/MobX-RESTful-table/classes/SearchableInput.html)
+8. [Array Field](https://idea2app.github.io/MobX-RESTful-table/classes/ArrayField.html)
+9. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
+10. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
+11. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
+12. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
+13. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
+14. [Searchable Input](https://idea2app.github.io/MobX-RESTful-table/classes/SearchableInput.html)
 
 ## Installation
 

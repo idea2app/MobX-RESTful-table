@@ -1,9 +1,10 @@
 import { text2color } from 'idea-react';
 import { GitRepository } from 'mobx-github';
 import { FC } from 'react';
-import { Badge } from 'react-bootstrap';
+import { Badge, Form, InputGroup } from 'react-bootstrap';
 
 import {
+  ArrayField,
   BadgeInput,
   Column,
   FileModel,
@@ -19,6 +20,11 @@ import {
 } from '../source';
 import { i18n, repositoryStore, topicStore } from './model';
 import { CodeExample, Section } from './utility';
+
+interface Price {
+  currency: 'USD' | 'CNY';
+  amount: number;
+}
 
 class MyFileModel extends FileModel {}
 
@@ -114,6 +120,31 @@ export const Content: FC = () => (
     <Section title="Range Input">
       <CodeExample>
         <RangeInput min={0} max={5} icon={value => (value ? '★' : '☆')} onChange={console.log} />
+      </CodeExample>
+    </Section>
+
+    <Section title="Array Field">
+      <CodeExample>
+        <ArrayField
+          name="prices"
+          renderItem={({ currency, amount }: Price) => (
+            <InputGroup>
+              <Form.Select name="currency" defaultValue={currency}>
+                <option value="USD">USD $</option>
+                <option value="CNY">CNY ¥</option>
+              </Form.Select>
+              <Form.Control
+                placeholder="Amount"
+                type="number"
+                name="amount"
+                required
+                min={0}
+                defaultValue={amount}
+              />
+            </InputGroup>
+          )}
+          onChange={console.log}
+        />
       </CodeExample>
     </Section>
 
