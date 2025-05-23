@@ -4,15 +4,7 @@ import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject, Filter } from 'mobx-restful';
 import { FocusEvent } from 'react';
-import {
-  Badge,
-  Button,
-  CloseButton,
-  Form,
-  InputGroup,
-  ListGroup,
-  Spinner,
-} from 'react-bootstrap';
+import { Badge, Button, CloseButton, Form, InputGroup, ListGroup, Spinner } from 'react-bootstrap';
 import { Second } from 'web-utility';
 
 import { TextInputTypes } from './BadgeInput';
@@ -22,17 +14,13 @@ import { ScrollList, ScrollListProps } from './ScrollList';
 
 export type OptionData = Record<'label' | 'value', string>;
 
-export type SearchableInputProps<
-  D extends DataObject,
-  F extends Filter<D> = Filter<D>,
-> = Omit<
+export type SearchableInputProps<D extends DataObject, F extends Filter<D> = Filter<D>> = Omit<
   ScrollListProps<D, F>,
   'id' | 'defaultValue' | 'onChange' | 'defaultData' | 'renderList'
 > &
   FormComponentProps<OptionData[]> &
   Omit<RestFormProps<D, F>, 'fields'> & {
-    translator: RestFormProps<D, F>['translator'] &
-      ScrollListProps<D, F>['translator'];
+    translator: RestFormProps<D, F>['translator'] & ScrollListProps<D, F>['translator'];
     fields?: RestFormProps<D, F>['fields'];
     labelKey: keyof D;
     valueKey: keyof D;
@@ -49,7 +37,7 @@ export class SearchableInput<
   static readonly displayName = 'SearchableInput';
 
   @observable
-  accessor filter = {} as F;
+  accessor filter = this.props.filter;
 
   @observable
   accessor listShown = false;
@@ -59,7 +47,7 @@ export class SearchableInput<
 
     value = value.trim();
 
-    this.filter = (value ? { [labelKey]: value } : {}) as F;
+    this.filter = { ...this.filter, [labelKey]: value || undefined };
 
     if (store.downloading < 1)
       if (value) {
@@ -85,8 +73,7 @@ export class SearchableInput<
     (this.innerValue = this.value.filter(option => option.value !== value));
 
   handleBlur = ({ target, relatedTarget }: FocusEvent<HTMLElement>) => {
-    if (target.parentElement !== relatedTarget?.parentElement)
-      this.listShown = false;
+    if (target.parentElement !== relatedTarget?.parentElement) this.listShown = false;
   };
 
   renderList: ScrollListProps<D, F>['renderList'] = allItems =>
@@ -121,19 +108,11 @@ export class SearchableInput<
 
   renderOverlay() {
     const { filter } = this;
-    const {
-      translator,
-      fields,
-      store,
-      labelKey,
-      renderList = this.renderList,
-    } = this.props;
+    const { translator, fields, store, labelKey, renderList = this.renderList } = this.props;
 
     const keyword = filter[labelKey] as string;
 
-    const needNew = !store.allItems.some(
-      ({ [labelKey]: label }) => label === keyword,
-    );
+    const needNew = !store.allItems.some(({ [labelKey]: label }) => label === keyword);
 
     return (
       <div
@@ -141,7 +120,7 @@ export class SearchableInput<
         style={{ top: '100%', maxHeight: '30vh' }}
         onBlurCapture={this.handleBlur}
       >
-        {needNew && fields && (
+        {needNew && fields?.[0] && (
           <Button
             className="w-100 sticky-top"
             variant="warning"
@@ -191,7 +170,7 @@ export class SearchableInput<
 
         {listShown && this.renderOverlay()}
 
-        {fields && (
+        {fields?.[0] && (
           <RestFormModal
             {...{ translator, fields, store }}
             onSubmit={({ [labelKey]: label, [valueKey]: value }) => {
@@ -200,11 +179,7 @@ export class SearchableInput<
             }}
           />
         )}
-        <input
-          type="hidden"
-          name={name}
-          value={JSON.stringify(value?.map(({ value }) => value))}
-        />
+        <input type="hidden" name={name} value={JSON.stringify(value?.map(({ value }) => value))} />
         <Form.Control
           {...{ type, placeholder, required, readOnly, disabled }}
           onChange={({ currentTarget: { value } }) => this.search(value)}

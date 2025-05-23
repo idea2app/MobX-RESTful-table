@@ -110,14 +110,23 @@ export class RestForm<
         renderInput ??
         (meta.type === 'file'
           ? this.renderFile(meta)
-          : meta.key &&
-            this.renderField(meta, meta.rows && !meta.options ? { as: 'textarea' } : {})),
+          : (meta.type === 'radio' || meta.type === 'checkbox') && meta.options
+            ? this.renderCheckGroup(meta)
+            : meta.key &&
+              this.renderField(meta, meta.rows && !meta.options ? { as: 'textarea' } : {})),
     }));
   }
 
   @computed
   get readOnly() {
     return this.fields.every(({ readOnly, disabled }) => readOnly || disabled);
+  }
+
+  @computed
+  get fieldReady() {
+    const { id, store } = this.observedProps;
+
+    return !id || store.downloading < 1;
   }
 
   renderFile =
@@ -140,6 +149,27 @@ export class RestForm<
         </RestForm.FieldBox>
       );
     };
+  renderCheckGroup =
+    ({ key, type, options, renderLabel }: Field<D>) =>
+    (data: D) =>
+      this.fieldReady && (
+        <RestForm.FieldBox name={key} renderLabel={renderLabel}>
+          <div>
+            {options.map(({ value, text = value }) => (
+              <Form.Check
+                key={value}
+                id={[key, value] + ''}
+                label={text}
+                inline
+                type={type as 'radio' | 'checkbox'}
+                name={key.toString()}
+                value={value}
+                defaultChecked={data[key]?.includes(value)}
+              />
+            ))}
+          </div>
+        </RestForm.FieldBox>
+      );
 
   renderField = (
     { key, type, step, renderLabel, renderInput, ...meta }: Field<D>,
@@ -148,15 +178,16 @@ export class RestForm<
     const label =
       typeof renderLabel === 'function' ? renderLabel?.(key) : renderLabel || (key as string);
 
-    return (data: D) => (
-      <FormField
-        {...props}
-        {...meta}
-        {...{ type, step, label }}
-        name={key.toString()}
-        defaultValue={RestForm.dateValueOf({ type, step }, data[key])}
-      />
-    );
+    return (data: D) =>
+      this.fieldReady && (
+        <FormField
+          {...props}
+          {...meta}
+          {...{ type, step, label }}
+          name={key.toString()}
+          defaultValue={RestForm.dateValueOf({ type, step }, data[key])}
+        />
+      );
   };
 
   render() {

@@ -13,6 +13,7 @@ import {
   FormField,
   ImagePreview,
   RangeInput,
+  RestForm,
   RestTable,
   SearchableInput,
 } from '../source';
@@ -149,6 +150,19 @@ export const Content: FC = () => (
           multiple
           defaultValue={['https://web-cell.dev/WebCell-0.f9823b00.png']}
           onChange={console.log}
+        />
+      </CodeExample>
+    </Section>
+
+    <Section title="REST form">
+      <CodeExample>
+        <RestForm
+          translator={i18n}
+          store={repositoryStore}
+          fields={columns.map(({ renderHead, renderBody, ...meta }) => ({
+            ...meta,
+            renderLabel: renderHead,
+          }))}
         />
       </CodeExample>
     </Section>
