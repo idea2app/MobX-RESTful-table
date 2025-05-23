@@ -61,6 +61,16 @@ const columns: Column<GitRepository>[] = [
     ),
   },
   { key: 'stargazers_count', type: 'number', renderHead: 'Star Count' },
+  {
+    key: 'description',
+    contentEditable: true,
+    renderHead: 'Description',
+    renderBody: ({ description }) => (
+      <p className="m-0 text-truncate" style={{ maxWidth: '10rem' }} title={description}>
+        {description}
+      </p>
+    ),
+  },
 ];
 
 export const Content: FC = () => (

@@ -34,6 +34,7 @@
     "mobx-react-helper": "^0.4.1",
     "mobx-restful": "^2.1.0",
     "react-bootstrap": "^2.10.10",
+    "react-bootstrap-editor": "^2.1.1",
     "regenerator-runtime": "^0.14.1",
     "web-utility": "^4.4.3"
   },
