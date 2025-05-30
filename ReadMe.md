@@ -109,6 +109,9 @@ export default class PaginationPage extends Component {
             {full_name}
           </a>
         ),
+        required: true,
+        minLength: 3,
+        invalidMessage: 'Input 3 characters at least',
       },
       { key: 'homepage', type: 'url', renderHead: t('home_page') },
       { key: 'language', renderHead: t('programming_language') },
