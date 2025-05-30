@@ -39,6 +39,7 @@ export const FormField: FC<FormFieldProps> = ({
       </Form.Select>
     ) : (
       <Form.Control
+        className={rows > 1 ? 'h-auto' : ''}
         {...{ name, multiple, rows, ...controlProps }}
         placeholder={placeholder || (typeof label === 'string' ? label : name || id)}
       />

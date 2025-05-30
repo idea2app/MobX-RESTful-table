@@ -1,10 +1,10 @@
-import { text2color } from 'idea-react';
 import { GitRepository } from 'mobx-github';
 import { FC } from 'react';
-import { Badge, Form, InputGroup } from 'react-bootstrap';
+import { Form, InputGroup } from 'react-bootstrap';
 
 import {
   ArrayField,
+  BadgeBar,
   BadgeInput,
   Column,
   FileModel,
@@ -44,27 +44,16 @@ const columns: Column<GitRepository>[] = [
     key: 'topics',
     renderHead: 'Topic',
     renderBody: ({ topics }) => (
-      <div className="d-flex flex-wrap gap-2">
-        {topics?.map(topic => (
-          <Badge
-            key={topic}
-            bg={text2color(topic, ['light'])}
-            as="a"
-            className="text-decoration-none"
-            target="_blank"
-            href={`https://github.com/topics/${topic}`}
-          >
-            {topic}
-          </Badge>
-        ))}
-      </div>
+      <BadgeBar
+        list={(topics || []).map(text => ({ text, link: `https://github.com/topics/${text}` }))}
+      />
     ),
   },
   { key: 'stargazers_count', type: 'number', renderHead: 'Star Count' },
   {
     key: 'description',
-    contentEditable: true,
     renderHead: 'Description',
+    contentEditable: true,
     renderBody: ({ description }) => (
       <p className="m-0 text-truncate" style={{ maxWidth: '10rem' }} title={description}>
         {description}
@@ -83,7 +72,7 @@ export const Content: FC = () => (
       </CodeExample>
 
       <CodeExample>
-        <FormField label="Text Area" as="textarea" />
+        <FormField label="Text Area" as="textarea" rows={3} />
       </CodeExample>
 
       <CodeExample>

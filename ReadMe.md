@@ -20,20 +20,21 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 
 ## Components
 
-1. [Image Preview](https://idea2app.github.io/MobX-RESTful-table/classes/ImagePreview.html)
-2. [File Preview](https://idea2app.github.io/MobX-RESTful-table/functions/FilePreview-1.html)
-3. [File Picker](https://idea2app.github.io/MobX-RESTful-table/classes/FilePicker.html)
-4. [File Uploader](https://idea2app.github.io/MobX-RESTful-table/classes/FileUploader.html)
-5. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
-6. [Range Input](https://idea2app.github.io/MobX-RESTful-table/classes/RangeInput.html)
-7. [Badge Input](https://idea2app.github.io/MobX-RESTful-table/classes/BadgeInput.html)
-8. [Array Field](https://idea2app.github.io/MobX-RESTful-table/classes/ArrayField.html)
-9. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
-10. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
-11. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
-12. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
-13. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
-14. [Searchable Input](https://idea2app.github.io/MobX-RESTful-table/classes/SearchableInput.html)
+1. [Badge Bar](https://idea2app.github.io/MobX-RESTful-table/classes/BadgeBar.html)
+2. [Image Preview](https://idea2app.github.io/MobX-RESTful-table/classes/ImagePreview.html)
+3. [File Preview](https://idea2app.github.io/MobX-RESTful-table/functions/FilePreview-1.html)
+4. [File Picker](https://idea2app.github.io/MobX-RESTful-table/classes/FilePicker.html)
+5. [File Uploader](https://idea2app.github.io/MobX-RESTful-table/classes/FileUploader.html)
+6. [Form Field](https://idea2app.github.io/MobX-RESTful-table/functions/FormField-1.html)
+7. [Range Input](https://idea2app.github.io/MobX-RESTful-table/classes/RangeInput.html)
+8. [Badge Input](https://idea2app.github.io/MobX-RESTful-table/classes/BadgeInput.html)
+9. [Array Field](https://idea2app.github.io/MobX-RESTful-table/classes/ArrayField.html)
+10. [REST Form](https://idea2app.github.io/MobX-RESTful-table/classes/RestForm.html)
+11. [Pager](https://idea2app.github.io/MobX-RESTful-table/functions/Pager-1.html)
+12. [REST Table](https://idea2app.github.io/MobX-RESTful-table/classes/RestTable.html)
+13. [Scroll Boundary](https://idea2app.github.io/MobX-RESTful-table/functions/ScrollBoundary-1.html)
+14. [Scroll List](https://idea2app.github.io/MobX-RESTful-table/classes/ScrollList.html)
+15. [Searchable Input](https://idea2app.github.io/MobX-RESTful-table/classes/SearchableInput.html)
 
 ## Installation
 
@@ -88,7 +89,7 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
 import { Container, Button, Badge } from 'react-bootstrap';
-import { Column, RestTable } from 'mobx-restful-table';
+import { BadgeBar, Column, RestTable } from 'mobx-restful-table';
 
 import repositoryStore, { Repository } from '../models/Repository';
 import { i18n } from '../models/Translation';
@@ -115,22 +116,22 @@ export default class PaginationPage extends Component {
         key: 'topics',
         renderHead: t('topic'),
         renderBody: ({ topics }) => (
-          <>
-            {topics?.map(topic => (
-              <Badge
-                key={topic}
-                className="me-2"
-                as="a"
-                target="_blank"
-                href={`https://github.com/topics/${topic}`}
-              >
-                {topic}
-              </Badge>
-            ))}
-          </>
+          <BadgeBar
+            list={(topics || []).map(text => ({ text, link: `https://github.com/topics/${text}` }))}
+          />
         ),
       },
       { key: 'stargazers_count', type: 'number', renderHead: t('star_count') },
+      {
+        key: 'description',
+        renderHead: t('description'),
+        contentEditable: true,
+        renderBody: ({ description }) => (
+          <p className="m-0 text-truncate" style={{ maxWidth: '10rem' }} title={description}>
+            {description}
+          </p>
+        ),
+      },
     ];
   }
 
