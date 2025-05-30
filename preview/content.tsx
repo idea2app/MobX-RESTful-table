@@ -37,6 +37,9 @@ const columns: Column<GitRepository>[] = [
         {full_name}
       </a>
     ),
+    required: true,
+    minLength: 3,
+    invalidMessage: 'Input 3 characters at least',
   },
   { key: 'homepage', type: 'url', renderHead: 'Home Page' },
   { key: 'language', renderHead: 'Programming Language' },

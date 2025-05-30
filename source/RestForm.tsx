@@ -1,10 +1,10 @@
-import { computed } from 'mobx';
+import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import { FormEvent, Fragment, InputHTMLAttributes, ReactNode } from 'react';
-import { Button, Form, FormGroupProps, FormProps } from 'react-bootstrap';
+import { Button, Form, FormGroupProps, FormProps, InputGroup } from 'react-bootstrap';
 import { Editor, EditorProps } from 'react-bootstrap-editor';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
@@ -29,7 +29,8 @@ export interface Field<T extends DataObject>
       | 'placeholder'
     >,
     Pick<FormFieldProps, 'options' | 'rows' | 'contentEditable'>,
-    Pick<EditorProps, 'tools'> {
+    Pick<EditorProps, 'tools'>,
+    Partial<Record<`${'' | 'in'}validMessage`, ReactNode>> {
   key?: keyof T;
   renderLabel?: ReactNode | ((data: keyof T) => ReactNode);
   renderInput?: (data: T, meta: Field<T>) => ReactNode;
@@ -38,7 +39,7 @@ export interface Field<T extends DataObject>
 
 export interface FieldBoxProps<D extends DataObject>
   extends FormGroupProps,
-    Required<Pick<Field<D>, 'renderLabel'>> {
+    Pick<Field<D>, 'renderLabel' | `${'' | 'in'}validMessage`> {
   name: Field<D>['key'];
 }
 
@@ -72,16 +73,31 @@ export class RestForm<
   static FieldBox = <D extends DataObject>({
     name,
     renderLabel,
+    validMessage,
+    invalidMessage,
     children,
     ...props
   }: FieldBoxProps<D>) => (
     <Form.Group {...props}>
       <Form.Label>
-        {typeof renderLabel === 'function' ? renderLabel?.(name) : renderLabel || (name as string)}
+        {typeof renderLabel === 'function' ? renderLabel(name) : renderLabel || (name as string)}
       </Form.Label>
       {children}
+      {validMessage && (
+        <Form.Control.Feedback tooltip type="valid">
+          {validMessage}
+        </Form.Control.Feedback>
+      )}
+      {invalidMessage && (
+        <Form.Control.Feedback tooltip type="invalid">
+          {invalidMessage}
+        </Form.Control.Feedback>
+      )}
     </Form.Group>
   );
+
+  @observable
+  accessor validated = false;
 
   componentDidMount() {
     const { id, store } = this.props;
@@ -93,13 +109,21 @@ export class RestForm<
     event.preventDefault();
     event.stopPropagation();
 
-    const { id, store, onSubmit } = this.props;
+    const form = event.currentTarget;
+    const valid = form.checkValidity();
 
-    const updated = await store.updateOne(formToJSON(event.currentTarget), id);
+    this.validated = true;
 
-    onSubmit?.(updated);
+    if (valid) {
+      const { id, store, onSubmit } = this.props;
 
-    store.clearCurrent();
+      const updated = await store.updateOne(formToJSON(form), id);
+
+      onSubmit?.(updated);
+
+      store.clearCurrent();
+    }
+    this.validated = false;
   };
 
   @computed
@@ -127,6 +151,11 @@ export class RestForm<
   }
 
   @computed
+  get customValidation() {
+    return this.fields.some(({ validMessage, invalidMessage }) => validMessage || invalidMessage);
+  }
+
+  @computed
   get fieldReady() {
     const { id, store } = this.observedProps;
 
@@ -134,12 +163,12 @@ export class RestForm<
   }
 
   renderFile =
-    ({ key, renderLabel, type, required, multiple, accept, uploader }: Field<D>) =>
+    ({ key, type, required, multiple, accept, uploader, ...meta }: Field<D>) =>
     ({ [key]: paths }: D) => {
       const value = ((Array.isArray(paths) ? paths : [paths]) as string[]).filter(Boolean);
 
       return (
-        <RestForm.FieldBox name={key} renderLabel={renderLabel}>
+        <RestForm.FieldBox name={key} {...meta}>
           {uploader ? (
             <FileUploader
               store={uploader}
@@ -154,9 +183,9 @@ export class RestForm<
       );
     };
   renderCheckGroup =
-    ({ key, type, options, renderLabel }: Field<D>) =>
+    ({ key, type, options, ...meta }: Field<D>) =>
     (data: D) => (
-      <RestForm.FieldBox name={key} renderLabel={renderLabel}>
+      <RestForm.FieldBox name={key} {...meta}>
         <div>
           {this.fieldReady &&
             options.map(({ value, text = value }) => (
@@ -176,34 +205,47 @@ export class RestForm<
     );
 
   renderHTMLEditor =
-    ({ key, renderLabel }: Field<D>) =>
+    ({ key, contentEditable, ...meta }: Field<D>) =>
     (data: D) => (
-      <RestForm.FieldBox name={key} renderLabel={renderLabel}>
+      <RestForm.FieldBox name={key} {...meta}>
         {this.fieldReady && <Editor name={key?.toString()} defaultValue={data[key!] as string} />}
       </RestForm.FieldBox>
     );
 
   renderField = (
-    { key, type, step, renderLabel, renderInput, ...meta }: Field<D>,
+    { key, type, step, renderLabel, renderInput, validMessage, invalidMessage, ...meta }: Field<D>,
     props: Partial<FormFieldProps> = {},
   ) => {
     const label =
       typeof renderLabel === 'function' ? renderLabel?.(key) : renderLabel || (key as string);
 
-    return (data: D) =>
-      this.fieldReady && (
-        <FormField
-          {...props}
-          {...meta}
-          {...{ type, step, label }}
-          name={key.toString()}
-          defaultValue={RestForm.dateValueOf({ type, step }, data[key])}
-        />
-      );
+    return (data: D) => (
+      <InputGroup hasValidation={this.customValidation}>
+        {this.fieldReady && (
+          <FormField
+            {...props}
+            {...meta}
+            {...{ type, step, label }}
+            name={key.toString()}
+            defaultValue={RestForm.dateValueOf({ type, step }, data[key])}
+          />
+        )}
+        {validMessage && (
+          <Form.Control.Feedback tooltip type="valid">
+            {validMessage}
+          </Form.Control.Feedback>
+        )}
+        {invalidMessage && (
+          <Form.Control.Feedback tooltip type="invalid">
+            {invalidMessage}
+          </Form.Control.Feedback>
+        )}
+      </InputGroup>
+    );
   };
 
   render() {
-    const { fields, readOnly } = this,
+    const { fields, readOnly, customValidation, validated } = this,
       { id, className = '', store, translator, ...props } = this.observedProps;
     const { downloading, uploading, currentOne } = store,
       { t } = translator;
@@ -213,6 +255,8 @@ export class RestForm<
       <Form
         className={`d-flex flex-column gap-3 ${className}`}
         {...props}
+        noValidate={customValidation}
+        validated={validated}
         onSubmit={this.handleSubmit}
         onReset={() => store.clearCurrent()}
       >

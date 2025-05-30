@@ -23,9 +23,23 @@ export const FormField: FC<FormFieldProps> = ({
   options,
   multiple,
   rows,
+  onBlur,
   ...controlProps
 }) => (
-  <Form.FloatingLabel {...{ className, style, label }} controlId={name || id}>
+  <Form.FloatingLabel
+    {...{ className, style, label }}
+    controlId={name || id}
+    onBlur={event => {
+      if ((event.target as HTMLInputElement).checkValidity()) {
+        event.target.classList.remove('is-invalid');
+        event.currentTarget.classList.remove('is-invalid');
+      } else {
+        event.target.classList.add('is-invalid');
+        event.currentTarget.classList.add('is-invalid');
+      }
+      onBlur?.(event as Parameters<FormControlProps['onBlur']>[0]);
+    }}
+  >
     {options ? (
       <Form.Select
         className={multiple ? 'h-auto' : ''}
