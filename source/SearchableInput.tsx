@@ -4,9 +4,10 @@ import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject, Filter } from 'mobx-restful';
 import { FocusEvent } from 'react';
-import { Badge, Button, CloseButton, Form, InputGroup, ListGroup, Spinner } from 'react-bootstrap';
+import { Button, Form, InputGroup, ListGroup, Spinner } from 'react-bootstrap';
 import { Second } from 'web-utility';
 
+import { BadgeBar } from './BadgeBar';
 import { TextInputTypes } from './BadgeInput';
 import { RestFormProps } from './RestForm';
 import { RestFormModal } from './RestFormModal';
@@ -69,8 +70,8 @@ export class SearchableInput<
     if (!this.props.multiple) this.listShown = false;
   };
 
-  delete = (value: string) =>
-    (this.innerValue = this.value.filter(option => option.value !== value));
+  delete = (index: number) =>
+    (this.innerValue = [...this.value.slice(0, index), ...this.value.slice(index + 1)]);
 
   handleBlur = ({ target, relatedTarget }: FocusEvent<HTMLElement>) => {
     if (target.parentElement !== relatedTarget?.parentElement) this.listShown = false;
@@ -155,17 +156,10 @@ export class SearchableInput<
     return (
       <InputGroup className="position-relative">
         <InputGroup.Text className="d-flex flex-wrap align-items-center gap-2">
-          {value?.map(({ value, label }) => (
-            <Badge
-              key={value}
-              className="d-inline-flex align-items-center gap-1"
-              bg="info"
-              text="dark"
-            >
-              {label}
-              <CloseButton onClick={() => this.delete(value)} />
-            </Badge>
-          ))}
+          <BadgeBar
+            list={(value || []).map(({ label }) => ({ text: label }))}
+            onDelete={({}, index) => this.delete(index)}
+          />
         </InputGroup.Text>
 
         {listShown && this.renderOverlay()}

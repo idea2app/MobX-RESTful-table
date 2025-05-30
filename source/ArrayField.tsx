@@ -18,6 +18,8 @@ export type ArrayFieldProps<T extends DataObject = DataObject> = Pick<
 export class ArrayField<T extends DataObject = DataObject> extends FormComponent<
   ArrayFieldProps<T>
 > {
+  static displayName = 'ArrayField';
+
   componentDidMount() {
     super.componentDidMount();
 

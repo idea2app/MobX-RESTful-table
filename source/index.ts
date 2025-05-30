@@ -1,3 +1,4 @@
+export * from './BadgeBar';
 export * from './ImagePreview';
 export * from './FilePreview';
 export * from './FilePicker';
