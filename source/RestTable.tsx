@@ -9,13 +9,13 @@ import { Component, ReactNode } from 'react';
 import { Button, Form, Spinner, Table, TableProps } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
+import { BadgeBar } from './BadgeBar';
 import { FilePreview } from './FilePreview';
 import { Pager } from './Pager';
 import { Field, RestFormProps } from './RestForm';
 import { RestFormModal } from './RestFormModal';
 
-export interface Column<T extends DataObject>
-  extends Omit<Field<T>, 'renderLabel'> {
+export interface Column<T extends DataObject> extends Omit<Field<T>, 'renderLabel'> {
   renderHead?: Field<T>['renderLabel'];
   renderBody?: (data: T) => ReactNode;
   renderFoot?: ReactNode | ((data: keyof T) => ReactNode);
@@ -37,9 +37,7 @@ export interface RestTableProps<T extends DataObject>
 }
 
 @observer
-export class RestTable<T extends DataObject> extends ObservedComponent<
-  RestTableProps<T>
-> {
+export class RestTable<T extends DataObject> extends ObservedComponent<RestTableProps<T>> {
   static readonly displayName = 'RestTable';
 
   componentDidMount() {
@@ -68,9 +66,7 @@ export class RestTable<T extends DataObject> extends ObservedComponent<
     const { store, onCheck } = this.props;
     const { indexKey, currentPage } = store;
 
-    this.checkedKeys = this.checkedKeys.length
-      ? []
-      : currentPage.map(({ [indexKey]: ID }) => ID);
+    this.checkedKeys = this.checkedKeys.length ? [] : currentPage.map(({ [indexKey]: ID }) => ID);
 
     onCheck?.(this.checkedKeys);
   };
@@ -87,14 +83,12 @@ export class RestTable<T extends DataObject> extends ObservedComponent<
           name={`all-${indexKey.toString()}`}
           value={checkedKeys + ''}
           checked={
-            !!currentPage[0] &&
-            currentPage.every(({ [indexKey]: ID }) => checkedKeys.includes(ID))
+            !!currentPage[0] && currentPage.every(({ [indexKey]: ID }) => checkedKeys.includes(ID))
           }
           // https://github.com/facebook/react/issues/1798
           ref={(input: HTMLInputElement | null) => {
             if (input)
-              input.indeterminate =
-                !!checkedKeys.length && checkedKeys.length < currentPage.length;
+              input.indeterminate = !!checkedKeys.length && checkedKeys.length < currentPage.length;
           }}
           onClick={toggleCheckAll}
           onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
@@ -115,8 +109,7 @@ export class RestTable<T extends DataObject> extends ObservedComponent<
 
   @computed
   get operateColumn(): Column<T> {
-    const { editable, deletable, columns, store, translator } =
-      this.observedProps;
+    const { editable, deletable, columns, store, translator } = this.observedProps;
     const { t } = translator,
       readOnly = columns.every(({ readOnly }) => readOnly),
       disabled = columns.every(({ disabled }) => disabled);
@@ -160,30 +153,10 @@ export class RestTable<T extends DataObject> extends ObservedComponent<
 
     return [
       onCheck && this.checkColumn,
-
       ...columns.map(
-        ({ type, key, accept, renderBody, ...column }) =>
-          ({
-            ...column,
-            type,
-            key,
-            renderBody:
-              renderBody ??
-              (type === 'url'
-                ? ({ [key]: value }) =>
-                    value && (
-                      <a target="_blank" href={value}>
-                        {value}
-                      </a>
-                    )
-                : type === 'file'
-                  ? ({ [key]: value }) => (
-                      <FilePreview type={accept} path={value} />
-                    )
-                  : undefined),
-          }) as Column<T>,
+        ({ renderBody, ...column }) =>
+          ({ ...column, renderBody: renderBody ?? this.renderCustomBody(column) }) as Column<T>,
       ),
-
       (editable || deletable) && this.operateColumn,
     ].filter(Boolean);
   }
@@ -202,6 +175,21 @@ export class RestTable<T extends DataObject> extends ObservedComponent<
   get editing() {
     return !isEmpty(this.observedProps.store.currentOne);
   }
+
+  renderCustomBody = ({ key, type, options, accept }: Column<T>): Column<T>['renderBody'] =>
+    type === 'url'
+      ? ({ [key]: value }) =>
+          value && (
+            <a target="_blank" href={value}>
+              {value}
+            </a>
+          )
+      : type === 'file'
+        ? ({ [key]: value }) => <FilePreview type={accept} path={value} />
+        : options
+          ? ({ [key]: value }) =>
+              value && <BadgeBar list={(value as string[]).map(text => ({ text }))} />
+          : undefined;
 
   renderTable() {
     const {
@@ -294,24 +282,17 @@ export class RestTable<T extends DataObject> extends ObservedComponent<
   }
 
   render() {
-    const { className, editable, deletable, store, translator, onSubmit } =
-      this.props;
-    const { indexKey, pageSize, pageIndex, pageCount, totalCount } = store,
-      { t } = translator;
+    const { className, editable, deletable, store, translator, onSubmit } = this.props;
+    const { t } = translator,
+      { indexKey, pageSize, pageIndex, pageCount, totalCount } = store;
 
     return (
       <div className={classNames('overflow-auto', className)}>
         <header className="d-flex justify-content-between sticky-top bg-white py-3">
           <nav className="d-flex align-items-center">
-            <Pager
-              {...{ pageSize, pageIndex, pageCount }}
-              onChange={this.getList}
-            />
-            {!!totalCount && (
-              <span className="mx-3 fs14">
-                {t('total_x_rows', { totalCount })}
-              </span>
-            )}
+            <Pager {...{ pageSize, pageIndex, pageCount }} onChange={this.getList} />
+
+            {!!totalCount && <span className="mx-3 fs14">{t('total_x_rows', { totalCount })}</span>}
           </nav>
           <div>
             {deletable && (
@@ -324,9 +305,7 @@ export class RestTable<T extends DataObject> extends ObservedComponent<
               </Button>
             )}
             {editable && (
-              <Button
-                onClick={() => (store.currentOne[indexKey] = '' as T[keyof T])}
-              >
+              <Button onClick={() => (store.currentOne[indexKey] = '' as T[keyof T])}>
                 {t('create')}
               </Button>
             )}

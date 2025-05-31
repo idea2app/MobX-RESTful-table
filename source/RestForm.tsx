@@ -24,6 +24,7 @@ export interface Field<T extends DataObject>
       | 'max'
       | 'maxLength'
       | 'step'
+      | 'pattern'
       | 'multiple'
       | 'accept'
       | 'placeholder'
@@ -205,10 +206,12 @@ export class RestForm<
     );
 
   renderHTMLEditor =
-    ({ key, contentEditable, ...meta }: Field<D>) =>
+    ({ key, contentEditable, tools, ...meta }: Field<D>) =>
     (data: D) => (
       <RestForm.FieldBox name={key} {...meta}>
-        {this.fieldReady && <Editor name={key?.toString()} defaultValue={data[key!] as string} />}
+        {this.fieldReady && (
+          <Editor tools={tools} name={key?.toString()} defaultValue={data[key!] as string} />
+        )}
       </RestForm.FieldBox>
     );
 

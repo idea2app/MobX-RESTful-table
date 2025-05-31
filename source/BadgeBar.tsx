@@ -10,7 +10,6 @@ export const VariantColors: Variant[] = [
   'danger',
   'warning',
   'info',
-  'dark',
 ];
 
 export const text2color = (raw: string) =>
