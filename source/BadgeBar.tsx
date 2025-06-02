@@ -42,8 +42,8 @@ export const BadgeBar: FC<BadgeBarProps> = ({
         as="li"
         className="d-flex align-items-center gap-2"
       >
-        {link ? (
-          <a className="text-decoration-none text-white" href={link}>
+        {link || URL.canParse(text) ? (
+          <a className="text-decoration-none text-white" href={link || text}>
             {text}
           </a>
         ) : (

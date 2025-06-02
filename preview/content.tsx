@@ -51,18 +51,20 @@ const columns: Column<GitRepository>[] = [
         list={(topics || []).map(text => ({ text, link: `https://github.com/topics/${text}` }))}
       />
     ),
-  },
-  { key: 'stargazers_count', type: 'number', renderHead: 'Star Count' },
-  {
-    key: 'description',
-    renderHead: 'Description',
-    contentEditable: true,
-    renderBody: ({ description }) => (
-      <p className="m-0 text-truncate" style={{ maxWidth: '10rem' }} title={description}>
-        {description}
-      </p>
+    renderInput: ({ topics }) => (
+      <SearchableInput
+        translator={i18n}
+        store={topicStore}
+        labelKey="name"
+        valueKey="name"
+        placeholder="search GitHub topics"
+        multiple
+        defaultValue={topics?.map(value => ({ value, label: value }))}
+      />
     ),
   },
+  { key: 'stargazers_count', type: 'number', renderHead: 'Star Count' },
+  { key: 'description', renderHead: 'Description', rows: 3 },
 ];
 
 export const Content: FC = () => (

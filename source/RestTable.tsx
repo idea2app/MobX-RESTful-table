@@ -176,7 +176,14 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
     return !isEmpty(this.observedProps.store.currentOne);
   }
 
-  renderCustomBody = ({ key, type, options, accept }: Column<T>): Column<T>['renderBody'] =>
+  renderCustomBody = ({
+    key,
+    type,
+    multiple,
+    options,
+    accept,
+    rows,
+  }: Column<T>): Column<T>['renderBody'] =>
     type === 'url'
       ? ({ [key]: value }) =>
           value && (
@@ -184,12 +191,25 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
               {value}
             </a>
           )
-      : type === 'file'
-        ? ({ [key]: value }) => <FilePreview type={accept} path={value} />
-        : options
-          ? ({ [key]: value }) =>
-              value && <BadgeBar list={(value as string[]).map(text => ({ text }))} />
-          : undefined;
+      : type === 'email'
+        ? ({ [key]: value }) => value && <a href={`mailto:${value}`}>{value}</a>
+        : type === 'tel'
+          ? ({ [key]: value }) => value && <a href={`tel:${value}`}>{value}</a>
+          : type === 'file'
+            ? ({ [key]: value }) =>
+                ((Array.isArray(value) ? value : [value]) as string[]).map(
+                  path => path && <FilePreview key={path} type={accept} path={path} />,
+                )
+            : options || multiple
+              ? ({ [key]: value }) =>
+                  value && <BadgeBar list={(value as string[]).map(text => ({ text }))} />
+              : !options && rows
+                ? ({ [key]: value }) => (
+                    <p className="m-0 text-truncate" style={{ maxWidth: '20rem' }} title={value}>
+                      {value}
+                    </p>
+                  )
+                : undefined;
 
   renderTable() {
     const {

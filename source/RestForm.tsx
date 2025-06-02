@@ -8,6 +8,7 @@ import { Button, Form, FormGroupProps, FormProps, InputGroup } from 'react-boots
 import { Editor, EditorProps } from 'react-bootstrap-editor';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
+import { BadgeInput } from './BadgeInput';
 import { FilePreview } from './FilePreview';
 import { FileModel, FileUploader } from './FileUploader';
 import { FormField, FormFieldProps } from './FormField';
@@ -33,7 +34,7 @@ export interface Field<T extends DataObject>
     Pick<EditorProps, 'tools'>,
     Partial<Record<`${'' | 'in'}validMessage`, ReactNode>> {
   key?: keyof T;
-  renderLabel?: ReactNode | ((data: keyof T) => ReactNode);
+  renderLabel?: ReactNode | ((key: keyof T) => ReactNode);
   renderInput?: (data: T, meta: Field<T>) => ReactNode;
   uploader?: FileModel;
 }
@@ -141,8 +142,10 @@ export class RestForm<
             ? this.renderCheckGroup(meta)
             : meta.contentEditable
               ? this.renderHTMLEditor(meta)
-              : meta.key &&
-                this.renderField(meta, meta.rows && !meta.options ? { as: 'textarea' } : {})),
+              : !meta.options && meta.multiple
+                ? this.renderMultipleInput(meta)
+                : meta.key &&
+                  this.renderField(meta, meta.rows && !meta.options ? { as: 'textarea' } : {})),
     }));
   }
 
@@ -195,6 +198,7 @@ export class RestForm<
                 id={[key, value] + ''}
                 label={text}
                 inline
+                {...meta}
                 type={type as 'radio' | 'checkbox'}
                 name={key.toString()}
                 value={value}
@@ -205,13 +209,19 @@ export class RestForm<
       </RestForm.FieldBox>
     );
 
+  renderMultipleInput =
+    ({ key, type, ...meta }: Field<D>) =>
+    ({ [key]: value }: D) => (
+      <RestForm.FieldBox name={key} {...meta}>
+        {this.fieldReady && <BadgeInput {...meta} name={key?.toString()} defaultValue={value} />}
+      </RestForm.FieldBox>
+    );
+
   renderHTMLEditor =
     ({ key, contentEditable, tools, ...meta }: Field<D>) =>
-    (data: D) => (
+    ({ [key]: value }: D) => (
       <RestForm.FieldBox name={key} {...meta}>
-        {this.fieldReady && (
-          <Editor tools={tools} name={key?.toString()} defaultValue={data[key!] as string} />
-        )}
+        {this.fieldReady && <Editor tools={tools} name={key?.toString()} defaultValue={value} />}
       </RestForm.FieldBox>
     );
 
@@ -222,7 +232,7 @@ export class RestForm<
     const label =
       typeof renderLabel === 'function' ? renderLabel?.(key) : renderLabel || (key as string);
 
-    return (data: D) => (
+    return ({ [key]: value }: D) => (
       <InputGroup hasValidation={this.customValidation}>
         {this.fieldReady && (
           <FormField
@@ -230,7 +240,7 @@ export class RestForm<
             {...meta}
             {...{ type, step, label }}
             name={key.toString()}
-            defaultValue={RestForm.dateValueOf({ type, step }, data[key])}
+            defaultValue={RestForm.dateValueOf({ type, step }, value)}
           />
         )}
         {validMessage && (
