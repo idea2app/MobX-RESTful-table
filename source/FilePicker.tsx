@@ -1,6 +1,6 @@
-import { computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { FormComponent, FormComponentProps } from 'mobx-react-helper';
+import { FormComponent, FormComponentProps, reaction } from 'mobx-react-helper';
 import { CloseButton } from 'react-bootstrap';
 import { blobOf } from 'web-utility';
 
@@ -32,9 +32,8 @@ export class FilePicker extends FormComponent<FilePickerProps> {
     return typeof value === 'string' ? value : blobCache.get(value);
   }
 
-  #disposer?: IReactionDisposer;
-
-  #restoreFile = async (data: FilePickerProps['value']) => {
+  @reaction(({ value }) => value)
+  protected async restoreFile(data: FilePickerProps['value']) {
     if (typeof data === 'string')
       try {
         const blob = await blobOf(data),
@@ -52,7 +51,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
       return (this.file = data);
     }
     return (this.file = undefined);
-  };
+  }
 
   #changeFile = (data?: File) => {
     this.file = data;
@@ -75,21 +74,11 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   componentDidMount() {
     super.componentDidMount();
 
-    this.#restoreFile(this.value);
-
-    this.#disposer = reaction(() => this.value, this.#restoreFile);
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount();
-
-    this.#disposer?.();
-    this.#disposer = undefined;
+    this.restoreFile(this.value);
   }
 
   renderInput() {
-    const { id, name, value, required, disabled, accept, multiple } =
-        this.props,
+    const { id, name, value, required, disabled, accept, multiple } = this.props,
       { filePath } = this;
 
     return (
@@ -101,9 +90,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           name={value ? undefined : name}
           required={!value && required}
           {...{ id, disabled, accept, multiple }}
-          onChange={({ currentTarget: { files } }) =>
-            this.#changeFile(files?.[0])
-          }
+          onChange={({ currentTarget: { files } }) => this.#changeFile(files?.[0])}
         />
         {filePath && <input type="hidden" name={name} value={filePath} />}
       </>
@@ -120,11 +107,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
         style={{ width: '10rem', height: '10rem', ...style }}
       >
         {filePath ? (
-          <FilePreview
-            className="w-100 h-100"
-            type={fileType}
-            path={filePath}
-          />
+          <FilePreview className="w-100 h-100" type={fileType} path={filePath} />
         ) : (
           <div className="w-100 h-100 d-flex justify-content-center align-items-center display-1">
             +

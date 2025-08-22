@@ -1,6 +1,6 @@
-import { IReactionDisposer, observable, reaction } from 'mobx';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { FormComponent, FormComponentProps } from 'mobx-react-helper';
+import { FormComponent, FormComponentProps, reaction } from 'mobx-react-helper';
 import { BaseModel } from 'mobx-restful';
 import { DragEvent } from 'react';
 
@@ -70,26 +70,19 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
   @observable
   accessor pickIndex: number | undefined;
 
-  #disposer?: IReactionDisposer;
-
   componentDidMount() {
     super.componentDidMount();
 
     const { store } = this.props;
-
+debugger
     store.files = this.value || [];
-
-    this.#disposer = reaction(
-      () => this.value,
-      value => (store.files = value),
-    );
   }
 
-  componentWillUnmount() {
-    super.componentWillUnmount();
+  @reaction(({ value }) => value)
+  protected restoreFile(value: FileUploaderProps['value']) {
+    const { store } = this.props;
 
-    this.#disposer?.();
-    this.#disposer = undefined;
+    store.files = value;
   }
 
   handleDrop = (index: number) => (event: DragEvent<HTMLElement>) => {
@@ -143,11 +136,7 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
             onDragStart={() => (this.pickIndex = index)}
             onDrop={this.handleDrop(index)}
           >
-            <FilePicker
-              {...props}
-              value={file}
-              onChange={this.handleChange(file)}
-            />
+            <FilePicker {...props} value={file} onChange={this.handleChange(file)} />
           </li>
         ))}
         {(multiple || !value?.[0]) && (

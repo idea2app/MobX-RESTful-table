@@ -4,8 +4,8 @@ import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
-import { DataObject, IDType } from 'mobx-restful';
-import { Component, ReactNode } from 'react';
+import { DataObject, Filter, IDType } from 'mobx-restful';
+import { ReactNode } from 'react';
 import { Button, Form, Spinner, Table, TableProps } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
@@ -26,25 +26,29 @@ type Translator<T extends DataObject> = RestFormProps<T>['translator'] &
     string,
     'create' | 'view' | 'edit' | 'delete' | 'total_x_rows' | 'sure_to_delete_x'
   >;
-export interface RestTableProps<T extends DataObject>
+export interface RestTableProps<D extends DataObject, F extends Filter<D> = Filter<D>>
   extends Omit<TableProps, 'onSubmit'>,
-    Omit<RestFormProps<T>, 'id' | 'fields' | 'translator'> {
+    Omit<RestFormProps<D>, 'id' | 'fields' | 'translator'> {
+  filter?: F;
   editable?: boolean;
   deletable?: boolean;
-  columns: Column<T>[];
-  translator: Translator<T>;
+  columns: Column<D>[];
+  translator: Translator<D>;
   onCheck?: (keys: IDType[]) => any;
 }
 
 @observer
-export class RestTable<T extends DataObject> extends ObservedComponent<RestTableProps<T>> {
+export class RestTable<
+  D extends DataObject,
+  F extends Filter<D> = Filter<D>,
+> extends ObservedComponent<RestTableProps<D, F>> {
   static readonly displayName = 'RestTable';
 
   componentDidMount() {
-    const { store } = this.props;
+    const { store, filter } = this.props;
 
     store.clear();
-    store.getList();
+    store.getList(filter);
   }
 
   @observable
@@ -72,7 +76,7 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
   };
 
   @computed
-  get checkColumn(): Column<T> {
+  get checkColumn(): Column<D> {
     const { checkedKeys, toggleCheckAll } = this,
       { indexKey, currentPage } = this.observedProps.store;
 
@@ -108,7 +112,7 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
   }
 
   @computed
-  get operateColumn(): Column<T> {
+  get operateColumn(): Column<D> {
     const { editable, deletable, columns, store, translator } = this.observedProps;
     const { t } = translator,
       readOnly = columns.every(({ readOnly }) => readOnly),
@@ -148,14 +152,14 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
   }
 
   @computed
-  get columns(): Column<T>[] {
+  get columns(): Column<D>[] {
     const { editable, deletable, columns, onCheck } = this.observedProps;
 
     return [
       onCheck && this.checkColumn,
       ...columns.map(
         ({ renderBody, ...column }) =>
-          ({ ...column, renderBody: renderBody ?? this.renderCustomBody(column) }) as Column<T>,
+          ({ ...column, renderBody: renderBody ?? this.renderCustomBody(column) }) as Column<D>,
       ),
       (editable || deletable) && this.operateColumn,
     ].filter(Boolean);
@@ -183,7 +187,7 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
     options,
     accept,
     rows,
-  }: Column<T>): Column<T>['renderBody'] =>
+  }: Column<D>): Column<D>['renderBody'] =>
     type === 'url'
       ? ({ [key]: value }) =>
           value && (
@@ -289,9 +293,9 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
   }
 
   getList = debounce(({ pageIndex, pageSize }) => {
-    const { store } = this.props;
+    const { store, filter } = this.props;
 
-    if (store.downloading < 1) store.getList({}, pageIndex, pageSize);
+    if (store.downloading < 1) store.getList(filter, pageIndex, pageSize);
   });
 
   async deleteList(keys: IDType[]) {
@@ -325,7 +329,7 @@ export class RestTable<T extends DataObject> extends ObservedComponent<RestTable
               </Button>
             )}
             {editable && (
-              <Button onClick={() => (store.currentOne[indexKey] = '' as T[keyof T])}>
+              <Button onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}>
                 {t('create')}
               </Button>
             )}

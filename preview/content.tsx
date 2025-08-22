@@ -28,6 +28,8 @@ interface Price {
 
 class MyFileModel extends FileModel {}
 
+const fileStore = new MyFileModel();
+
 const columns: Column<GitRepository>[] = [
   {
     key: 'full_name',
@@ -181,7 +183,7 @@ export const Content: FC = () => (
       <CodeExample>
         <FileUploader
           accept="image/*"
-          store={new MyFileModel()}
+          store={fileStore}
           multiple
           defaultValue={['https://web-cell.dev/WebCell-0.f9823b00.png']}
           onChange={console.log}
