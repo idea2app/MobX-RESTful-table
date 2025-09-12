@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A Pagination Table & Scroll List component suite for CRUD operation, which is based on MobX RESTful & React.",
@@ -36,7 +36,7 @@
     "react-bootstrap": "^2.10.10",
     "react-bootstrap-editor": "^2.1.1",
     "regenerator-runtime": "^0.14.1",
-    "web-utility": "^4.5.1"
+    "web-utility": "^4.5.3"
   },
   "peerDependencies": {
     "react": ">=16.8"
@@ -48,22 +48,22 @@
     "@parcel/transformer-typescript-tsc": "~2.15.4",
     "@parcel/transformer-typescript-types": "~2.15.4",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^22.17.2",
-    "@types/react": "^19.1.11",
-    "@types/react-dom": "^19.1.7",
+    "@types/node": "^22.18.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
     "husky": "^9.1.7",
     "idea-react": "^2.0.0-rc.13",
     "koajax": "^3.1.2",
-    "lint-staged": "^16.1.5",
-    "mobx-github": "^0.3.11",
+    "lint-staged": "^16.1.6",
+    "mobx-github": "^0.5.1",
     "parcel": "~2.15.4",
     "prettier": "^3.6.2",
     "prismjs": "^1.30.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "rimraf": "^6.0.1",
-    "typedoc": "^0.28.10",
-    "typedoc-plugin-mdn-links": "^5.0.8",
+    "typedoc": "^0.28.12",
+    "typedoc-plugin-mdn-links": "^5.0.9",
     "typescript": "~5.9.2"
   },
   "resolutions": {

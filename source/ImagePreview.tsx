@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Component } from 'react';
+import { ObservedComponent, reaction } from 'mobx-react-helper';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 
 @observer
-export class ImagePreview extends Component<ImageProps> {
+export class ImagePreview extends ObservedComponent<ImageProps> {
   static readonly displayName = 'ImagePreview';
 
   @observable
@@ -17,16 +17,13 @@ export class ImagePreview extends Component<ImageProps> {
   @observable
   accessor viewing = false;
 
+  @reaction(({ observedProps }) => observedProps.src)
   componentDidMount() {
-    const { src } = this.props;
+    const { src } = this.observedProps;
 
     this.loadedPath = '';
 
     if (src) this.load(src);
-  }
-
-  componentDidUpdate({ src }: Readonly<ImageProps>) {
-    if (src !== this.props.src) this.componentDidMount();
   }
 
   async load(path: string) {
@@ -47,16 +44,7 @@ export class ImagePreview extends Component<ImageProps> {
 
   render() {
     const { downloading, loadedPath, viewing } = this,
-      {
-        className,
-        loading,
-        src,
-        fluid,
-        rounded,
-        roundedCircle,
-        thumbnail,
-        ...props
-      } = this.props;
+      { className, loading, src, fluid, rounded, roundedCircle, thumbnail, ...props } = this.props;
 
     return (
       <div

@@ -23,6 +23,7 @@ export interface BadgeItem {
 export interface BadgeBarProps extends BadgeProps {
   list: BadgeItem[];
   bgResolver?: (text: string) => Variant | string;
+  onCheck?: (item: BadgeItem, index: number) => any;
   onDelete?: (item: BadgeItem, index: number) => any;
 }
 
@@ -30,6 +31,7 @@ export const BadgeBar: FC<BadgeBarProps> = ({
   className = '',
   list,
   bgResolver = text2color,
+  onCheck,
   onDelete,
   ...props
 }) => (
@@ -46,6 +48,8 @@ export const BadgeBar: FC<BadgeBarProps> = ({
           <a className="text-decoration-none text-white" href={link || text}>
             {text}
           </a>
+        ) : onCheck ? (
+          <span onClick={() => onCheck({ text, link }, index)}>{text}</span>
         ) : (
           text
         )}
