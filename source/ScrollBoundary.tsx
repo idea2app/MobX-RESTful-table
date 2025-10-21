@@ -11,23 +11,25 @@ export interface ScrollBoundaryProps
   onTouch: TouchHandler;
 }
 
-const touch =
-  (edge: EdgePosition, onTouch: TouchHandler) => (node: HTMLElement | null) => {
-    if (!node) return;
+const EdgeOrder: EdgePosition[] = ['top', 'right', 'bottom', 'left'];
 
-    const anchor = node.parentElement?.parentElement;
+const touch = (edge: EdgePosition, onTouch: TouchHandler) => (node: HTMLElement | null) => {
+  if (!node) return;
 
-    const { overflowX, overflowY } = anchor ? getComputedStyle(anchor) : {};
+  const anchor = node.parentElement?.parentElement;
 
-    const root = `${overflowX}${overflowY}`.match(/auto|scroll/)
-      ? anchor
-      : document;
+  const { overflowX, overflowY } = anchor ? getComputedStyle(anchor) : {};
 
-    new IntersectionObserver(
-      ([{ isIntersecting }]) => isIntersecting && onTouch(edge),
-      { root },
-    ).observe(node);
-  };
+  const root = `${overflowX}${overflowY}`.match(/auto|scroll/) ? anchor : null;
+
+  const edgeMargins = Array(4).fill('0px');
+  edgeMargins[EdgeOrder.indexOf(edge)] = '200px';
+
+  new IntersectionObserver(([{ isIntersecting }]) => isIntersecting && onTouch(edge), {
+    root,
+    rootMargin: edgeMargins.join(' '),
+  }).observe(node);
+};
 
 export const ScrollBoundary: FC<ScrollBoundaryProps> = ({
   className,
@@ -40,31 +42,19 @@ export const ScrollBoundary: FC<ScrollBoundaryProps> = ({
   ...props
 }) => (
   <div className={classNames('position-relative', className)} {...props}>
-    <div
-      className="position-absolute top-0 left-0 w-100"
-      ref={touch('top', onTouch)}
-    >
+    <div className="position-absolute top-0 left-0 w-100" ref={touch('top', onTouch)}>
       {top}
     </div>
-    <div
-      className="position-absolute top-0 left-0 h-100"
-      ref={touch('left', onTouch)}
-    >
+    <div className="position-absolute top-0 left-0 h-100" ref={touch('left', onTouch)}>
       {left}
     </div>
 
     {children}
 
-    <div
-      className="position-absolute top-0 right-0 h-100"
-      ref={touch('right', onTouch)}
-    >
+    <div className="position-absolute top-0 right-0 h-100" ref={touch('right', onTouch)}>
       {right}
     </div>
-    <div
-      className="position-absolute top-100 left-0 w-100"
-      ref={touch('bottom', onTouch)}
-    >
+    <div className="position-absolute top-100 left-0 w-100" ref={touch('bottom', onTouch)}>
       {bottom}
     </div>
   </div>
