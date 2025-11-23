@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { debounce } from 'lodash';
 import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
@@ -14,6 +13,8 @@ import { FilePreview } from './FilePreview';
 import { Pager } from './Pager';
 import { Field, RestForm, RestFormProps } from './RestForm';
 import { RestFormModal } from './RestFormModal';
+
+import * as styles from './RestTable.module.less';
 
 export interface Column<T extends DataObject> extends Omit<Field<T>, 'renderLabel'> {
   renderHead?: Field<T>['renderLabel'];
@@ -336,7 +337,7 @@ export class RestTable<
         <header className="sticky-top bg-white py-3">
           {filterFields && (
             <RestForm
-              className="d-flex flex-wrap align-items-center gap-3 pb-3 border-bottom"
+              className={`d-flex flex-wrap align-items-center gap-3 pb-3 border-bottom ${styles.filterBar}`}
               size={fieldSize}
               translator={translator}
               fields={filterFields}

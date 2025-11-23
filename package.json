@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A Pagination Table & Scroll List component suite for CRUD operation, which is based on MobX RESTful & React.",
@@ -45,6 +45,7 @@
     "@octokit/openapi-types": "^27.0.0",
     "@parcel/config-default": "~2.16.1",
     "@parcel/packager-ts": "~2.16.1",
+    "@parcel/transformer-less": "~2.16.1",
     "@parcel/transformer-typescript-tsc": "~2.16.1",
     "@parcel/transformer-typescript-types": "~2.16.1",
     "@types/lodash": "^4.17.21",
