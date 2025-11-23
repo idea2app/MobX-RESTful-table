@@ -316,25 +316,34 @@ export class RestTable<
   }
 
   render() {
-    const { className, editable, deletable, filterFields, store, translator, onSubmit } =
-        this.props,
+    const {
+        className = 'overflow-auto d-flex flex-column gap-3',
+        editable,
+        deletable,
+        filterFields,
+        store,
+        translator,
+        onSubmit,
+        onReset,
+        ...props
+      } = this.props,
       { fieldSize } = this;
     const { t } = translator,
       { indexKey, pageSize, pageIndex, pageCount, totalCount } = store;
 
     return (
-      <div className={classNames('overflow-auto', className)}>
+      <div className={className} {...props}>
         <header className="sticky-top bg-white py-3">
-          <RestForm
-            className="d-flex flex-wrap"
-            size={fieldSize}
-            translator={translator}
-            fields={filterFields}
-            onSubmit={filter => store.getList(filter, 1)}
-            onReset={() => store.getList({}, 1)}
-          />
-          <hr />
-
+          {filterFields && (
+            <RestForm
+              className="d-flex flex-wrap align-items-center gap-3 pb-3 border-bottom"
+              size={fieldSize}
+              translator={translator}
+              fields={filterFields}
+              onSubmit={filter => store.getList(filter, 1)}
+              onReset={() => store.getList({}, 1)}
+            />
+          )}
           <div className="d-flex justify-content-between align-items-center">
             {deletable && (
               <Button

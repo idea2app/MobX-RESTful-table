@@ -285,8 +285,8 @@ export class RestForm<
     return (
       <Form
         {...props}
+        {...{ className, validated }}
         noValidate={customValidation}
-        validated={validated}
         onSubmit={this.handleSubmit}
         onReset={this.handleReset}
       >
