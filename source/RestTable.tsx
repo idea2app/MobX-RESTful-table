@@ -12,7 +12,7 @@ import { isEmpty } from 'web-utility';
 import { BadgeBar } from './BadgeBar';
 import { FilePreview } from './FilePreview';
 import { Pager } from './Pager';
-import { Field, RestFormProps } from './RestForm';
+import { Field, RestForm, RestFormProps } from './RestForm';
 import { RestFormModal } from './RestFormModal';
 
 export interface Column<T extends DataObject> extends Omit<Field<T>, 'renderLabel'> {
@@ -27,9 +27,10 @@ type Translator<T extends DataObject> = RestFormProps<T>['translator'] &
     'create' | 'view' | 'edit' | 'delete' | 'total_x_rows' | 'sure_to_delete_x'
   >;
 export interface RestTableProps<D extends DataObject, F extends Filter<D> = Filter<D>>
-  extends Omit<TableProps, 'onSubmit'>,
-    Omit<RestFormProps<D>, 'id' | 'fields' | 'translator'> {
+  extends Omit<TableProps, 'onSubmit' | 'onReset'>,
+    Omit<RestFormProps<D>, 'id' | 'size' | 'fields' | 'translator'> {
   filter?: F;
+  filterFields?: Field<F>[];
   editable?: boolean;
   deletable?: boolean;
   columns: Column<D>[];
@@ -49,6 +50,13 @@ export class RestTable<
 
     store.clear();
     store.getList(filter);
+  }
+
+  @computed
+  get fieldSize() {
+    const { size } = this.observedProps;
+
+    return !size ? undefined : size === 'sm' ? 'sm' : 'lg';
   }
 
   @observable
@@ -113,7 +121,8 @@ export class RestTable<
 
   @computed
   get operateColumn(): Column<D> {
-    const { editable, deletable, columns, store, translator } = this.observedProps;
+    const { editable, deletable, columns, store, translator } = this.observedProps,
+      { fieldSize } = this;
     const { t } = translator,
       readOnly = columns.every(({ readOnly }) => readOnly),
       disabled = columns.every(({ disabled }) => disabled);
@@ -129,7 +138,7 @@ export class RestTable<
               <Button
                 className="text-nowrap m-1"
                 variant={readOnly ? 'primary' : 'warning'}
-                size="sm"
+                size={fieldSize}
                 onClick={() => (store.currentOne = data)}
               >
                 {readOnly ? t('view') : t('edit')}
@@ -140,7 +149,7 @@ export class RestTable<
             <Button
               className="text-nowrap m-1"
               variant="danger"
-              size="sm"
+              size={fieldSize}
               onClick={() => this.deleteList([data.id])}
             >
               {t('delete')}
@@ -225,6 +234,7 @@ export class RestTable<
         deletable,
         onCheck,
         onSubmit,
+        onReset,
         responsive = true,
         ...tableProps
       } = this.props,
@@ -306,30 +316,41 @@ export class RestTable<
   }
 
   render() {
-    const { className, editable, deletable, store, translator, onSubmit } = this.props;
+    const { className, editable, deletable, filterFields, store, translator, onSubmit } =
+        this.props,
+      { fieldSize } = this;
     const { t } = translator,
       { indexKey, pageSize, pageIndex, pageCount, totalCount } = store;
 
     return (
       <div className={classNames('overflow-auto', className)}>
-        <header className="d-flex justify-content-between sticky-top bg-white py-3">
-          <nav className="d-flex align-items-center">
-            <Pager {...{ pageSize, pageIndex, pageCount }} onChange={this.getList} />
+        <header className="sticky-top bg-white py-3">
+          <RestForm
+            className="d-flex flex-wrap"
+            size={fieldSize}
+            translator={translator}
+            fields={filterFields}
+            onSubmit={filter => store.getList(filter, 1)}
+            onReset={() => store.getList({}, 1)}
+          />
+          <hr />
 
-            {!!totalCount && <span className="mx-3 fs14">{t('total_x_rows', { totalCount })}</span>}
-          </nav>
-          <div>
+          <div className="d-flex justify-content-between align-items-center">
             {deletable && (
               <Button
                 className="mx-2"
                 variant="danger"
+                size={fieldSize}
                 onClick={() => this.deleteList(this.checkedKeys)}
               >
                 {t('delete')}
               </Button>
             )}
             {editable && (
-              <Button onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}>
+              <Button
+                size={fieldSize}
+                onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}
+              >
                 {t('create')}
               </Button>
             )}
@@ -338,8 +359,15 @@ export class RestTable<
 
         {this.renderTable()}
 
+        <footer className="d-flex justify-content-between align-items-center">
+          {!!totalCount && <span className="mx-3 fs14">{t('total_x_rows', { totalCount })}</span>}
+
+          <Pager {...{ pageSize, pageIndex, pageCount }} onChange={this.getList} />
+        </footer>
+
         {editable && (
           <RestFormModal
+            size={fieldSize}
             fields={this.columns.map(({ renderHead, ...field }) => ({
               ...field,
               renderLabel: renderHead,
