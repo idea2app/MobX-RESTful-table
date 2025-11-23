@@ -6,7 +6,7 @@ import { isEmpty } from 'web-utility';
 import { RestForm, RestFormProps } from './RestForm';
 
 export const RestFormModal = observer(
-  <T extends DataObject>({ fields, store, translator }: RestFormProps<T>) => {
+  <T extends DataObject>({ fields, store, translator, ...props }: RestFormProps<T>) => {
     const { indexKey, currentOne } = store;
 
     const editing = !isEmpty(currentOne),
@@ -17,7 +17,7 @@ export const RestFormModal = observer(
         <Modal.Header closeButton>{ID}</Modal.Header>
 
         <Modal.Body>
-          <RestForm id={ID} {...{ fields, store, translator }} />
+          <RestForm id={ID} {...{ fields, store, translator, ...props }} />
         </Modal.Body>
       </Modal>
     );

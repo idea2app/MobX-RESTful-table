@@ -1,4 +1,4 @@
-import { GitRepository } from 'mobx-github';
+import { GitRepository, RepositoryFilter } from 'mobx-github';
 import { FC } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 
@@ -7,6 +7,7 @@ import {
   BadgeBar,
   BadgeInput,
   Column,
+  Field,
   FileModel,
   FilePicker,
   FilePreview,
@@ -29,6 +30,14 @@ interface Price {
 class MyFileModel extends FileModel {}
 
 const fileStore = new MyFileModel();
+
+const filterFields: Field<RepositoryFilter>[] = [
+  { key: 'full_name', renderLabel: 'Repository Name' },
+  { key: 'homepage', renderLabel: 'Home Page' },
+  { key: 'language', renderLabel: 'Programming Language' },
+  { key: 'topics', renderLabel: 'Topic' },
+  { key: 'description', renderLabel: 'Description' },
+];
 
 const columns: Column<GitRepository>[] = [
   {
@@ -211,6 +220,7 @@ export const Content: FC = () => (
           hover
           editable
           deletable
+          filterFields={filterFields}
           columns={columns}
           store={repositoryStore}
           translator={i18n}

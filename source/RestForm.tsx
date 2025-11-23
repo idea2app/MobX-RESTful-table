@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import { FormEvent, Fragment, InputHTMLAttributes, ReactNode } from 'react';
-import { Button, Form, FormGroupProps, FormProps, InputGroup } from 'react-bootstrap';
+import { Button, ButtonProps, Form, FormGroupProps, FormProps, InputGroup } from 'react-bootstrap';
 import { Editor, EditorProps } from 'react-bootstrap-editor';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
@@ -46,12 +46,14 @@ export interface FieldBoxProps<D extends DataObject>
 }
 
 export interface RestFormProps<D extends DataObject, F extends Filter<D> = Filter<D>>
-  extends Pick<FormProps, 'className' | 'style'> {
+  extends Pick<FormProps, 'className' | 'style'>,
+    Pick<ButtonProps, 'size'> {
   id?: IDType;
   fields: Field<D>[];
-  store: ListModel<D, F>;
+  store?: ListModel<D, F>;
   translator: TranslationModel<string, 'submit' | 'cancel'>;
   onSubmit?: (data: D) => any;
+  onReset?: (data: Partial<D>) => any;
 }
 
 @observer
@@ -104,7 +106,7 @@ export class RestForm<
   componentDidMount() {
     const { id, store } = this.props;
 
-    if (id) store.getOne(id);
+    if (id) store?.getOne(id);
   }
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -118,14 +120,22 @@ export class RestForm<
 
     if (valid) {
       const { id, store, onSubmit } = this.props;
+      let data = formToJSON<D>(form);
 
-      const updated = await store.updateOne(formToJSON(form), id);
+      data = await store?.updateOne(data, id);
 
-      onSubmit?.(updated);
+      onSubmit?.(data);
 
-      store.clearCurrent();
+      store?.clearCurrent();
     }
     this.validated = false;
+  };
+
+  handleReset = ({ currentTarget }: FormEvent<HTMLFormElement>) => {
+    const { onReset, store } = this.props;
+
+    onReset?.(formToJSON(currentTarget));
+    store?.clearCurrent();
   };
 
   @computed
@@ -163,7 +173,7 @@ export class RestForm<
   get fieldReady() {
     const { id, store } = this.observedProps;
 
-    return !id || store.downloading < 1;
+    return !id || store?.downloading < 1;
   }
 
   renderFile =
@@ -239,6 +249,7 @@ export class RestForm<
             {...props}
             {...meta}
             {...{ type, step, label }}
+            size={this.observedProps.size}
             name={key.toString()}
             defaultValue={RestForm.dateValueOf({ type, step }, value)}
           />
@@ -259,29 +270,41 @@ export class RestForm<
 
   render() {
     const { fields, readOnly, customValidation, validated } = this,
-      { id, className = '', store, translator, ...props } = this.observedProps;
-    const { downloading, uploading, currentOne } = store,
+      {
+        id,
+        className = 'd-flex flex-column gap-3',
+        size,
+        store,
+        translator,
+        ...props
+      } = this.props;
+    const { downloading, uploading, currentOne = {} as D } = store || {},
       { t } = translator;
     const loading = downloading > 0 || uploading > 0;
 
     return (
       <Form
-        className={`d-flex flex-column gap-3 ${className}`}
         {...props}
+        {...{ className, validated }}
         noValidate={customValidation}
-        validated={validated}
         onSubmit={this.handleSubmit}
-        onReset={() => store.clearCurrent()}
+        onReset={this.handleReset}
       >
         {fields.map(({ renderInput, ...meta }) => (
           <Fragment key={meta.key?.toString()}>{renderInput?.(currentOne, meta)}</Fragment>
         ))}
         {!readOnly && (
           <footer className="d-flex gap-3">
-            <Button className="flex-fill" type="submit" disabled={loading}>
+            <Button className="flex-fill" size={size} type="submit" disabled={loading}>
               {t('submit')}
             </Button>
-            <Button className="flex-fill" type="reset" variant="danger" disabled={loading}>
+            <Button
+              className="flex-fill"
+              size={size}
+              type="reset"
+              variant="danger"
+              disabled={loading}
+            >
               {t('cancel')}
             </Button>
           </footer>

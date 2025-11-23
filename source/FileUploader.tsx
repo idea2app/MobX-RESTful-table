@@ -74,7 +74,7 @@ export class FileUploader extends FormComponent<FileUploaderProps> {
     super.componentDidMount();
 
     const { store } = this.props;
-debugger
+
     store.files = this.value || [];
   }
 
