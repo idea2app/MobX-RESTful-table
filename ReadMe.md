@@ -49,6 +49,14 @@ npm i react \
 
 ## Configuration
 
+### `index.html`
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
+<link rel="stylesheet" href="https://unpkg.com/mobx-restful-table@2.6.2/dist/index.css" />
+```
+
 ### `tsconfig.json`
 
 ```json

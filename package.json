@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A Pagination Table & Scroll List component suite for CRUD operation, which is based on MobX RESTful & React.",
@@ -50,7 +50,7 @@
     "@parcel/transformer-typescript-types": "~2.16.1",
     "@types/lodash": "^4.17.21",
     "@types/node": "^22.19.1",
-    "@types/react": "^19.2.6",
+    "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "husky": "^9.1.7",
     "idea-react": "^2.0.0-rc.13",
@@ -58,12 +58,12 @@
     "lint-staged": "^16.2.7",
     "mobx-github": "^0.6.2",
     "parcel": "~2.16.1",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.2",
     "prismjs": "^1.30.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "rimraf": "^6.1.2",
-    "typedoc": "^0.28.14",
+    "typedoc": "^0.28.15",
     "typedoc-plugin-mdn-links": "^5.0.10",
     "typescript": "~5.9.3"
   },
@@ -99,7 +99,8 @@
     "preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel --open",
     "test": "lint-staged",
     "pack-preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel build --public-url=. --dist-dir=../docs/preview/",
-    "build": "rm -rf dist/ docs/  &&  parcel build  &&  typedoc source/  &&  npm run pack-preview",
+    "pack-dist": "rm -rf dist/ docs/  &&  parcel build  &&  sed -i 's/^require(\"\\.\\/index\\.css\");//' dist/index.js  &&  rimraf dist/index.js.map",
+    "build": "npm run pack-dist  &&  typedoc source/  &&  npm run pack-preview",
     "prepublishOnly": "npm test  &&  npm run build"
   }
 }
