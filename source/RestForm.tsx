@@ -202,11 +202,11 @@ export class RestForm<
       <RestForm.FieldBox name={key} {...meta}>
         <div>
           {this.fieldReady &&
-            options.map(({ value, text = value }) => (
+            options.map(({ value, label = value }) => (
               <Form.Check
                 key={value}
                 id={[key, value] + ''}
-                label={text}
+                label={label}
                 inline
                 {...meta}
                 type={type as 'radio' | 'checkbox'}

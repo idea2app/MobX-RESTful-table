@@ -28,7 +28,8 @@ type Translator<T extends DataObject> = RestFormProps<T>['translator'] &
     'create' | 'view' | 'edit' | 'delete' | 'total_x_rows' | 'sure_to_delete_x'
   >;
 export interface RestTableProps<D extends DataObject, F extends Filter<D> = Filter<D>>
-  extends Omit<TableProps, 'onSubmit' | 'onReset'>,
+  extends
+    Omit<TableProps, 'onSubmit' | 'onReset'>,
     Omit<RestFormProps<D>, 'id' | 'size' | 'fields' | 'translator'> {
   filter?: F;
   filterFields?: Field<F>[];
@@ -334,7 +335,7 @@ export class RestTable<
 
     return (
       <div className={className} {...props}>
-        <header className="sticky-top bg-white py-3">
+        <header className="sticky-top bg-white py-3 d-flex flex-column gap-3">
           {filterFields && (
             <RestForm
               className={`d-flex flex-wrap align-items-center gap-3 pb-3 border-bottom ${styles.filterBar}`}
