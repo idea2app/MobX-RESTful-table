@@ -8,7 +8,7 @@ import { Button, Form, InputGroup, ListGroup, Spinner } from 'react-bootstrap';
 import { Second } from 'web-utility';
 
 import { BadgeBar } from './BadgeBar';
-import { TextInputTypes } from './BadgeInput';
+import { TextInputType } from './BadgeInput';
 import { RestFormProps } from './RestForm';
 import { RestFormModal } from './RestFormModal';
 import { ScrollList, ScrollListProps } from './ScrollList';
@@ -20,13 +20,13 @@ export type SearchableInputProps<D extends DataObject, F extends Filter<D> = Fil
   'id' | 'defaultValue' | 'onChange' | 'defaultData' | 'renderList'
 > &
   FormComponentProps<OptionData[]> &
-  Omit<RestFormProps<D, F>, 'fields'> & {
+  Omit<RestFormProps<D, F>, 'defaultValue' | 'onChange' | 'fields'> & {
     translator: RestFormProps<D, F>['translator'] & ScrollListProps<D, F>['translator'];
     fields?: RestFormProps<D, F>['fields'];
     labelKey: keyof D;
     valueKey: keyof D;
     renderList?: ScrollListProps<D, F>['renderList'];
-    type?: (typeof TextInputTypes)[number];
+    type?: TextInputType;
     multiple?: boolean;
   };
 

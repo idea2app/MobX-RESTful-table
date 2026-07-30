@@ -7,14 +7,18 @@
     "useDefineForClassFields": true,
     "jsx": "react-jsx",
     "skipLibCheck": true,
-    "lib": ["ES2023", "DOM"],
+    "lib": ["ES2023", "DOM"]
   },
   "include": ["source/*"],
   "typedocOptions": {
     "name": "MobX RESTful table",
+    "includeVersion": true,
     "excludeExternals": true,
     "excludePrivate": true,
-    "readme": "./ReadMe.md",
     "plugin": ["typedoc-plugin-mdn-links"],
-  },
+    "readme": "./ReadMe.md",
+    "navigationLinks": {
+      "GitHub": "https://github.com/idea2app/MobX-RESTful-table"
+    }
+  }
 }

@@ -6,29 +6,33 @@ export type EdgePosition = 'top' | 'bottom' | 'left' | 'right';
 export type TouchHandler = (edge: EdgePosition) => any;
 
 export interface ScrollBoundaryProps
-  extends HTMLAttributes<HTMLDivElement>,
-    Partial<Record<EdgePosition, ReactNode>> {
+  extends HTMLAttributes<HTMLDivElement>, Partial<Record<EdgePosition, ReactNode>> {
   onTouch: TouchHandler;
 }
 
 const EdgeOrder: EdgePosition[] = ['top', 'right', 'bottom', 'left'];
 
-const touch = (edge: EdgePosition, onTouch: TouchHandler) => (node: HTMLElement | null) => {
-  if (!node) return;
+const touch = (edge: EdgePosition, onTouch: TouchHandler) => {
+  let observer: IntersectionObserver | undefined;
 
-  const anchor = node.parentElement?.parentElement;
+  return (node: HTMLElement | null) => {
+    if (!node) return observer?.disconnect();
 
-  const { overflowX, overflowY } = anchor ? getComputedStyle(anchor) : {};
+    const anchor = node.parentElement?.parentElement;
 
-  const root = `${overflowX}${overflowY}`.match(/auto|scroll/) ? anchor : null;
+    const { overflowX, overflowY } = anchor ? getComputedStyle(anchor) : {};
 
-  const edgeMargins = Array(4).fill('0px');
-  edgeMargins[EdgeOrder.indexOf(edge)] = '200px';
+    const root = `${overflowX}${overflowY}`.match(/auto|scroll/) ? anchor : null;
 
-  new IntersectionObserver(([{ isIntersecting }]) => isIntersecting && onTouch(edge), {
-    root,
-    rootMargin: edgeMargins.join(' '),
-  }).observe(node);
+    const edgeMargins = Array(4).fill('0px');
+    edgeMargins[EdgeOrder.indexOf(edge)] = '200px';
+
+    observer = new IntersectionObserver(([{ isIntersecting }]) => isIntersecting && onTouch(edge), {
+      root,
+      rootMargin: edgeMargins.join(' '),
+    });
+    observer.observe(node);
+  };
 };
 
 export const ScrollBoundary: FC<ScrollBoundaryProps> = ({

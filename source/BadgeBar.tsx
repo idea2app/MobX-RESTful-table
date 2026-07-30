@@ -49,7 +49,13 @@ export const BadgeBar: FC<BadgeBarProps> = ({
             {text}
           </a>
         ) : onCheck ? (
-          <span onClick={() => onCheck({ text, link }, index)}>{text}</span>
+          <button
+            type="button"
+            className="bg-transparent border-0 p-0"
+            onClick={() => onCheck({ text, link }, index)}
+          >
+            {text}
+          </button>
         ) : (
           text
         )}
