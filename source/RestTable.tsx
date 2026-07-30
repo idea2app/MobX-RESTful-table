@@ -104,7 +104,7 @@ export class RestTable<
             if (input)
               input.indeterminate = !!checkedKeys.length && checkedKeys.length < currentPage.length;
           }}
-          onClick={toggleCheckAll}
+          onChange={toggleCheckAll}
           onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
         />
       ),
@@ -114,7 +114,7 @@ export class RestTable<
           name={indexKey.toString()}
           value={ID}
           checked={checkedKeys.includes(ID)}
-          onClick={() => this.toggleCheck(ID)}
+          onChange={() => this.toggleCheck(ID)}
           onKeyUp={({ key }) => key === ' ' && this.toggleCheck(ID)}
         />
       ),
@@ -133,26 +133,22 @@ export class RestTable<
       renderHead: () => <></>,
       renderBody: data => (
         <>
-          {disabled ? (
-            <></>
-          ) : (
-            editable && (
-              <Button
-                className="text-nowrap m-1"
-                variant={readOnly ? 'primary' : 'warning'}
-                size={fieldSize}
-                onClick={() => (store.currentOne = data)}
-              >
-                {readOnly ? t('view') : t('edit')}
-              </Button>
-            )
+          {!disabled && editable && (
+            <Button
+              className="text-nowrap m-1"
+              variant={readOnly ? 'primary' : 'warning'}
+              size={fieldSize}
+              onClick={() => (store.currentOne = data)}
+            >
+              {readOnly ? t('view') : t('edit')}
+            </Button>
           )}
           {deletable && (
             <Button
               className="text-nowrap m-1"
               variant="danger"
               size={fieldSize}
-              onClick={() => this.deleteList([data.id])}
+              onClick={() => this.deleteList([data[store.indexKey]])}
             >
               {t('delete')}
             </Button>
@@ -231,6 +227,8 @@ export class RestTable<
         className,
         columns: _,
         store,
+        filter,
+        filterFields,
         translator,
         editable,
         deletable,
@@ -320,6 +318,8 @@ export class RestTable<
   render() {
     const {
         className = 'overflow-auto d-flex flex-column gap-3',
+        striped,
+        hover,
         editable,
         deletable,
         filterFields,
@@ -327,6 +327,7 @@ export class RestTable<
         translator,
         onSubmit,
         onReset,
+        onCheck,
         ...props
       } = this.props,
       { fieldSize } = this;
@@ -338,7 +339,7 @@ export class RestTable<
         <header className="sticky-top bg-white py-3 d-flex flex-column gap-3">
           {filterFields && (
             <RestForm
-              className={`d-flex flex-wrap align-items-center gap-3 pb-3 border-bottom ${styles.filterBar}`}
+              className={`d-flex flex-wrap align-items-center gap-3 pb-3 m-0 border-bottom ${styles.filterBar}`}
               size={fieldSize}
               translator={translator}
               fields={filterFields}
@@ -346,26 +347,24 @@ export class RestTable<
               onReset={() => store.getList({}, 1)}
             />
           )}
-          <div className="d-flex justify-content-between align-items-center">
-            {deletable && (
-              <Button
-                className="mx-2"
-                variant="danger"
-                size={fieldSize}
-                onClick={() => this.deleteList(this.checkedKeys)}
-              >
-                {t('delete')}
-              </Button>
-            )}
-            {editable && (
-              <Button
-                size={fieldSize}
-                onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}
-              >
-                {t('create')}
-              </Button>
-            )}
-          </div>
+          {deletable && (
+            <Button
+              variant="danger"
+              size={fieldSize}
+              disabled={!this.checkedKeys[0]}
+              onClick={() => this.deleteList(this.checkedKeys)}
+            >
+              {t('delete')}
+            </Button>
+          )}
+          {editable && (
+            <Button
+              size={fieldSize}
+              onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}
+            >
+              {t('create')}
+            </Button>
+          )}
         </header>
 
         {this.renderTable()}

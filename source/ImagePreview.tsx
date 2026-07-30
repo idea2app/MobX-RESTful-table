@@ -29,17 +29,20 @@ export class ImagePreview extends ObservedComponent<ImageProps> {
   async load(path: string) {
     this.downloading = true;
 
-    await new Promise((resolve, reject) => {
-      const image = new globalThis.Image();
+    try {
+      await new Promise((resolve, reject) => {
+        const image = new globalThis.Image();
 
-      image.onload = resolve;
-      image.onerror = reject;
+        image.onload = resolve;
+        image.onerror = reject;
 
-      image.src = path;
-    });
+        image.src = path;
+      });
 
-    this.loadedPath = path;
-    this.downloading = false;
+      this.loadedPath = path;
+    } finally {
+      this.downloading = false;
+    }
   }
 
   render() {

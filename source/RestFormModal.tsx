@@ -1,12 +1,17 @@
 import { observer } from 'mobx-react';
-import { DataObject } from 'mobx-restful';
+import { DataObject, Filter } from 'mobx-restful';
 import { Modal } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
 import { RestForm, RestFormProps } from './RestForm';
 
 export const RestFormModal = observer(
-  <T extends DataObject>({ fields, store, translator, ...props }: RestFormProps<T>) => {
+  <D extends DataObject, F extends Filter<D> = Filter<D>>({
+    fields,
+    store,
+    translator,
+    ...props
+  }: RestFormProps<D, F>) => {
     const { indexKey, currentOne } = store;
 
     const editing = !isEmpty(currentOne),

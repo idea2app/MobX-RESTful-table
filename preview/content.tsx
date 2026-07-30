@@ -31,6 +31,24 @@ class MyFileModel extends FileModel {}
 
 const fileStore = new MyFileModel();
 
+const demoImageSource = `
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0d6efd" />
+      <stop offset="1" stop-color="#20c997" />
+    </linearGradient>
+  </defs>
+  <rect width="320" height="200" fill="url(#g)" />
+  <circle cx="70" cy="80" r="36" fill="rgba(255,255,255,.35)" />
+  <rect x="116" y="56" width="140" height="88" rx="12" fill="rgba(255,255,255,.25)" />
+  <text x="160" y="182" text-anchor="middle" font-family="Arial" font-size="20" fill="white">
+    MobX RESTful table
+  </text>
+</svg>
+`;
+const demoImage = `data:image/svg+xml,${encodeURIComponent(demoImageSource)}`;
+
 const filterFields: Field<RepositoryFilter>[] = [
   { key: 'full_name', renderLabel: 'Repository Name' },
   { key: 'homepage', renderLabel: 'Home Page' },
@@ -165,7 +183,7 @@ export const Content: FC = () => (
 
     <Section title="Image Preview">
       <CodeExample>
-        <ImagePreview src="https://github.com/idea2app.png" />
+        <ImagePreview src={demoImage} />
       </CodeExample>
     </Section>
 
@@ -180,11 +198,7 @@ export const Content: FC = () => (
         <FilePicker accept="image/*" onChange={console.log} />
       </CodeExample>
       <CodeExample>
-        <FilePicker
-          accept="image/*"
-          defaultValue="https://github.com/idea2app.png"
-          onChange={console.log}
-        />
+        <FilePicker accept="image/*" defaultValue={demoImage} onChange={console.log} />
       </CodeExample>
     </Section>
 
@@ -194,7 +208,7 @@ export const Content: FC = () => (
           accept="image/*"
           store={fileStore}
           multiple
-          defaultValue={['https://web-cell.dev/WebCell-0.f9823b00.png']}
+          defaultValue={[demoImage]}
           onChange={console.log}
         />
       </CodeExample>

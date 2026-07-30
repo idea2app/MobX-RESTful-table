@@ -7,16 +7,18 @@ import { BadgeBar } from './BadgeBar';
 
 export const TextInputTypes = ['text', 'number', 'tel', 'email', 'url'] as const;
 
+export type TextInputType = (typeof TextInputTypes)[number];
+
 export interface BadgeInputProps extends FormComponentProps<string[]> {
-  type?: (typeof TextInputTypes)[number];
+  type?: TextInputType;
 }
 
 @observer
 export class BadgeInput extends FormComponent<BadgeInputProps> {
   static readonly displayName = 'BadgeInput';
 
-  static match(type: string): type is BadgeInputProps['type'] {
-    return TextInputTypes.includes(type as BadgeInputProps['type']);
+  static match(type: string): type is TextInputType {
+    return TextInputTypes.includes(type as TextInputType);
   }
 
   handleInput = (event: KeyboardEvent<HTMLInputElement>) => {

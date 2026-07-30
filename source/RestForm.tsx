@@ -14,7 +14,8 @@ import { FileModel, FileUploader } from './FileUploader';
 import { FormField, FormFieldProps } from './FormField';
 
 export interface Field<T extends DataObject>
-  extends Pick<
+  extends
+    Pick<
       InputHTMLAttributes<HTMLInputElement>,
       | 'type'
       | 'readOnly'
@@ -40,14 +41,12 @@ export interface Field<T extends DataObject>
 }
 
 export interface FieldBoxProps<D extends DataObject>
-  extends FormGroupProps,
-    Pick<Field<D>, 'renderLabel' | `${'' | 'in'}validMessage`> {
+  extends FormGroupProps, Pick<Field<D>, 'renderLabel' | `${'' | 'in'}validMessage`> {
   name: Field<D>['key'];
 }
 
 export interface RestFormProps<D extends DataObject, F extends Filter<D> = Filter<D>>
-  extends Pick<FormProps, 'className' | 'style'>,
-    Pick<ButtonProps, 'size'> {
+  extends Pick<FormProps, 'className' | 'style'>, Pick<ButtonProps, 'size'> {
   id?: IDType;
   fields: Field<D>[];
   store?: ListModel<D, F>;
@@ -173,7 +172,7 @@ export class RestForm<
   get fieldReady() {
     const { id, store } = this.observedProps;
 
-    return !id || store?.downloading < 1;
+    return !id || !store || store.downloading < 1;
   }
 
   renderFile =
@@ -191,11 +190,12 @@ export class RestForm<
               defaultValue={value}
             />
           ) : (
-            value.map(path => <FilePreview {...{ type, path }} />)
+            value.map(path => <FilePreview key={path} {...{ type, path }} />)
           )}
         </RestForm.FieldBox>
       );
     };
+
   renderCheckGroup =
     ({ key, type, options, ...meta }: Field<D>) =>
     (data: D) => (
@@ -240,7 +240,7 @@ export class RestForm<
     props: Partial<FormFieldProps> = {},
   ) => {
     const label =
-      typeof renderLabel === 'function' ? renderLabel?.(key) : renderLabel || (key as string);
+      typeof renderLabel === 'function' ? renderLabel(key) : renderLabel || (key as string);
 
     return ({ [key]: value }: D) => (
       <InputGroup hasValidation={this.customValidation}>

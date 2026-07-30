@@ -1,8 +1,10 @@
 import { FC, TextareaHTMLAttributes } from 'react';
 import { FloatingLabelProps, Form, FormControlProps, FormSelectProps } from 'react-bootstrap';
+import { uniqueID } from 'web-utility';
 
-export interface SelectOption
-  extends Partial<Pick<HTMLOptionElement, 'text' | 'label' | 'disabled'>> {
+export interface SelectOption extends Partial<
+  Pick<HTMLOptionElement, 'text' | 'label' | 'disabled'>
+> {
   value: string;
 }
 
@@ -16,10 +18,10 @@ export type FormFieldProps = FormControlProps &
 export const FormField: FC<FormFieldProps> = ({
   className,
   style,
-  label,
-  placeholder,
-  id,
   name,
+  id = name || `form-field-${uniqueID()}`,
+  label,
+  placeholder = typeof label === 'string' ? label : id,
   options,
   multiple,
   rows,
@@ -28,7 +30,7 @@ export const FormField: FC<FormFieldProps> = ({
 }) => (
   <Form.FloatingLabel
     {...{ className, style, label }}
-    controlId={name || id}
+    controlId={id}
     onBlur={event => {
       if ((event.target as HTMLInputElement).checkValidity()) {
         event.target.classList.remove('is-invalid');
@@ -54,8 +56,7 @@ export const FormField: FC<FormFieldProps> = ({
     ) : (
       <Form.Control
         className={rows > 1 ? 'h-auto' : ''}
-        {...{ name, multiple, rows, ...controlProps }}
-        placeholder={placeholder || (typeof label === 'string' ? label : name || id)}
+        {...{ name, multiple, rows, placeholder, ...controlProps }}
       />
     )}
   </Form.FloatingLabel>
