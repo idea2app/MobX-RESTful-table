@@ -322,6 +322,7 @@ export class RestTable<
         hover,
         editable,
         deletable,
+        filter,
         filterFields,
         store,
         translator,

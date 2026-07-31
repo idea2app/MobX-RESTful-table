@@ -54,7 +54,7 @@ npm i react \
 ```html
 <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
-<link rel="stylesheet" href="https://unpkg.com/mobx-restful-table@2.6.2/dist/index.css" />
+<link rel="stylesheet" href="https://unpkg.com/mobx-restful-table@2.6.6/dist/index.css" />
 ```
 
 ### `tsconfig.json`
@@ -257,7 +257,7 @@ export const EditorPage = () => (
 [4]: https://mobx.js.org/
 [5]: https://libraries.io/npm/mobx-restful-table
 [6]: https://github.com/idea2app/MobX-RESTful-table/actions/workflows/main.yml
-[7]: https://nodei.co/npm/mobx-restful-table/
+[7]: https://npm.im/mobx-restful-table/
 [8]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Translation.ts
 [9]: https://github.com/idea2app/Next-Bootstrap-TS/tree/main/translation
 [10]: https://github.com/idea2app/Next-Bootstrap-TS/blob/main/models/Base.ts#L12-L24

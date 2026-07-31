@@ -18,13 +18,13 @@ importers:
         specifier: ^4.18.1
         version: 4.18.1
       mobx:
-        specifier: ^6.16.1
+        specifier: '>=6'
         version: 6.16.1
       mobx-i18n:
         specifier: '>=0.6'
         version: 0.7.5(mobx@6.16.1)(typescript@5.9.3)
       mobx-react:
-        specifier: ^9.2.2
+        specifier: '>=9'
         version: 9.2.2(mobx@6.16.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       mobx-react-helper:
         specifier: ^0.5.1
@@ -889,8 +889,8 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  brace-expansion@5.0.8:
-    resolution: {integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==}
+  brace-expansion@5.0.9:
+    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
     engines: {node: 20 || >=22}
 
   browser-fs-access@0.38.0:
@@ -2655,7 +2655,7 @@ snapshots:
 
   baseline-browser-mapping@2.11.7: {}
 
-  brace-expansion@5.0.8:
+  brace-expansion@5.0.9:
     dependencies:
       balanced-match: 4.0.4
 
@@ -3003,7 +3003,7 @@ snapshots:
 
   minimatch@10.2.6:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: 5.0.9
 
   minipass@7.1.3: {}
 

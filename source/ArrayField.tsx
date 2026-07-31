@@ -1,4 +1,3 @@
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject } from 'mobx-restful';
@@ -20,20 +19,10 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
 > {
   static displayName = 'ArrayField';
 
-  protected readonly rowIds = new WeakMap<object, string>();
+  protected readonly rowIds: string[] = [];
 
-  protected readRowId(item: T) {
-    return this.rowIds.get(item as object);
-  }
-
-  protected writeRowId(item: T, rowId = uniqueID()) {
-    this.rowIds.set(item as object, rowId);
-
-    return rowId;
-  }
-
-  protected getRowId(item: T) {
-    return this.readRowId(item) || this.writeRowId(item);
+  protected getRowId(index: number) {
+    return (this.rowIds[index] ||= uniqueID());
   }
 
   componentDidMount() {
@@ -46,20 +35,21 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
     const { innerValue = [] } = this,
       item = {} as T;
 
-    this.writeRowId(item);
+    this.rowIds.splice(index, 0, uniqueID());
     this.innerValue = [...innerValue.slice(0, index), item, ...innerValue.slice(index)];
   };
 
-  remove = (index: number) => (this.innerValue = this.innerValue?.filter((_, i) => i !== index));
+  remove = (index: number) => {
+    this.rowIds.splice(index, 1);
+
+    this.innerValue = this.innerValue?.filter((_, i) => i !== index);
+  };
 
   handleChange =
     (index: number) =>
     ({ currentTarget }: ChangeEvent<EventTarget>) => {
       const item = formToJSON<T>(currentTarget as HTMLFieldSetElement),
         { innerValue = [] } = this;
-      const currentItem = innerValue[index];
-
-      this.writeRowId(item, this.readRowId(currentItem));
 
       this.innerValue = [...innerValue.slice(0, index), item, ...innerValue.slice(index + 1)];
     };
@@ -67,25 +57,27 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
   handleUpdate =
     (index: number) =>
     ({ currentTarget }: ChangeEvent<EventTarget>) => {
-      const item = formToJSON<T>(currentTarget as HTMLFieldSetElement),
-        currentItem = this.innerValue![index];
+      const item = formToJSON<T>(currentTarget as HTMLFieldSetElement);
 
-      this.writeRowId(item, this.readRowId(currentItem));
       this.innerValue![index] = item;
     };
 
   render() {
-    const { className = '', style, name, renderItem } = this.props;
+    const { className = '', style, name, renderItem } = this.props,
+      { value, rowIds } = this;
+    const length = value?.length || 0;
+
+    if (rowIds.length > length) rowIds.length = length;
 
     return (
       <>
-        {this.value?.map((item, index, { length }) => (
+        {value?.map((item, index, { length }) => (
           <fieldset
-            key={this.getRowId(item)}
+            key={this.getRowId(index)}
             className={`d-flex align-items-center my-2 gap-2 ${className}`}
             {...{ style, name }}
-            onChange={this.handleChange(index)}
-            onBlur={this.handleUpdate(index)}
+            onBlur={this.handleChange(index)}
+            onChange={this.handleUpdate(index)}
           >
             <div className="flex-fill">{renderItem(item, index)}</div>
             <ButtonGroup>
