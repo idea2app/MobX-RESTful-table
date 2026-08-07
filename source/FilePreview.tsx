@@ -8,7 +8,8 @@ export type FilePreviewProps = ImageProps &
   HTMLAttributes<HTMLVideoElement> &
   HTMLAttributes<HTMLAnchorElement> & {
     type?: InputHTMLAttributes<HTMLInputElement>['accept'];
-    path: string;
+    path?: string;
+    file?: HTMLMediaElement['srcObject'];
   };
 
 export const FileTypeMap = {
@@ -28,12 +29,14 @@ export const FilePreview: FC<FilePreviewProps> = ({
   hidden,
   type,
   path,
+  file,
   ...props
 }) => {
   const [category, ...kind] = type?.split(/\W+/) || [],
-    fileName = decodeURI(
-      new URL(path, 'http://localhost').pathname.split('/').at(-1),
-    );
+    fileName =
+      file instanceof File
+        ? file.name
+        : decodeURI(new URL(path, 'http://localhost').pathname.split('/').at(-1));
   const extension =
     FileTypeMap[kind.at(-1)] ||
     (fileName?.includes('.') ? fileName.split('.').at(-1) : kind.at(-1));
@@ -44,19 +47,23 @@ export const FilePreview: FC<FilePreviewProps> = ({
       {...{ style, hidden }}
     >
       {category === 'image' ? (
-        <ImagePreview
-          className="h-100"
-          fluid
-          loading="lazy"
+        <ImagePreview className="h-100" fluid loading="lazy" src={path} {...props} />
+      ) : category === 'audio' ? (
+        <audio
+          controls
           src={path}
+          ref={node => {
+            if (node) node.srcObject = file;
+          }}
           {...props}
         />
-      ) : category === 'audio' ? (
-        <audio controls src={path} {...props} />
       ) : category === 'video' ? (
         <video
           muted
           src={path}
+          ref={node => {
+            if (node) node.srcObject = file;
+          }}
           onMouseEnter={({ currentTarget }) => currentTarget.play()}
           onMouseLeave={({ currentTarget }) => currentTarget.pause()}
           {...props}
@@ -70,9 +77,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
             download={fileName}
             {...props}
           >
-            <i
-              className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`}
-            />
+            <i className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`} />
           </a>
           <figcaption className="mw-100 text-truncate">{fileName}</figcaption>
         </>
