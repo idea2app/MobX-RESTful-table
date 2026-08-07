@@ -1,6 +1,6 @@
 {
   "name": "mobx-restful-table",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "license": "LGPL-3.0",
   "author": "shiy2008@gmail.com",
   "description": "A Pagination Table & Scroll List component suite for CRUD operation, which is based on MobX RESTful & React.",
@@ -114,8 +114,8 @@
     "preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel --open",
     "test": "lint-staged",
     "pack-preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel build --public-url=. --dist-dir=../docs/preview/",
-    "pack-dist": "rm -rf dist/ docs/  &&  parcel build  &&  sed -i 's/^require(\"\\.\\/index\\.css\");//' dist/index.js  &&  rimraf dist/index.js.map",
-    "fix-esm": "cd dist/esm/  &&  rm index.css*  &&  sed -i 's/^import\"\\.\\/index\\.css\";//' index.js  &&  rimraf index.js.map",
+    "pack-dist": "rm -rf dist/ docs/  &&  parcel build  &&  sed -i 's/require(\"\\.\\/index\\.css\");//' dist/index.js  &&  rimraf dist/index.js.map",
+    "fix-esm": "cd dist/esm/  &&  rm index.css*  &&  sed -i 's/import\"\\.\\/index\\.css\";//' index.js  &&  rimraf index.js.map",
     "build": "npm run pack-dist  &&  npm run fix-esm  &&  typedoc source/  &&  npm run pack-preview",
     "prepublishOnly": "npm test  &&  npm run build"
   }
