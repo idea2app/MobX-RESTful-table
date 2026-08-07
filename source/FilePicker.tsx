@@ -1,12 +1,15 @@
 import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps, reaction } from 'mobx-react-helper';
-import { CloseButton } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import { blobOf } from 'web-utility';
 
-import { FilePreview } from './FilePreview';
+import { FilePreview, FilePreviewProps } from './FilePreview';
+import * as styles from './FilePicker.module.less';
 
-export type FilePickerProps = FormComponentProps<string | File>;
+export interface FilePickerProps extends FormComponentProps<string | File> {
+  onView?: (data: Pick<FilePreviewProps, 'path' | 'file'>) => void;
+}
 
 const blobCache = new WeakMap<File, string>();
 
@@ -98,29 +101,34 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   }
 
   render() {
-    const { filePath, fileType } = this,
-      { className = '', style } = this.props;
+    const { file, filePath, fileType } = this,
+      { className = '', style, onView } = this.props;
 
     return (
       <div
-        className={`d-inline-block border rounded position-relative ${className}`}
+        className={`d-inline-block border rounded position-relative ${styles.filePicker} ${className}`}
         style={{ width: '10rem', height: '10rem', ...style }}
       >
         {filePath ? (
-          <FilePreview className="w-100 h-100" type={fileType} path={filePath} />
+          <FilePreview className="w-100 h-100" type={fileType} path={filePath} file={file} />
         ) : (
           <div className="w-100 h-100 d-flex justify-content-center align-items-center display-1">
             +
           </div>
         )}
         {this.renderInput()}
-        {filePath && (
-          <CloseButton
-            className="position-absolute top-0 end-0"
-            style={{ width: '0.5rem', height: '0.5rem' }}
-            onClick={() => this.#changeFile()}
-          />
-        )}
+        <ButtonGroup className={`position-absolute top-0 end-0 ${styles.toolbar}`} size="sm">
+          {onView && (
+            <Button onClick={() => onView({ path: filePath, file })}>
+              <i className="bi bi-eye-fill" />
+            </Button>
+          )}
+          {filePath && (
+            <Button onClick={() => this.#changeFile()}>
+              <i className="bi bi-x-lg" />
+            </Button>
+          )}
+        </ButtonGroup>
       </div>
     );
   }

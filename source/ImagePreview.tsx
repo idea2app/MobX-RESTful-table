@@ -4,8 +4,10 @@ import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 
+export type ImagePreviewProps = ImageProps & Partial<Pick<HTMLMediaElement, 'srcObject'>> ;
+
 @observer
-export class ImagePreview extends ObservedComponent<ImageProps> {
+export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
   static readonly displayName = 'ImagePreview';
 
   @observable
@@ -17,13 +19,28 @@ export class ImagePreview extends ObservedComponent<ImageProps> {
   @observable
   accessor viewing = false;
 
-  @reaction(({ observedProps }) => observedProps.src)
-  componentDidMount() {
-    const { src } = this.observedProps;
+  objectURL = '';
 
+  @reaction(({ observedProps }) => observedProps.src + observedProps.srcObject)
+  componentDidMount() {
+    const { src, srcObject } = this.observedProps;
+
+    if (this.objectURL) {
+      URL.revokeObjectURL(this.objectURL);
+      this.objectURL = '';
+    }
     this.loadedPath = '';
 
-    if (src) this.load(src);
+    if (srcObject instanceof Blob || srcObject instanceof MediaSource) {
+      this.objectURL = URL.createObjectURL(srcObject);
+      this.load(this.objectURL);
+    } else if (src) {
+      this.load(src);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.objectURL) URL.revokeObjectURL(this.objectURL);
   }
 
   async load(path: string) {

@@ -1,6 +1,9 @@
+import { observable } from 'mobx';
 import { GitRepository, RepositoryFilter } from 'mobx-github';
+import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
+import { blobOf } from 'web-utility';
 
 import {
   ArrayField,
@@ -19,6 +22,7 @@ import {
   RestTable,
   SearchableInput,
 } from '../source';
+import { FileView } from './FileView';
 import { i18n, repositoryStore, topicStore } from './model';
 import { CodeExample, Section } from './utility';
 
@@ -27,7 +31,30 @@ interface Price {
   amount: number;
 }
 
-class MyFileModel extends FileModel {}
+class FileViewModel {
+  @observable
+  accessor currentFile: File | undefined;
+}
+const fileViewStore = new FileViewModel();
+
+type UploadResponse = Record<'originalname' | 'filename' | 'location', string>;
+
+class MyFileModel extends FileModel {
+  async upload(file: string | Blob): Promise<string> {
+    if (typeof file === 'string') file = await blobOf(file);
+
+    const body = new FormData();
+    body.append('file', file);
+
+    const response = await fetch('https://api.escuelajs.co/api/v1/files/upload', {
+      method: 'POST',
+      body,
+    });
+    const { location } = (await response.json()) as UploadResponse;
+
+    return super.upload(location);
+  }
+}
 
 const fileStore = new MyFileModel();
 
@@ -96,7 +123,7 @@ const columns: Column<GitRepository>[] = [
   { key: 'description', renderHead: 'Description', rows: 3 },
 ];
 
-export const Content: FC = () => (
+export const Content: FC = observer(() => (
   <>
     <h1>MobX RESTful table examples</h1>
 
@@ -200,6 +227,16 @@ export const Content: FC = () => (
       <CodeExample>
         <FilePicker accept="image/*" defaultValue={demoImage} onChange={console.log} />
       </CodeExample>
+      <CodeExample>
+        <FilePicker
+          defaultValue={demoImage}
+          onView={({ file }) => file instanceof File && (fileViewStore.currentFile = file)}
+        />
+        <FileView
+          file={fileViewStore.currentFile}
+          onClose={() => (fileViewStore.currentFile = undefined)}
+        />
+      </CodeExample>
     </Section>
 
     <Section title="File Uploader">
@@ -243,4 +280,4 @@ export const Content: FC = () => (
       </CodeExample>
     </Section>
   </>
-);
+));

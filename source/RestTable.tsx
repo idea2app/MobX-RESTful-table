@@ -337,7 +337,7 @@ export class RestTable<
 
     return (
       <div className={className} {...props}>
-        <header className="sticky-top bg-white py-3 d-flex flex-column gap-3">
+        <header className="sticky-top bg-white py-3 d-flex align-items-center gap-3">
           {filterFields && (
             <RestForm
               className={`d-flex flex-wrap align-items-center gap-3 pb-3 m-0 border-bottom ${styles.filterBar}`}
