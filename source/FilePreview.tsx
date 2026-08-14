@@ -36,7 +36,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
     fileName =
       file instanceof File
         ? file.name
-        : decodeURI(new URL(path, 'http://localhost').pathname.split('/').at(-1));
+        : path && decodeURI(new URL(path, 'http://localhost').pathname.split('/').at(-1) || '');
   const extension =
     FileTypeMap[kind.at(-1)] ||
     (fileName?.includes('.') ? fileName.split('.').at(-1) : kind.at(-1));
@@ -47,7 +47,13 @@ export const FilePreview: FC<FilePreviewProps> = ({
       {...{ style, hidden }}
     >
       {category === 'image' ? (
-        <ImagePreview className="h-100" fluid loading="lazy" src={path} {...props} />
+        <ImagePreview
+          className="h-100"
+          fluid
+          loading="lazy"
+          src={file instanceof Blob ? file : path}
+          {...props}
+        />
       ) : category === 'audio' ? (
         <audio
           controls

@@ -10,7 +10,7 @@ import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
 import { BadgeInput } from './BadgeInput';
 import { FilePreview } from './FilePreview';
-import { FileModel, FileUploader } from './FileUploader';
+import { FileModel, FileUploader, FileUploaderProps } from './FileUploader';
 import { FormField, FormFieldProps } from './FormField';
 
 export interface Field<T extends DataObject>
@@ -33,6 +33,7 @@ export interface Field<T extends DataObject>
     >,
     Pick<FormFieldProps, 'options' | 'rows' | 'contentEditable'>,
     Pick<EditorProps, 'tools'>,
+    Pick<FileUploaderProps, 'onView'>,
     Partial<Record<`${'' | 'in'}validMessage`, ReactNode>> {
   key?: keyof T;
   renderLabel?: ReactNode | ((key: keyof T) => ReactNode);
@@ -176,7 +177,7 @@ export class RestForm<
   }
 
   renderFile =
-    ({ key, type, required, multiple, accept, uploader, ...meta }: Field<D>) =>
+    ({ key, type, required, multiple, accept, uploader, onView, ...meta }: Field<D>) =>
     ({ [key]: paths }: D) => {
       const value = ((Array.isArray(paths) ? paths : [paths]) as string[]).filter(Boolean);
 
@@ -186,7 +187,7 @@ export class RestForm<
             <FileUploader
               store={uploader}
               name={key?.toString()}
-              {...{ required, multiple, accept }}
+              {...{ required, multiple, accept, onView }}
               defaultValue={value}
             />
           ) : (

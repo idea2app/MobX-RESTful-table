@@ -1,10 +1,12 @@
+/// <reference types="@types/react/experimental" />
+
 import classNames from 'classnames';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
 
-export type ImagePreviewProps = ImageProps & Partial<Pick<HTMLMediaElement, 'srcObject'>> ;
+export type ImagePreviewProps = ImageProps;
 
 @observer
 export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
@@ -21,9 +23,9 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
 
   objectURL = '';
 
-  @reaction(({ observedProps }) => observedProps.src + observedProps.srcObject)
+  @reaction(({ observedProps }) => observedProps.src)
   componentDidMount() {
-    const { src, srcObject } = this.observedProps;
+    const { src } = this.observedProps;
 
     if (this.objectURL) {
       URL.revokeObjectURL(this.objectURL);
@@ -31,8 +33,8 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
     }
     this.loadedPath = '';
 
-    if (srcObject instanceof Blob || srcObject instanceof MediaSource) {
-      this.objectURL = URL.createObjectURL(srcObject);
+    if (src instanceof Blob) {
+      this.objectURL = URL.createObjectURL(src);
       this.load(this.objectURL);
     } else if (src) {
       this.load(src);
