@@ -14,8 +14,7 @@ export const i18n = new TranslationModel({
     cancel: 'Cancel',
     edit: 'Edit',
     delete: 'Delete',
-    total_x_rows: ({ totalCount }: { totalCount: number }) =>
-      `Total ${totalCount} rows`,
+    total_x_rows: ({ totalCount }: { totalCount: number }) => `Total ${totalCount} rows`,
     sure_to_delete_x: ({ keys }: { keys: IDType[] }) =>
       `Are you sure to delete ${keys.join(', ')}?`,
   },
@@ -51,7 +50,7 @@ export class GitHubTopicModel extends ListModel<Topic> {
         per_page: pageSize,
       })}`,
     );
-    return { pageData: body.items, totalCount: body.total_count };
+    return { pageData: body!.items, totalCount: body!.total_count };
   }
 }
 

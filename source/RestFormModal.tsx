@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import { DataObject, Filter } from 'mobx-restful';
+import { DataObject, Filter, ListModel } from 'mobx-restful';
 import { Modal } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
 
@@ -12,13 +12,13 @@ export const RestFormModal = observer(
     translator,
     ...props
   }: RestFormProps<D, F>) => {
-    const { indexKey, currentOne } = store;
+    const { indexKey, currentOne } = store || ({} as ListModel<D, F>);
 
     const editing = !isEmpty(currentOne),
-      ID = currentOne[indexKey];
+      ID = currentOne?.[indexKey];
 
     return (
-      <Modal show={editing} onHide={() => store.clearCurrent()}>
+      <Modal show={editing} onHide={() => store?.clearCurrent()}>
         <Modal.Header closeButton>{ID}</Modal.Header>
 
         <Modal.Body>

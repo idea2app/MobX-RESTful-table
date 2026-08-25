@@ -38,7 +38,7 @@ export class SearchableInput<
   static readonly displayName = 'SearchableInput';
 
   @observable
-  accessor filter = this.props.filter;
+  accessor filter = this.props.filter || ({} as F);
 
   @observable
   accessor listShown = false;
@@ -71,7 +71,10 @@ export class SearchableInput<
   };
 
   delete = (index: number) =>
-    (this.innerValue = [...this.value.slice(0, index), ...this.value.slice(index + 1)]);
+    (this.innerValue = [
+      ...(this.value || []).slice(0, index),
+      ...(this.value || []).slice(index + 1),
+    ]);
 
   handleBlur = ({ target, relatedTarget }: FocusEvent<HTMLElement>) => {
     if (target.parentElement !== relatedTarget?.parentElement) this.listShown = false;
@@ -111,7 +114,7 @@ export class SearchableInput<
     const { filter } = this;
     const { translator, fields, store, labelKey, renderList = this.renderList } = this.props;
 
-    const keyword = filter[labelKey] as string;
+    const keyword = filter[labelKey as keyof F] || '';
 
     const needNew = !store.allItems.some(({ [labelKey]: label }) => label === keyword);
 
@@ -158,7 +161,7 @@ export class SearchableInput<
         <InputGroup.Text className="d-flex flex-wrap align-items-center gap-2">
           <BadgeBar
             list={(value || []).map(({ label }) => ({ text: label }))}
-            onDelete={({}, index) => this.delete(index)}
+            onDelete={!readOnly && !disabled ? ({}, index) => this.delete(index) : undefined}
           />
         </InputGroup.Text>
 

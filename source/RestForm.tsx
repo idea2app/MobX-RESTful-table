@@ -3,7 +3,14 @@ import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
-import { FormEvent, Fragment, InputHTMLAttributes, ReactNode } from 'react';
+import {
+  createRef,
+  Fragment,
+  InputHTMLAttributes,
+  ReactNode,
+  SubmitEvent,
+  SyntheticEvent,
+} from 'react';
 import { Button, ButtonProps, Form, FormGroupProps, FormProps, InputGroup } from 'react-bootstrap';
 import { Editor, EditorProps } from 'react-bootstrap-editor';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
@@ -75,7 +82,7 @@ export class RestForm<
             : raw;
 
   static FieldBox = <D extends DataObject>({
-    name,
+    name = '',
     renderLabel,
     validMessage,
     invalidMessage,
@@ -103,13 +110,32 @@ export class RestForm<
   @observable
   accessor validated = false;
 
+  #form = createRef<HTMLFormElement>();
+
   componentDidMount() {
+    super.componentDidMount();
+
     const { id, store } = this.props;
 
     if (id) store?.getOne(id);
+
+    window.addEventListener('beforeunload', this.handleUnload);
   }
 
-  handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  componentWillUnmount() {
+    super.componentWillUnmount();
+
+    window.removeEventListener('beforeunload', this.handleUnload);
+  }
+
+  handleUnload = (event: BeforeUnloadEvent) => {
+    if (this.#form.current?.checkValidity()) return;
+
+    event.preventDefault();
+    event.returnValue = '';
+  };
+
+  handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -122,7 +148,7 @@ export class RestForm<
       const { id, store, onSubmit } = this.props;
       let data = formToJSON<D>(form);
 
-      data = await store?.updateOne(data, id);
+      data = (await store?.updateOne(data, id)) || data;
 
       onSubmit?.(data);
 
@@ -131,7 +157,7 @@ export class RestForm<
     this.validated = false;
   };
 
-  handleReset = ({ currentTarget }: FormEvent<HTMLFormElement>) => {
+  handleReset = ({ currentTarget }: SyntheticEvent<HTMLFormElement>) => {
     const { onReset, store } = this.props;
 
     onReset?.(formToJSON(currentTarget));
@@ -177,7 +203,7 @@ export class RestForm<
   }
 
   renderFile =
-    ({ key, type, required, multiple, accept, uploader, onView, ...meta }: Field<D>) =>
+    ({ key = '', type, required, multiple, accept, uploader, onView, ...meta }: Field<D>) =>
     ({ [key]: paths }: D) => {
       const value = ((Array.isArray(paths) ? paths : [paths]) as string[]).filter(Boolean);
 
@@ -186,7 +212,7 @@ export class RestForm<
           {uploader ? (
             <FileUploader
               store={uploader}
-              name={key?.toString()}
+              name={key.toString()}
               {...{ required, multiple, accept, onView }}
               defaultValue={value}
             />
@@ -198,7 +224,7 @@ export class RestForm<
     };
 
   renderCheckGroup =
-    ({ key, type, options, ...meta }: Field<D>) =>
+    ({ key = '', type, options = [], ...meta }: Field<D>) =>
     (data: D) => (
       <RestForm.FieldBox name={key} {...meta}>
         <div>
@@ -221,23 +247,32 @@ export class RestForm<
     );
 
   renderMultipleInput =
-    ({ key, type, ...meta }: Field<D>) =>
+    ({ key = '', type, ...meta }: Field<D>) =>
     ({ [key]: value }: D) => (
       <RestForm.FieldBox name={key} {...meta}>
-        {this.fieldReady && <BadgeInput {...meta} name={key?.toString()} defaultValue={value} />}
+        {this.fieldReady && <BadgeInput {...meta} name={key.toString()} defaultValue={value} />}
       </RestForm.FieldBox>
     );
 
   renderHTMLEditor =
-    ({ key, contentEditable, tools, ...meta }: Field<D>) =>
+    ({ key = '', contentEditable, tools, ...meta }: Field<D>) =>
     ({ [key]: value }: D) => (
       <RestForm.FieldBox name={key} {...meta}>
-        {this.fieldReady && <Editor tools={tools} name={key?.toString()} defaultValue={value} />}
+        {this.fieldReady && <Editor tools={tools} name={key.toString()} defaultValue={value} />}
       </RestForm.FieldBox>
     );
 
   renderField = (
-    { key, type, step, renderLabel, renderInput, validMessage, invalidMessage, ...meta }: Field<D>,
+    {
+      key = '',
+      type,
+      step,
+      renderLabel,
+      renderInput,
+      validMessage,
+      invalidMessage,
+      ...meta
+    }: Field<D>,
     props: Partial<FormFieldProps> = {},
   ) => {
     const label =
@@ -279,12 +314,13 @@ export class RestForm<
         translator,
         ...props
       } = this.props;
-    const { downloading, uploading, currentOne = {} as D } = store || {},
+    const { downloading = 0, uploading = 0, currentOne = {} as D } = store || {},
       { t } = translator;
     const loading = downloading > 0 || uploading > 0;
 
     return (
       <Form
+        ref={this.#form}
         {...props}
         {...{ className, validated }}
         noValidate={customValidation}

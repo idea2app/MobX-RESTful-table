@@ -37,9 +37,11 @@ export const FilePreview: FC<FilePreviewProps> = ({
       file instanceof File
         ? file.name
         : path && decodeURI(new URL(path, 'http://localhost').pathname.split('/').at(-1) || '');
-  const extension =
-    FileTypeMap[kind.at(-1)] ||
-    (fileName?.includes('.') ? fileName.split('.').at(-1) : kind.at(-1));
+
+  const lastKind = kind.at(-1) as keyof typeof FileTypeMap;
+  const extension = fileName?.includes('.')
+    ? fileName.split('.').at(-1)
+    : lastKind && FileTypeMap[lastKind];
 
   return (
     <figure
@@ -59,7 +61,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
           controls
           src={path}
           ref={node => {
-            if (node) node.srcObject = file;
+            if (node) node.srcObject = file || null;
           }}
           {...props}
         />
@@ -68,7 +70,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
           muted
           src={path}
           ref={node => {
-            if (node) node.srcObject = file;
+            if (node) node.srcObject = file || null;
           }}
           onMouseEnter={({ currentTarget }) => currentTarget.play()}
           onMouseLeave={({ currentTarget }) => currentTarget.pause()}
@@ -85,7 +87,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
           >
             <i className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`} />
           </a>
-          <figcaption className="mw-100 text-truncate">{fileName}</figcaption>
+          <figcaption className="mw-100 text-wrap text-truncate">{fileName}</figcaption>
         </>
       )}
     </figure>
