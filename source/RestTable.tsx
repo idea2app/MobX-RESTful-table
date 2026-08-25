@@ -3,7 +3,7 @@ import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent } from 'mobx-react-helper';
-import { DataObject, Filter, IDType } from 'mobx-restful';
+import { DataObject, Filter, IDType, ListModel, NewData } from 'mobx-restful';
 import { ReactNode } from 'react';
 import { Button, Form, Spinner, Table, TableProps } from 'react-bootstrap';
 import { isEmpty } from 'web-utility';
@@ -30,7 +30,8 @@ type Translator<T extends DataObject> = RestFormProps<T>['translator'] &
 export interface RestTableProps<D extends DataObject, F extends Filter<D> = Filter<D>>
   extends
     Omit<TableProps, 'onSubmit' | 'onReset'>,
-    Omit<RestFormProps<D>, 'id' | 'size' | 'fields' | 'translator'> {
+    Omit<RestFormProps<D>, 'id' | 'size' | 'fields' | 'store' | 'translator'> {
+  store: ListModel<D, Partial<NewData<D>>>;
   filter?: F;
   filterFields?: Field<F>[];
   editable?: boolean;
@@ -159,7 +160,7 @@ export class RestTable<
   }
 
   @computed
-  get columns(): Column<D>[] {
+  get columns() {
     const { editable, deletable, columns, onCheck } = this.observedProps;
 
     return [
@@ -169,7 +170,7 @@ export class RestTable<
           ({ ...column, renderBody: renderBody ?? this.renderCustomBody(column) }) as Column<D>,
       ),
       (editable || deletable) && this.operateColumn,
-    ].filter(Boolean);
+    ].filter(Boolean) as Column<D>[];
   }
 
   @computed
@@ -188,7 +189,7 @@ export class RestTable<
   }
 
   renderCustomBody = ({
-    key,
+    key = '',
     type,
     multiple,
     options,
@@ -251,7 +252,7 @@ export class RestTable<
                   (key || renderHead) && (
                     <th key={key?.toString() || index}>
                       {typeof renderHead === 'function'
-                        ? renderHead(key)
+                        ? renderHead(key!)
                         : renderHead || (key as string)}
                     </th>
                   ),
@@ -290,7 +291,7 @@ export class RestTable<
                   (key || renderFoot) && (
                     <td key={key?.toString() || index}>
                       {typeof renderFoot === 'function'
-                        ? renderFoot(key)
+                        ? renderFoot(key!)
                         : renderFoot || (key as string)}
                     </td>
                   ),

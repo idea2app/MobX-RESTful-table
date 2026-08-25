@@ -62,4 +62,4 @@ export class App extends Component {
   }
 }
 
-createRoot(document.querySelector('#app')).render(<App />);
+createRoot(document.querySelector('#app')!).render(<App />);

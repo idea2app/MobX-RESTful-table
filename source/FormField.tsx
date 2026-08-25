@@ -1,4 +1,4 @@
-import { FC, TextareaHTMLAttributes } from 'react';
+import { FC, FocusEvent, TextareaHTMLAttributes } from 'react';
 import { FloatingLabelProps, Form, FormControlProps, FormSelectProps } from 'react-bootstrap';
 import { uniqueID } from 'web-utility';
 
@@ -24,7 +24,7 @@ export const FormField: FC<FormFieldProps> = ({
   placeholder = typeof label === 'string' ? label : id,
   options,
   multiple,
-  rows,
+  rows = 0,
   onBlur,
   ...controlProps
 }) => (
@@ -33,7 +33,7 @@ export const FormField: FC<FormFieldProps> = ({
     controlId={id}
     onBlur={
       onBlur &&
-      (event => {
+      ((event: FocusEvent<HTMLInputElement>) => {
         if ((event.target as HTMLInputElement).checkValidity()) {
           event.target.classList.remove('is-invalid');
           event.currentTarget.classList.remove('is-invalid');
@@ -41,7 +41,7 @@ export const FormField: FC<FormFieldProps> = ({
           event.target.classList.add('is-invalid');
           event.currentTarget.classList.add('is-invalid');
         }
-        onBlur(event as Parameters<FormControlProps['onBlur']>[0]);
+        onBlur(event);
       })
     }
   >

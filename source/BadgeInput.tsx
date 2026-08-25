@@ -42,7 +42,7 @@ export class BadgeInput extends FormComponent<BadgeInputProps> {
   };
 
   delete(index: number) {
-    const { innerValue } = this;
+    const { innerValue = [] } = this;
 
     this.innerValue = [...innerValue.slice(0, index), ...innerValue.slice(index + 1)];
   }

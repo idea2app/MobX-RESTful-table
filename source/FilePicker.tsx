@@ -32,7 +32,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   get filePath() {
     const { value } = this;
 
-    return typeof value === 'string' ? value : blobCache.get(value);
+    return typeof value === 'string' ? value : value && blobCache.get(value);
   }
 
   @reaction(({ value }) => value)
@@ -40,7 +40,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
     if (typeof data === 'string')
       try {
         const blob = await blobOf(data),
-          name = data.split('/').at(-1);
+          name = data.split('/').at(-1) || '';
         const file = new File([blob], name, { type: blob.type });
 
         blobCache.set(file, data);
@@ -117,18 +117,19 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           </div>
         )}
         {this.renderInput()}
-        <ButtonGroup className={`position-absolute top-0 end-0 ${styles.toolbar}`} size="sm">
-          {onView && (
-            <Button onClick={() => onView({ path: filePath, file })}>
-              <i className="bi bi-eye-fill" />
-            </Button>
-          )}
-          {filePath && (
+
+        {filePath && (
+          <ButtonGroup className={`position-absolute top-0 end-0 ${styles.toolbar}`} size="sm">
+            {onView && (
+              <Button onClick={() => onView({ path: filePath, file })}>
+                <i className="bi bi-eye-fill" />
+              </Button>
+            )}
             <Button onClick={() => this.#changeFile()}>
               <i className="bi bi-x-lg" />
             </Button>
-          )}
-        </ButtonGroup>
+          </ButtonGroup>
+        )}
       </div>
     );
   }
