@@ -1,0 +1,2 @@
+var e=globalThis.parcelRequireb6bd,n=e.register;n("8ubbp",function(n,r){e("czA5i"),e("4BHaK")}),n("4BHaK",function(e,n){var r,a;a=/("|')(?:\\(?:\r\n?|\n|.)|(?!\1)[^\\\r\n])*\1/,(r=Prism).languages.json5=r.languages.extend("json",{property:[{pattern:RegExp(a.source+"(?=\\s*:)"),greedy:!0},{pattern:/(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/,alias:"unquoted"}],string:{pattern:a,greedy:!0},number:/[+-]?\b(?:NaN|Infinity|0x[a-fA-F\d]+)\b|[+-]?(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:[eE][+-]?\d+\b)?/})});
+//# sourceMappingURL=json5-EAGAEIPM.6985ca7c.js.map
