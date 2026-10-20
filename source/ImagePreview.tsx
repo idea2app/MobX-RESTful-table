@@ -5,6 +5,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
 import { Image, ImageProps, Modal, Spinner } from 'react-bootstrap';
+import { fileNameOf } from 'web-utility';
 
 export type ImagePreviewProps = ImageProps;
 
@@ -103,7 +104,7 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
             as="a"
             href={loadedPath}
             target="_blank"
-            download={loadedPath.split('/').pop()}
+            download={fileNameOf(loadedPath)}
           >
             {loadedPath}
           </Modal.Footer>

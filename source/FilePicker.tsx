@@ -2,7 +2,7 @@ import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps, reaction } from 'mobx-react-helper';
 import { Button, ButtonGroup } from 'react-bootstrap';
-import { blobOf } from 'web-utility';
+import { blobOf, fileNameOf } from 'web-utility';
 
 import { FilePreview, FilePreviewProps } from './FilePreview';
 import * as styles from './FilePicker.module.less';
@@ -40,7 +40,7 @@ export class FilePicker extends FormComponent<FilePickerProps> {
     if (typeof data === 'string')
       try {
         const blob = await blobOf(data),
-          name = data.split('/').at(-1) || '';
+          name = fileNameOf(data);
         const file = new File([blob], name, { type: blob.type });
 
         blobCache.set(file, data);
