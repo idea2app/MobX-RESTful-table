@@ -23,8 +23,13 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
 
   objectURL = '';
 
-  @reaction(({ observedProps }) => observedProps.src)
   componentDidMount() {
+    super.componentDidMount();
+    this.init();
+  }
+
+  @reaction(({ observedProps: { src } }) => src)
+  init() {
     const { src } = this.observedProps;
 
     if (this.objectURL) {

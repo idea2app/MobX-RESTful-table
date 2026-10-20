@@ -1,7 +1,7 @@
 import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
-import { ObservedComponent } from 'mobx-react-helper';
+import { ObservedComponent, reaction } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import {
   createRef,
@@ -115,11 +115,16 @@ export class RestForm<
   componentDidMount() {
     super.componentDidMount();
 
-    const { id, store } = this.props;
-
-    if (id) store?.getOne(id);
+    this.init();
 
     window.addEventListener('beforeunload', this.handleUnload);
+  }
+
+  @reaction(({ observedProps: { id } }) => id)
+  init() {
+    const { id, store } = this.props;
+
+    if (id) return store?.getOne(id);
   }
 
   componentWillUnmount() {

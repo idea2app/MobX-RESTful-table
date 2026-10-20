@@ -1,5 +1,6 @@
 import { FC, HTMLAttributes, InputHTMLAttributes } from 'react';
 import { ImageProps } from 'react-bootstrap';
+import { fileNameOf } from 'web-utility';
 
 import { ImagePreview } from './ImagePreview';
 
@@ -33,10 +34,7 @@ export const FilePreview: FC<FilePreviewProps> = ({
   ...props
 }) => {
   const [category, ...kind] = type?.split(/\W+/) || [],
-    fileName =
-      file instanceof File
-        ? file.name
-        : path && decodeURI(new URL(path, 'http://localhost').pathname.split('/').at(-1) || '');
+    fileName = file instanceof File ? file.name : path && fileNameOf(path);
 
   const lastKind = kind.at(-1) as keyof typeof FileTypeMap;
   const extension = fileName?.includes('.')

@@ -2,7 +2,7 @@ import { debounce } from 'lodash';
 import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
-import { ObservedComponent } from 'mobx-react-helper';
+import { ObservedComponent, reaction } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel, NewData } from 'mobx-restful';
 import { ReactNode } from 'react';
 import { Button, Form, Spinner, Table, TableProps } from 'react-bootstrap';
@@ -49,6 +49,12 @@ export class RestTable<
   static readonly displayName = 'RestTable';
 
   componentDidMount() {
+    super.componentDidMount();
+    this.init();
+  }
+
+  @reaction(({ observedProps: { filter } }) => filter)
+  init() {
     const { store, filter } = this.props;
 
     store.clear();
