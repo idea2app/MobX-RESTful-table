@@ -24,7 +24,10 @@ export const FilePreview: FC<FilePreviewProps> = ({
 }) => {
   if (!file && !path) throw new URIError('No file or path provided');
 
-  const { name: fileName, category, extension } = fileMetaOf(file || path || '');
+  const { name, category, extension } =
+    file instanceof EventTarget
+      ? { category: type?.split('/')[0] }
+      : fileMetaOf(file || path || '');
 
   return (
     <figure
@@ -65,12 +68,12 @@ export const FilePreview: FC<FilePreviewProps> = ({
             className="d-inline-flex justify-content-center align-items-center"
             href={path}
             target="_blank"
-            download={fileName}
+            download={name}
             {...props}
           >
             <i className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`} />
           </a>
-          <figcaption className="mw-100 text-wrap text-truncate">{fileName}</figcaption>
+          <figcaption className="mw-100 text-wrap text-truncate">{name}</figcaption>
         </>
       )}
     </figure>
