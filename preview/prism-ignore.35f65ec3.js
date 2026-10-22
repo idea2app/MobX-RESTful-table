@@ -1,0 +1,2 @@
+(0,globalThis.parcelRequireb6bd.register)("6L8Im",function(e,g){var n;(n=Prism).languages.ignore={comment:/^#.*/m,entry:{pattern:/\S(?:.*(?:(?:\\ )|\S))?/,alias:"string",inside:{operator:/^!|\*\*?|\?/,regex:{pattern:/(^|[^\\])\[[^\[\]]*\]/,lookbehind:!0},punctuation:/\//}}},n.languages.gitignore=n.languages.ignore,n.languages.hgignore=n.languages.ignore,n.languages.npmignore=n.languages.ignore});
+//# sourceMappingURL=prism-ignore.35f65ec3.js.map

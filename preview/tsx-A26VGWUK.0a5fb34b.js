@@ -1,0 +1,2 @@
+var e=globalThis.parcelRequireb6bd,a=e.register;a("22DGa",function(a,t){e("8KWMF"),e("lV5sx"),e("kfrj2")}),a("kfrj2",function(e,a){var t,r,s;r=(t=Prism).util.clone(t.languages.typescript),t.languages.tsx=t.languages.extend("jsx",r),delete t.languages.tsx.parameter,delete t.languages.tsx["literal-property"],(s=t.languages.tsx.tag).pattern=RegExp(/(^|[^\w$]|(?=<\/))/.source+"(?:"+s.pattern.source+")",s.pattern.flags),s.lookbehind=!0});
+//# sourceMappingURL=tsx-A26VGWUK.0a5fb34b.js.map
