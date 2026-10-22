@@ -1,15 +1,14 @@
 import { CodeBlock } from 'idea-react';
 import { FC, HTMLAttributes, PropsWithChildren } from 'react';
-
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-typescript';
+import { Card } from 'react-bootstrap';
 
 export const CodeExample: FC<PropsWithChildren> = ({ children }) => (
   <>
     {children}
-    <CodeBlock language="tsx">{children}</CodeBlock>
+
+    <Card className="my-3" body>
+      <CodeBlock language="tsx">{children}</CodeBlock>
+    </Card>
   </>
 );
 

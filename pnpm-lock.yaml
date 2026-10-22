@@ -33,24 +33,24 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1
       web-utility:
-        specifier: ^4.7.3
-        version: 4.7.3(typescript@6.0.3)
+        specifier: ^4.8.0
+        version: 4.8.0(typescript@6.0.3)
     devDependencies:
       '@mlightcad/cad-simple-viewer':
         specifier: ^1.7.6
-        version: 1.7.6(@mlightcad/data-model@1.15.12)
+        version: 1.7.6(@mlightcad/data-model@1.15.14)
       '@mlightcad/data-model':
-        specifier: ^1.15.12
-        version: 1.15.12
+        specifier: ^1.15.14
+        version: 1.15.14
       '@octokit/openapi-types':
         specifier: ^29.0.1
         version: 29.0.1
       '@open-file-viewer/core':
         specifier: ^1.0.0
-        version: 1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.12))(@mlightcad/data-model@1.15.12)(@napi-rs/canvas@1.0.12)(pdfjs-dist@6.4.299)
+        version: 1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.14))(@mlightcad/data-model@1.15.14)(@napi-rs/canvas@1.0.13)(pdfjs-dist@6.4.299)
       '@open-file-viewer/react':
         specifier: ^1.0.0
-        version: 1.0.0(@open-file-viewer/core@1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.12))(@mlightcad/data-model@1.15.12)(@napi-rs/canvas@1.0.12)(pdfjs-dist@6.4.299))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.0.0(@open-file-viewer/core@1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.14))(@mlightcad/data-model@1.15.14)(@napi-rs/canvas@1.0.13)(pdfjs-dist@6.4.299))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@parcel/config-default':
         specifier: ~2.16.4
         version: 2.16.4(@parcel/core@2.16.4(@swc/helpers@0.5.23))(@swc/helpers@0.5.23)
@@ -67,8 +67,8 @@ importers:
         specifier: ~2.16.4
         version: 2.16.4(@parcel/core@2.16.4(@swc/helpers@0.5.23))(typescript@6.0.3)
       '@types/lodash':
-        specifier: ^4.17.26
-        version: 4.17.26
+        specifier: ^4.17.27
+        version: 4.17.27
       '@types/node':
         specifier: ^26.6.5
         version: 26.6.5
@@ -129,9 +129,6 @@ importers:
       prettier:
         specifier: ^3.9.10
         version: 3.9.10
-      prismjs:
-        specifier: ^1.30.0
-        version: 1.30.0
       process:
         specifier: ^0.11.10
         version: 0.11.10
@@ -318,25 +315,25 @@ packages:
       lodash-es: 4.17.21
       three: ^0.172.0
 
-  '@mlightcad/common@1.15.12':
-    resolution: {integrity: sha512-y54j5owzoFBIJ6ww4qmIV3a5PzZXK0M26nnNqEwIsCRqvD/v4HqR2q68vE9hGH7/vbW1nPBYdgydlu2pjZozeg==}
+  '@mlightcad/common@1.15.14':
+    resolution: {integrity: sha512-22PIzaIrrVKvx49isEdBtoK+U96QM5SZhm1aLObv1/p6N+jta/l9KNZe+zHMDx1jRjB6/1MggyqRSWgIo8dMcA==}
 
-  '@mlightcad/data-model@1.15.12':
-    resolution: {integrity: sha512-5+cjzFLo/RVkk2+4T/Dox3IWOvt04IqStpLy3nZ4IC2gE3vBqeevS2JhK257FwwepB/w3tCnUh9Rc4M/zIPdsQ==}
+  '@mlightcad/data-model@1.15.14':
+    resolution: {integrity: sha512-7wUfL5vzlIJ9X6gC2KHBnrIi1c1Ne2+yxkCKrbF+EU3k57F/V73Ou0Rqh/XhXhZaW1PWty6k2KU5ihjXeB1QBQ==}
 
-  '@mlightcad/emf-converter@1.15.12':
-    resolution: {integrity: sha512-J7/nH+aM9ZInmEDPVB+MWapE4hD0hBFu5ndT7/Vjnq5WoleAX3TqbmM+TuMt5iTpuCZCQcm7441qYSEEdDEYyQ==}
+  '@mlightcad/emf-converter@1.15.14':
+    resolution: {integrity: sha512-0Fc5iZMi/ZKEMJwHh6wEJQMFCO/26TgTMRBnHtBCt2Ti65gUzCpAmAK0hU17SatjF3aXmxG47t3Y63Jp4c6Nog==}
 
-  '@mlightcad/geometry-engine@3.15.12':
-    resolution: {integrity: sha512-Zr6+yxTwgOEFrK8UBUwg8SqcahrMrhcOr8g5ZjQaV8hzeriY2ypx7gh9bKY9CVw7iJcWmLP2s7lx8c02cAnopQ==}
+  '@mlightcad/geometry-engine@3.15.14':
+    resolution: {integrity: sha512-rXvmY2TGq8+u+7UUIz7UU9s6U0rl1dv0kQMwY8xWWsay98tvStBp6lLYL8IJmy87zkND8uQI7l57hP11aRIpgw==}
     peerDependencies:
-      '@mlightcad/common': 1.15.12
+      '@mlightcad/common': 1.15.14
 
-  '@mlightcad/graphic-interface@3.15.12':
-    resolution: {integrity: sha512-V/Ip38U30HduVVAGc1bw/iAwKkIKot6brXjrhVhIlBiEoNkPJB7qOBWut3+a9nkSx+uGwjMv3jBjYdoIRrLrCQ==}
+  '@mlightcad/graphic-interface@3.15.14':
+    resolution: {integrity: sha512-vZDDDpPhgBXNAjpj7XL9qi/P8lLHwfjSUQwA80CrfguknkoO++spFS/G/QUD/MO1nO+bmn04mfiy0HxrqG8ULQ==}
     peerDependencies:
-      '@mlightcad/common': 1.15.12
-      '@mlightcad/geometry-engine': 3.15.12
+      '@mlightcad/common': 1.15.14
+      '@mlightcad/geometry-engine': 3.15.14
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
     resolution: {integrity: sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ==}
@@ -368,67 +365,79 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@napi-rs/canvas-darwin-arm64@1.0.12':
-    resolution: {integrity: sha512-dRtZCi/u1IOZyRjEDCA73PqgWakf5689K2jfv4uPRYGMJvEqtV+Eq7MIQkBJLmdfUPe7AktSiBZRml2pggnjRQ==}
+  '@napi-rs/canvas-android-arm64@1.0.13':
+    resolution: {integrity: sha512-trn7AaDzQ+yeeA0ezhkC7cB1ZDPtp4UYk0EvB5F8qtYL9jEVWtVrU30WOpI52DszoTxaTsCgf5PP4ZVaOlOIHQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@napi-rs/canvas-darwin-arm64@1.0.13':
+    resolution: {integrity: sha512-6Y2djEetL8copxfNK6hg7oig/xqTwOchv19hBOm+zBNdKc/02Z3kjZN5wrLzv/l5O04/bAQS6I/AlQpwBlXgPg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@napi-rs/canvas-darwin-x64@1.0.12':
-    resolution: {integrity: sha512-YwvMgK5NBXwPY1AjZGXfPCG3hp/OFGM0Kw+JZHCOR/FYaeSOftaZRyxaDEGkJQSLEUZZIMNJXKCWgZYSzgWZEA==}
+  '@napi-rs/canvas-darwin-x64@1.0.13':
+    resolution: {integrity: sha512-OZoPwwu4TMMg8GTCFBrg8UFExwQTU/55i3uTC/izDat6PHE+ro9dimyQoOboFf91+NY7Pnn70ScR8f8I8+eZXw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@napi-rs/canvas-linux-arm-gnueabihf@1.0.12':
-    resolution: {integrity: sha512-LlOsZy8qh+qJq1euEvDZqa9muACS1fL1Ag38c7J+axAnA8NeXazMtqmUyKb4NVyft6DqbU/MesEj3C0bAFnv4Q==}
+  '@napi-rs/canvas-linux-arm-gnueabihf@1.0.13':
+    resolution: {integrity: sha512-dZSYaKROuswU2eUWG5aBKndNVe68elo1YX93xtRax7q658tj8rYE+HwduovWJgs6qwv1r1/CLR60nDeBbyjvyg==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
 
-  '@napi-rs/canvas-linux-arm64-gnu@1.0.12':
-    resolution: {integrity: sha512-nvuqhi85GzaFl/6sid4qf7wwjHuGU6gfIuDyywUb/fB+kp6Fp3h8GyIAKss/QPil3zVO2r8g6O9ah+IOUoBrIw==}
+  '@napi-rs/canvas-linux-arm64-gnu@1.0.13':
+    resolution: {integrity: sha512-W6FzYE8ADHI93In1vi80KBL6btDtAMuj50Ch5ptkWS8xuntyzbR4h5JDUmXoakxZn2yMInksudTEqVSWoFqFGg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@napi-rs/canvas-linux-arm64-musl@1.0.12':
-    resolution: {integrity: sha512-Bf6+9PoEr9K06P/oyMab7zZOpW90KimbIuNsy/vL0VhZZKsb0B0rCC78cp0jXhK6PIM7v8t6uX1sn7isOZ8KEw==}
+  '@napi-rs/canvas-linux-arm64-musl@1.0.13':
+    resolution: {integrity: sha512-+6fQ+rR49hkAa4voh2stLIwQ+4t+gmoseM8Bc53/DlMXb73IKymDPWK9A/NtWeqTW4ijWppYuyuxS2hPI8tzNA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@napi-rs/canvas-linux-riscv64-gnu@1.0.12':
-    resolution: {integrity: sha512-j7VcZduLSRx60nv/wbdyH+fyB5QriWGuO8GrvMDlFlt7GNUKAw5lHAHpcuuQW3QwLOe+3P+3qryzyT3sW5pCqQ==}
+  '@napi-rs/canvas-linux-riscv64-gnu@1.0.13':
+    resolution: {integrity: sha512-17XEMO3t9RW/TtHtSFf2AkaSWuCWdzbPeidz7zrOFawHxoLSJCnpTI1hN5aUvrZNnkNNmt/vZVJCh0ryUaik3A==}
     engines: {node: '>= 10'}
     cpu: [riscv64]
     os: [linux]
     libc: [glibc]
 
-  '@napi-rs/canvas-linux-x64-gnu@1.0.12':
-    resolution: {integrity: sha512-twDb8ZNgoCF8EG6ka+Lk4etU+ea9lv6NiV5ptIf+thz3LgWuHBbt85c+YgL1s05VsHe4WYWK0f+GhR45IuqARg==}
+  '@napi-rs/canvas-linux-x64-gnu@1.0.13':
+    resolution: {integrity: sha512-lc48IwknVHBsNzXn9Xs5OkUsRX38Ml3Z1aOybQ51mMEzZckm8+4A0qROlyYHEoBPzr1kL3IU8ZUAqDb7wtdX8w==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@napi-rs/canvas-linux-x64-musl@1.0.12':
-    resolution: {integrity: sha512-mtZbBeNCdGA0MYQxivPmMOp5JMH80LaJLQeEMg7Nne517fvgGb+DWTJTmoE/qUW8YJ4nkiP2vQyr1XVGrH/Ktg==}
+  '@napi-rs/canvas-linux-x64-musl@1.0.13':
+    resolution: {integrity: sha512-bGY1r26S2bs8UNFJcPWcCSNdCFbKep5PATsvtgtC9A5u6SRgr2/jJE/RlhHL5m9ZpixNDhVkLY/5h16Kx5V9YA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@napi-rs/canvas-win32-x64-msvc@1.0.12':
-    resolution: {integrity: sha512-SEEfblIAnYeS4UkeFPp9jw6ZWuHxaTqumUuksMgnMXmPLW8Ofb21uu7cujhw+lk4E9V3aWgGAE9f8g+CdoAU0Q==}
+  '@napi-rs/canvas-win32-arm64-msvc@1.0.13':
+    resolution: {integrity: sha512-2vRPBZoaIvJrUkDhZTE2Hn0YrnpJRCWVM3EJACoBKjuWI6WgPxGtUoRMsxRviCsyks8bKTSFdyw14CellnG2qA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@napi-rs/canvas-win32-x64-msvc@1.0.13':
+    resolution: {integrity: sha512-DUlW3lZPz63kYsf8mxgyyZuevhlH0T3/BGP9l+NazhB0F1+gL6D4hqZdnhZpw24DlWmTpATDcyYSZlJOi+DdfQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
 
-  '@napi-rs/canvas@1.0.12':
-    resolution: {integrity: sha512-PSwhRdvizfuiSDlhE4Ld2jl/JqkrbSFFyZO0ycamE6mBpf1H0uUF3Tm8yQaVDeAwCNNDzxjRfrN22KmWLTDwcw==}
+  '@napi-rs/canvas@1.0.13':
+    resolution: {integrity: sha512-b87ugZpQ5ViwqVBkjervxpwa0GmJPsKHLBNoZN6GpjWeHzTbDUGryriq+2DYW2XbB+xCqSIINQysC0/I87nPbw==}
     engines: {node: '>= 10'}
 
   '@octokit/openapi-types@28.0.0':
@@ -1163,8 +1172,8 @@ packages:
   '@types/hast@3.0.5':
     resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
 
-  '@types/lodash@4.17.26':
-    resolution: {integrity: sha512-48NWfiY6oNcKOh47Z4h+sIvwcQR91h6KPhaYKgeMIrkT2jV82Gy90SErj60vW8jQbeMSOSbhIv3bZ7JoqPPVhA==}
+  '@types/lodash@4.17.27':
+    resolution: {integrity: sha512-VenMRv/eKNrspX9v3H4dbmjsrnCOYdYBG3kxXKk3dG6X+urBGcj2Prww3xw1U5K4FV/mE4h5GbWd0szEKf+9ew==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -1295,8 +1304,8 @@ packages:
     resolution: {integrity: sha512-+ys997U96po4Kx/ABpBCqhA9EuxJaQWDQg7295H4hBphv3IZg0boBKuwYpt4YXp6MZ5AmZQnU/tyMTlRpaSejg==}
     engines: {node: '>= 0.4'}
 
-  caniuse-lite@1.0.30001817:
-    resolution: {integrity: sha512-uZ1JG80BwhtMalIAGPxPfmNhHyd/B/nTdr3hITWlRamSyAdUStP1Gop01e7SD5q6J90ixJvWDbvmiFVfDgn4bw==}
+  caniuse-lite@1.0.30001819:
+    resolution: {integrity: sha512-LFUqIIAwpzsIuevnKnsR9qnStBcgzPShTX61lBwN9uFkkf8o8zLiebEjbW8AYtZiF+1YKDWfdt/pWDtMuG8Xwg==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -1624,8 +1633,8 @@ packages:
     peerDependencies:
       marked: '>=4.0.10'
 
-  electron-to-chromium@1.5.461:
-    resolution: {integrity: sha512-3WZFARz1By+/rYcqQ0OLj4UcEdhd6tz2LEcDtKBUq7ey77EeJ1OtetY/5hjSUxw7dC5r5mA7FfkhRbqO9vnTCg==}
+  electron-to-chromium@1.5.463:
+    resolution: {integrity: sha512-nVWNU6ltFjopvOdD44J4zoBkgO0M+WZiFKKFV7EjebOH9z0KNphk6bCEjplXtJofL21ARIuuwWOCsFkBVklm6w==}
 
   emf-converter@3.5.1:
     resolution: {integrity: sha512-ujLWqrNg1y6U9/zJTOzyehCc+yqncys8PecF0fJbtQh7sRK0aKTlqav8O5LT9K67l8L31nigwEr2Xl139ZFo0w==}
@@ -2071,6 +2080,11 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
+  mime@4.1.1:
+    resolution: {integrity: sha512-YAApRsTpM2+gnUFHhRNGfkX8NK0V5xj1nyQLufGlwEI+eX4xRsTcel2IXDuMEGSGjBvzykNW4VuoEACgwYe7BQ==}
+    engines: {node: '>=16'}
+    hasBin: true
+
   minimatch@10.2.6:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
@@ -2161,8 +2175,8 @@ packages:
     resolution: {integrity: sha512-s+w+rBWnpTMwSFbaE0UXsRlg7hU4FjekKU4eyAih5T8nJuNZT1nNsskXpxmeqSK9UzkBl6UgRlnKc8hz8IEqOw==}
     hasBin: true
 
-  node-releases@2.0.59:
-    resolution: {integrity: sha512-5qr2okC4ItAI0hG5SaV0HoYMpnM/Y6+Oqr7AmPYy/2uEoGvS+GbSKLeRxSS1uAdu59yz0ouzcuXievSgg///WA==}
+  node-releases@2.0.60:
+    resolution: {integrity: sha512-OmO8+GM1JUZqXET720VrJCwkjUCXmCMQm0Z3UDDRbfNLHS4NEAvY60j5jiFv0tkKw2PNNlqOLhahVmwJIOLDIQ==}
     engines: {node: '>=18'}
 
   nullthrows@1.1.1:
@@ -2699,8 +2713,8 @@ packages:
     resolution: {integrity: sha512-/Gnggvj9oSrEvJbDyyPtAnxBt5fGQM2iWOKQNu7ie1OxDgK40iZpyV3TKaRiEzVj1oA1UxKnEy9XPXh6PW3eVw==}
     engines: {node: '>= 8'}
 
-  web-utility@4.7.3:
-    resolution: {integrity: sha512-TBdTeHFXCNtoHHLh8tr/2VA5e29HlzqC4l1qkiE7RRIdbiWwFKDyq9/4BuS4Sa+5+CWBxIdYo/5GikCg0tc5vA==}
+  web-utility@4.8.0:
+    resolution: {integrity: sha512-kRySSNglk2NqztjwWqBVWJDNmNUBcWZBquw7UDVUNeyxjwM5ClNZDX0YkVGVMckgfDc6yWZ92S3jJiCMa5WVzA==}
     peerDependencies:
       element-internals-polyfill: '>=1'
       typescript: '>=4.1'
@@ -2875,32 +2889,32 @@ snapshots:
 
   '@mixmark-io/domino@2.2.0': {}
 
-  '@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.12)':
+  '@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.14)':
     dependencies:
-      '@mlightcad/data-model': 1.15.12
+      '@mlightcad/data-model': 1.15.14
 
-  '@mlightcad/common@1.15.12':
+  '@mlightcad/common@1.15.14':
     dependencies:
       loglevel: 1.9.2
 
-  '@mlightcad/data-model@1.15.12':
+  '@mlightcad/data-model@1.15.14':
     dependencies:
-      '@mlightcad/common': 1.15.12
-      '@mlightcad/emf-converter': 1.15.12
-      '@mlightcad/geometry-engine': 3.15.12(@mlightcad/common@1.15.12)
-      '@mlightcad/graphic-interface': 3.15.12(@mlightcad/common@1.15.12)(@mlightcad/geometry-engine@3.15.12(@mlightcad/common@1.15.12))
+      '@mlightcad/common': 1.15.14
+      '@mlightcad/emf-converter': 1.15.14
+      '@mlightcad/geometry-engine': 3.15.14(@mlightcad/common@1.15.14)
+      '@mlightcad/graphic-interface': 3.15.14(@mlightcad/common@1.15.14)(@mlightcad/geometry-engine@3.15.14(@mlightcad/common@1.15.14))
       uid: 2.0.2
 
-  '@mlightcad/emf-converter@1.15.12': {}
+  '@mlightcad/emf-converter@1.15.14': {}
 
-  '@mlightcad/geometry-engine@3.15.12(@mlightcad/common@1.15.12)':
+  '@mlightcad/geometry-engine@3.15.14(@mlightcad/common@1.15.14)':
     dependencies:
-      '@mlightcad/common': 1.15.12
+      '@mlightcad/common': 1.15.14
 
-  '@mlightcad/graphic-interface@3.15.12(@mlightcad/common@1.15.12)(@mlightcad/geometry-engine@3.15.12(@mlightcad/common@1.15.12))':
+  '@mlightcad/graphic-interface@3.15.14(@mlightcad/common@1.15.14)(@mlightcad/geometry-engine@3.15.14(@mlightcad/common@1.15.14))':
     dependencies:
-      '@mlightcad/common': 1.15.12
-      '@mlightcad/geometry-engine': 3.15.12(@mlightcad/common@1.15.12)
+      '@mlightcad/common': 1.15.14
+      '@mlightcad/geometry-engine': 3.15.14(@mlightcad/common@1.15.14)
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
     optional: true
@@ -2920,51 +2934,59 @@ snapshots:
   '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
     optional: true
 
-  '@napi-rs/canvas-darwin-arm64@1.0.12':
+  '@napi-rs/canvas-android-arm64@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-darwin-x64@1.0.12':
+  '@napi-rs/canvas-darwin-arm64@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-linux-arm-gnueabihf@1.0.12':
+  '@napi-rs/canvas-darwin-x64@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-linux-arm64-gnu@1.0.12':
+  '@napi-rs/canvas-linux-arm-gnueabihf@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-linux-arm64-musl@1.0.12':
+  '@napi-rs/canvas-linux-arm64-gnu@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-linux-riscv64-gnu@1.0.12':
+  '@napi-rs/canvas-linux-arm64-musl@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-linux-x64-gnu@1.0.12':
+  '@napi-rs/canvas-linux-riscv64-gnu@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-linux-x64-musl@1.0.12':
+  '@napi-rs/canvas-linux-x64-gnu@1.0.13':
     optional: true
 
-  '@napi-rs/canvas-win32-x64-msvc@1.0.12':
+  '@napi-rs/canvas-linux-x64-musl@1.0.13':
     optional: true
 
-  '@napi-rs/canvas@1.0.12':
+  '@napi-rs/canvas-win32-arm64-msvc@1.0.13':
+    optional: true
+
+  '@napi-rs/canvas-win32-x64-msvc@1.0.13':
+    optional: true
+
+  '@napi-rs/canvas@1.0.13':
     optionalDependencies:
-      '@napi-rs/canvas-darwin-arm64': 1.0.12
-      '@napi-rs/canvas-darwin-x64': 1.0.12
-      '@napi-rs/canvas-linux-arm-gnueabihf': 1.0.12
-      '@napi-rs/canvas-linux-arm64-gnu': 1.0.12
-      '@napi-rs/canvas-linux-arm64-musl': 1.0.12
-      '@napi-rs/canvas-linux-riscv64-gnu': 1.0.12
-      '@napi-rs/canvas-linux-x64-gnu': 1.0.12
-      '@napi-rs/canvas-linux-x64-musl': 1.0.12
-      '@napi-rs/canvas-win32-x64-msvc': 1.0.12
+      '@napi-rs/canvas-android-arm64': 1.0.13
+      '@napi-rs/canvas-darwin-arm64': 1.0.13
+      '@napi-rs/canvas-darwin-x64': 1.0.13
+      '@napi-rs/canvas-linux-arm-gnueabihf': 1.0.13
+      '@napi-rs/canvas-linux-arm64-gnu': 1.0.13
+      '@napi-rs/canvas-linux-arm64-musl': 1.0.13
+      '@napi-rs/canvas-linux-riscv64-gnu': 1.0.13
+      '@napi-rs/canvas-linux-x64-gnu': 1.0.13
+      '@napi-rs/canvas-linux-x64-musl': 1.0.13
+      '@napi-rs/canvas-win32-arm64-msvc': 1.0.13
+      '@napi-rs/canvas-win32-x64-msvc': 1.0.13
     optional: true
 
   '@octokit/openapi-types@28.0.0': {}
 
   '@octokit/openapi-types@29.0.1': {}
 
-  '@open-file-viewer/core@1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.12))(@mlightcad/data-model@1.15.12)(@napi-rs/canvas@1.0.12)(pdfjs-dist@6.4.299)':
+  '@open-file-viewer/core@1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.14))(@mlightcad/data-model@1.15.14)(@napi-rs/canvas@1.0.13)(pdfjs-dist@6.4.299)':
     dependencies:
       '@aiden0z/pptx-renderer': 1.4.0(pdfjs-dist@6.4.299)
       '@kenjiuno/msgreader': 1.29.0
@@ -2972,7 +2994,7 @@ snapshots:
       ag-psd: 30.2.0
       docx-preview: 0.3.7
       dompurify: 3.4.17
-      emf-converter: 3.5.1(@napi-rs/canvas@1.0.12)
+      emf-converter: 3.5.1(@napi-rs/canvas@1.0.13)
       heic2any: 0.0.4
       hls.js: 1.7.3
       hyparquet: 1.31.5
@@ -2992,16 +3014,16 @@ snapshots:
       xlsx: '@stackline/xlsx@1.0.9'
       xz-decompress: 0.2.3
     optionalDependencies:
-      '@mlightcad/cad-simple-viewer': 1.7.6(@mlightcad/data-model@1.15.12)
-      '@mlightcad/data-model': 1.15.12
+      '@mlightcad/cad-simple-viewer': 1.7.6(@mlightcad/data-model@1.15.14)
+      '@mlightcad/data-model': 1.15.14
       pdfjs-dist: 6.4.299
     transitivePeerDependencies:
       - '@napi-rs/canvas'
       - geotiff
 
-  '@open-file-viewer/react@1.0.0(@open-file-viewer/core@1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.12))(@mlightcad/data-model@1.15.12)(@napi-rs/canvas@1.0.12)(pdfjs-dist@6.4.299))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@open-file-viewer/react@1.0.0(@open-file-viewer/core@1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.14))(@mlightcad/data-model@1.15.14)(@napi-rs/canvas@1.0.13)(pdfjs-dist@6.4.299))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@open-file-viewer/core': 1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.12))(@mlightcad/data-model@1.15.12)(@napi-rs/canvas@1.0.12)(pdfjs-dist@6.4.299)
+      '@open-file-viewer/core': 1.0.0(@mlightcad/cad-simple-viewer@1.7.6(@mlightcad/data-model@1.15.14))(@mlightcad/data-model@1.15.14)(@napi-rs/canvas@1.0.13)(pdfjs-dist@6.4.299)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
@@ -3998,7 +4020,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/lodash@4.17.26': {}
+  '@types/lodash@4.17.27': {}
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -4092,9 +4114,9 @@ snapshots:
   browserslist@4.29.4:
     dependencies:
       baseline-browser-mapping: 2.11.30
-      caniuse-lite: 1.0.30001817
-      electron-to-chromium: 1.5.461
-      node-releases: 2.0.59
+      caniuse-lite: 1.0.30001819
+      electron-to-chromium: 1.5.463
+      node-releases: 2.0.60
       update-browserslist-db: 1.3.4(browserslist@4.29.4)
 
   buffer-from@1.1.2: {}
@@ -4125,7 +4147,7 @@ snapshots:
       call-bind-apply-helpers: 1.0.2
       get-intrinsic: 1.3.0
 
-  caniuse-lite@1.0.30001817: {}
+  caniuse-lite@1.0.30001819: {}
 
   ccount@2.0.1: {}
 
@@ -4464,16 +4486,16 @@ snapshots:
       regenerator-runtime: 0.14.1
       turndown: 7.2.4
       turndown-plugin-gfm: 1.0.2
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - element-internals-polyfill
       - typescript
 
-  electron-to-chromium@1.5.461: {}
+  electron-to-chromium@1.5.463: {}
 
-  emf-converter@3.5.1(@napi-rs/canvas@1.0.12):
+  emf-converter@3.5.1(@napi-rs/canvas@1.0.13):
     optionalDependencies:
-      '@napi-rs/canvas': 1.0.12
+      '@napi-rs/canvas': 1.0.13
 
   entities@4.5.0: {}
 
@@ -4634,7 +4656,7 @@ snapshots:
       react-element-to-jsx-string: 18.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react-live: 4.1.8(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       shiki: 4.5.0
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - '@types/react'
       - element-internals-polyfill
@@ -4720,7 +4742,7 @@ snapshots:
       '@swc/helpers': 0.5.23
       regenerator-runtime: 0.14.1
       web-streams-polyfill: 4.3.0
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - element-internals-polyfill
       - typescript
@@ -4943,6 +4965,8 @@ snapshots:
   mime@1.6.0:
     optional: true
 
+  mime@4.1.1: {}
+
   minimatch@10.2.6:
     dependencies:
       brace-expansion: 5.0.12
@@ -4955,12 +4979,12 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 28.0.0
       '@swc/helpers': 0.5.23
-      '@types/lodash': 4.17.26
+      '@types/lodash': 4.17.27
       koajax: 3.3.1(typescript@6.0.3)
       lodash: 4.18.1
       mobx: 7.1.0
       mobx-restful: 2.1.5(mobx@7.1.0)(typescript@6.0.3)
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - core-js
       - element-internals-polyfill
@@ -4973,7 +4997,7 @@ snapshots:
       '@types/node': 24.19.2
       mobx: 7.1.0
       regenerator-runtime: 0.14.1
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - element-internals-polyfill
       - typescript
@@ -4984,7 +5008,7 @@ snapshots:
       lodash.isequalwith: 4.4.0
       mobx: 7.1.0
       react: 19.3.1
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - element-internals-polyfill
       - typescript
@@ -5007,7 +5031,7 @@ snapshots:
       koajax: 3.3.1(typescript@6.0.3)
       mobx: 7.1.0
       regenerator-runtime: 0.14.1
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - core-js
       - element-internals-polyfill
@@ -5074,7 +5098,7 @@ snapshots:
       detect-libc: 2.1.2
     optional: true
 
-  node-releases@2.0.59: {}
+  node-releases@2.0.60: {}
 
   nullthrows@1.1.1: {}
 
@@ -5142,7 +5166,7 @@ snapshots:
 
   pdfjs-dist@6.4.299:
     optionalDependencies:
-      '@napi-rs/canvas': 1.0.12
+      '@napi-rs/canvas': 1.0.13
 
   picocolors@1.1.1: {}
 
@@ -5240,7 +5264,7 @@ snapshots:
       mobx-react-helper: 0.5.4(mobx@7.1.0)(react@19.3.1)(typescript@6.0.3)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-      web-utility: 4.7.3(typescript@6.0.3)
+      web-utility: 4.8.0(typescript@6.0.3)
     transitivePeerDependencies:
       - element-internals-polyfill
       - marked
@@ -5675,9 +5699,10 @@ snapshots:
 
   web-streams-polyfill@4.3.0: {}
 
-  web-utility@4.7.3(typescript@6.0.3):
+  web-utility@4.8.0(typescript@6.0.3):
     dependencies:
       '@swc/helpers': 0.5.23
+      mime: 4.1.1
       regenerator-runtime: 0.14.1
       typescript: 6.0.3
 

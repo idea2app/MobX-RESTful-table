@@ -1,6 +1,6 @@
 import { FC, HTMLAttributes, InputHTMLAttributes } from 'react';
 import { ImageProps } from 'react-bootstrap';
-import { fileNameOf } from 'web-utility';
+import { fileMetaOf } from 'web-utility';
 
 import { ImagePreview } from './ImagePreview';
 
@@ -13,17 +13,6 @@ export type FilePreviewProps = ImageProps &
     file?: HTMLMediaElement['srcObject'];
   };
 
-export const FileTypeMap = {
-  stream: 'binary',
-  compressed: 'zip',
-  msword: 'doc',
-  document: 'docx',
-  powerpoint: 'ppt',
-  presentation: 'pptx',
-  excel: 'xls',
-  sheet: 'xlsx',
-};
-
 export const FilePreview: FC<FilePreviewProps> = ({
   className = '',
   style,
@@ -33,13 +22,9 @@ export const FilePreview: FC<FilePreviewProps> = ({
   file,
   ...props
 }) => {
-  const [category, ...kind] = type?.split(/\W+/) || [],
-    fileName = file instanceof File ? file.name : path && fileNameOf(path);
+  if (!file && !path) throw new URIError('No file or path provided');
 
-  const lastKind = kind.at(-1) as keyof typeof FileTypeMap;
-  const extension = fileName?.includes('.')
-    ? fileName.split('.').at(-1)
-    : lastKind && FileTypeMap[lastKind];
+  const { name: fileName, category, extension } = fileMetaOf(file || path || '');
 
   return (
     <figure

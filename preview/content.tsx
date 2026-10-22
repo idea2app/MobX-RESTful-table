@@ -216,6 +216,9 @@ export const Content: FC = observer(() => (
 
     <Section title="File Preview">
       <CodeExample>
+        <FilePreview path={demoImage} />
+      </CodeExample>
+      <CodeExample>
         <FilePreview path="https://idea2app.github.io/MobX-RESTful-table/index.html" />
       </CodeExample>
     </Section>

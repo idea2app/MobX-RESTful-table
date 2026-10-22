@@ -2,7 +2,7 @@ import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps, reaction } from 'mobx-react-helper';
 import { Button, ButtonGroup } from 'react-bootstrap';
-import { blobOf, fileNameOf } from 'web-utility';
+import { blobOf, fileMetaOf, fileNameOf } from 'web-utility';
 
 import { FilePreview, FilePreviewProps } from './FilePreview';
 import * as styles from './FilePicker.module.less';
@@ -23,9 +23,9 @@ export class FilePicker extends FormComponent<FilePickerProps> {
   @computed
   get fileType() {
     const { accept } = this.observedProps,
-      { file } = this;
+      { file, filePath } = this;
 
-    return file?.type || file?.name.match(/\.\w+$/)?.[0] || accept;
+    return fileMetaOf(file || filePath || '').type || accept;
   }
 
   @computed
