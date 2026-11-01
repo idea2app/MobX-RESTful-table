@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
 import { DataObject, Filter, IDType, ListModel, NewData } from 'mobx-restful';
 import { ReactNode } from 'react';
-import { Button, Form, Spinner, Table, TableProps } from 'react-bootstrap';
+import { Button, ButtonProps, Checkbox, Spinner, Table, TableProps } from 'idea-react';
 import { isEmpty } from 'web-utility';
 
 import { BadgeBar } from './BadgeBar';
@@ -31,6 +31,7 @@ export interface RestTableProps<D extends DataObject, F extends Filter<D> = Filt
   extends
     Omit<TableProps, 'onSubmit' | 'onReset'>,
     Omit<RestFormProps<D>, 'id' | 'size' | 'fields' | 'store' | 'translator'> {
+  size?: ButtonProps['size'];
   store: ListModel<D, Partial<NewData<D>>>;
   filter?: F;
   filterFields?: Field<F>[];
@@ -99,30 +100,22 @@ export class RestTable<
 
     return {
       renderHead: () => (
-        <Form.Check
-          type="checkbox"
+        <Checkbox
           name={`all-${indexKey.toString()}`}
           value={checkedKeys + ''}
           checked={
             !!currentPage[0] && currentPage.every(({ [indexKey]: ID }) => checkedKeys.includes(ID))
           }
-          // https://github.com/facebook/react/issues/1798
-          ref={(input: HTMLInputElement | null) => {
-            if (input)
-              input.indeterminate = !!checkedKeys.length && checkedKeys.length < currentPage.length;
-          }}
+          indeterminate={!!checkedKeys.length && checkedKeys.length < currentPage.length}
           onChange={toggleCheckAll}
-          onKeyUp={({ key }) => key === ' ' && toggleCheckAll()}
         />
       ),
       renderBody: ({ [indexKey]: ID }) => (
-        <Form.Check
-          type="checkbox"
+        <Checkbox
           name={indexKey.toString()}
           value={ID}
           checked={checkedKeys.includes(ID)}
           onChange={() => this.toggleCheck(ID)}
-          onKeyUp={({ key }) => key === ' ' && this.toggleCheck(ID)}
         />
       ),
     };
@@ -143,7 +136,7 @@ export class RestTable<
           {!disabled && editable && (
             <Button
               className="text-nowrap m-1"
-              variant={readOnly ? 'primary' : 'warning'}
+              theme={readOnly ? 'primary' : 'warning'}
               size={fieldSize}
               onClick={() => (store.currentOne = data)}
             >
@@ -153,7 +146,7 @@ export class RestTable<
           {deletable && (
             <Button
               className="text-nowrap m-1"
-              variant="danger"
+              theme="danger"
               size={fieldSize}
               onClick={() => this.deleteList([data[store.indexKey]])}
             >
@@ -239,6 +232,7 @@ export class RestTable<
         translator,
         editable,
         deletable,
+        size,
         onCheck,
         onSubmit,
         onReset,
@@ -249,7 +243,7 @@ export class RestTable<
     const { indexKey, downloading, currentPage } = store;
 
     return (
-      <Table {...tableProps} responsive={responsive}>
+      <Table {...tableProps} responsive={responsive} small={tableProps.small || size === 'sm'}>
         {hasHeader && (
           <thead>
             <tr className="align-middle text-nowrap">
@@ -327,6 +321,7 @@ export class RestTable<
         className = 'overflow-auto d-flex flex-column gap-3',
         striped,
         hover,
+        size,
         editable,
         deletable,
         filter,
@@ -357,7 +352,7 @@ export class RestTable<
           )}
           {deletable && (
             <Button
-              variant="danger"
+              theme="danger"
               size={fieldSize}
               disabled={!this.checkedKeys[0]}
               onClick={() => this.deleteList(this.checkedKeys)}

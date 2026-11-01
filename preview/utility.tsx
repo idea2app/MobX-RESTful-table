@@ -1,13 +1,14 @@
-import { CodeBlock } from 'idea-react';
+import { Card, CardBody, CodeBlock } from 'idea-react';
 import { FC, HTMLAttributes, PropsWithChildren } from 'react';
-import { Card } from 'react-bootstrap';
 
 export const CodeExample: FC<PropsWithChildren> = ({ children }) => (
   <>
     {children}
 
-    <Card className="my-3" body>
-      <CodeBlock language="tsx">{children}</CodeBlock>
+    <Card className="my-3">
+      <CardBody>
+        <CodeBlock language="tsx">{children}</CodeBlock>
+      </CardBody>
     </Card>
   </>
 );

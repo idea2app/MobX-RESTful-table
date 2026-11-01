@@ -33,11 +33,10 @@
   "dependencies": {
     "@swc/helpers": "^0.5.23",
     "classnames": "^2.5.1",
+    "idea-react": "3.0.0-beta.0",
     "lodash": "^4.18.1",
     "mobx-react-helper": "^0.5.4",
     "mobx-restful": "^2.1.5",
-    "react-bootstrap": "^2.10.10",
-    "react-bootstrap-editor": "^2.1.4",
     "regenerator-runtime": "^0.14.1",
     "web-utility": "^4.8.0"
   },
@@ -66,7 +65,6 @@
     "events": "^3.3.0",
     "https-browserify": "^1.0.0",
     "husky": "^9.1.7",
-    "idea-react": "^2.3.5",
     "koajax": "^3.3.1",
     "lint-staged": "^17.6.0",
     "marked": "^18.1.1",
@@ -118,7 +116,7 @@
   "scripts": {
     "prepare": "husky",
     "preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel --open",
-    "test": "lint-staged",
+    "test": "lint-staged && node --import ./test/register.mts --test --test-timeout=10000 \"test/**/*.test.tsx\"",
     "pack-preview": "cd preview/  &&  rimraf ../.parcel-cache dist/  &&  parcel build --public-url=. --dist-dir=../docs/preview/",
     "pack-dist": "rimraf dist/ docs/  &&  parcel build  &&  sed -i 's/require(\"\\.\\/index\\.css\");//' dist/index.js  &&  rimraf dist/index.js.map",
     "fix-esm": "cd dist/esm/  &&  rm index.css*  &&  sed -i 's/import\"\\.\\/index\\.css\";//' index.js  &&  rimraf index.js.map",

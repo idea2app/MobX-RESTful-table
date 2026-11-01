@@ -4,7 +4,15 @@ import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject, Filter } from 'mobx-restful';
 import { FocusEvent } from 'react';
-import { Button, Form, InputGroup, ListGroup, Spinner } from 'react-bootstrap';
+import {
+  Button,
+  FormControl,
+  InputGroup,
+  InputGroupText,
+  ListGroup,
+  ListGroupItem,
+  Spinner,
+} from 'idea-react';
 import { Second } from 'web-utility';
 
 import { BadgeBar } from './BadgeBar';
@@ -90,15 +98,9 @@ export class SearchableInput<
             value = data[valueKey];
 
           return (
-            <ListGroup.Item
-              key={value}
-              as="button"
-              type="button"
-              action
-              onClick={() => this.add(label, value)}
-            >
+            <ListGroupItem key={value} type="button" action onClick={() => this.add(label, value)}>
               {label}
-            </ListGroup.Item>
+            </ListGroupItem>
           );
         })}
       </ListGroup>
@@ -127,7 +129,7 @@ export class SearchableInput<
         {needNew && fields?.[0] && (
           <Button
             className="w-100 sticky-top"
-            variant="warning"
+            theme="warning"
             size="sm"
             type="button"
             onClick={() => (store.currentOne = { [labelKey]: keyword } as D)}
@@ -158,12 +160,12 @@ export class SearchableInput<
 
     return (
       <InputGroup className="position-relative">
-        <InputGroup.Text className="d-flex flex-wrap align-items-center gap-2">
+        <InputGroupText className="d-flex flex-wrap align-items-center gap-2">
           <BadgeBar
             list={(value || []).map(({ label }) => ({ text: label }))}
             onDelete={!readOnly && !disabled ? ({}, index) => this.delete(index) : undefined}
           />
-        </InputGroup.Text>
+        </InputGroupText>
 
         {listShown && this.renderOverlay()}
 
@@ -177,7 +179,7 @@ export class SearchableInput<
           />
         )}
         <input type="hidden" name={name} value={JSON.stringify(value?.map(({ value }) => value))} />
-        <Form.Control
+        <FormControl
           {...{ type, placeholder, required, readOnly, disabled }}
           onChange={({ currentTarget: { value } }) => this.search(value)}
         />

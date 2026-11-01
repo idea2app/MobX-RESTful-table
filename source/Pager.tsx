@@ -1,6 +1,6 @@
 import { ListModel } from 'mobx-restful';
 import { FC, MouseEvent } from 'react';
-import { Pagination, Form } from 'react-bootstrap';
+import { FormControl } from 'idea-react';
 import { buildURLData, parseURLData } from 'web-utility';
 
 export type PageMeta = Pick<ListModel<{}>, 'pageSize' | 'pageIndex'>;
@@ -10,12 +10,7 @@ export interface PagerProps extends PageMeta {
   onChange?: (meta: PageMeta) => any;
 }
 
-export const Pager: FC<PagerProps> = ({
-  pageSize,
-  pageIndex,
-  pageCount,
-  onChange,
-}) => {
+export const Pager: FC<PagerProps> = ({ pageSize, pageIndex, pageCount, onChange }) => {
   function propsOf(pageIndex = 1) {
     const pagination = { pageSize, pageIndex };
 
@@ -34,23 +29,20 @@ export const Pager: FC<PagerProps> = ({
   return (
     <form
       className="m-0 d-flex align-items-center gap-2"
-      onSubmit={
-        onChange && (event => (event.preventDefault(), event.stopPropagation()))
-      }
+      onSubmit={onChange && (event => (event.preventDefault(), event.stopPropagation()))}
     >
-      <Form.Control
+      <FormControl
         type="number"
         name="pageSize"
         defaultValue={pageSize}
         min={1}
         required
         onChange={({ currentTarget: input }) =>
-          input.reportValidity() &&
-          onChange?.({ pageSize: +input.value, pageIndex })
+          input.reportValidity() && onChange?.({ pageSize: +input.value, pageIndex })
         }
       />
       x
-      <Form.Control
+      <FormControl
         type="number"
         name="pageIndex"
         defaultValue={pageIndex || 1}
@@ -58,29 +50,54 @@ export const Pager: FC<PagerProps> = ({
         max={pageCount}
         required
         onChange={({ currentTarget: input }) =>
-          input.reportValidity() &&
-          onChange?.({ pageSize, pageIndex: +input.value })
+          input.reportValidity() && onChange?.({ pageSize, pageIndex: +input.value })
         }
       />
-      <Pagination className="m-0">
-        {pageIndex > 1 && <Pagination.Item {...propsOf(1)}>1</Pagination.Item>}
-        {pageIndex > 3 && <Pagination.Ellipsis />}
-        {pageIndex > 2 && (
-          <Pagination.Item {...propsOf(pageIndex - 1)}>
-            {pageIndex - 1}
-          </Pagination.Item>
-        )}
-        <Pagination.Item active>{pageIndex}</Pagination.Item>
-        {pageCount - pageIndex > 1 && (
-          <Pagination.Item {...propsOf(pageIndex + 1)}>
-            {pageIndex + 1}
-          </Pagination.Item>
-        )}
-        {pageCount - pageIndex > 2 && <Pagination.Ellipsis />}
-        {pageIndex < pageCount && (
-          <Pagination.Item {...propsOf(pageCount)}>{pageCount}</Pagination.Item>
-        )}
-      </Pagination>
+      <nav aria-label="Pagination">
+        <ul className="pagination m-0">
+          {pageIndex > 1 && (
+            <li className="page-item">
+              <a className="page-link" {...propsOf(1)}>
+                1
+              </a>
+            </li>
+          )}
+          {pageIndex > 3 && (
+            <li className="page-item disabled" aria-hidden="true">
+              <span className="page-link">…</span>
+            </li>
+          )}
+          {pageIndex > 2 && (
+            <li className="page-item">
+              <a className="page-link" {...propsOf(pageIndex - 1)}>
+                {pageIndex - 1}
+              </a>
+            </li>
+          )}
+          <li className="page-item active" aria-current="page">
+            <span className="page-link">{pageIndex}</span>
+          </li>
+          {pageCount - pageIndex > 1 && (
+            <li className="page-item">
+              <a className="page-link" {...propsOf(pageIndex + 1)}>
+                {pageIndex + 1}
+              </a>
+            </li>
+          )}
+          {pageCount - pageIndex > 2 && (
+            <li className="page-item disabled" aria-hidden="true">
+              <span className="page-link">…</span>
+            </li>
+          )}
+          {pageIndex < pageCount && (
+            <li className="page-item">
+              <a className="page-link" {...propsOf(pageCount)}>
+                {pageCount}
+              </a>
+            </li>
+          )}
+        </ul>
+      </nav>
     </form>
   );
 };

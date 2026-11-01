@@ -1,9 +1,9 @@
 import { configure, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
-import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, PageNav, Row } from 'idea-react';
 import { createRoot } from 'react-dom/client';
-import { Icon, PageNav } from 'idea-react';
+import { Icon } from 'idea-react';
 
 import { Content } from './content';
 
@@ -29,31 +29,26 @@ export class App extends Component {
 
     return (
       <>
-        <Button
-          className="my-3 d-md-none"
-          onClick={() => (this.menuOpen = !menuOpen)}
-        >
+        <Button className="my-3 d-md-none" onClick={() => (this.menuOpen = !menuOpen)}>
           <Icon name="list" />
         </Button>
-        <Collapse in={screenPortrait ? menuOpen : true}>
+        <div hidden={screenPortrait && !menuOpen}>
           <div className="sticky-top">
-            <PageNav
-              onClick={() => screenPortrait && (this.menuOpen = false)}
-            />
+            <PageNav onClick={() => screenPortrait && (this.menuOpen = false)} />
           </div>
-        </Collapse>
+        </div>
       </>
     );
   }
 
   render() {
     return (
-      <Container className="pb-3 py-md-5" fluid="md">
+      <Container className="pb-3 py-md-5" breakpoint="md">
         <Row>
-          <Col xs={12} md={3} className="sticky-top bg-light">
+          <Col span={12} md={3} className="sticky-top bg-subtle-secondary">
             {this.renderMenu()}
           </Col>
-          <Col xs={12} md={9}>
+          <Col span={12} md={9}>
             <Content />
           </Col>
         </Row>

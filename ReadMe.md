@@ -52,8 +52,12 @@ npm i react \
 ### `index.html`
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css"
+/>
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.13.1/font/bootstrap-icons.css" />
+<link rel="stylesheet" href="https://unpkg.com/idea-react@3.0.0-beta.0/dist/style.css" />
 <link rel="stylesheet" href="https://unpkg.com/mobx-restful-table@2.6.6/dist/index.css" />
 ```
 
@@ -96,7 +100,7 @@ Inspired by [Ant Design - Pro Table](https://procomponents.ant.design/components
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { Component } from 'react';
-import { Container, Button, Badge } from 'react-bootstrap';
+import { Container } from 'idea-react';
 import { BadgeBar, Column, RestTable } from 'mobx-restful-table';
 
 import repositoryStore, { Repository } from '../models/Repository';
@@ -177,7 +181,7 @@ export default class PaginationPage extends Component {
 ```tsx
 import { observer } from 'mobx-react';
 import { FC } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container } from 'idea-react';
 import { Loading } from 'idea-react';
 import { ScrollList } from 'mobx-restful-table';
 
@@ -195,13 +199,13 @@ const ScrollListPage: FC = observer(() => (
       translator={i18n}
       store={repositoryStore}
       renderList={allItems => (
-        <Row as="ul" className="list-unstyled g-4" xs={1} sm={2}>
+        <ul className="row row-cols-1 sm:row-cols-2 list-unstyled g-4">
           {allItems.map(item => (
-            <Col as="li" key={item.id}>
+            <li className="col" key={item.id}>
               <GitCard className="h-100 shadow-sm" {...item} />
-            </Col>
+            </li>
           ))}
-        </Row>
+        </ul>
       )}
     />
   </Container>

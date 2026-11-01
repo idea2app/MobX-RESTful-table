@@ -1,4 +1,4 @@
-import { computed, observable } from 'mobx';
+import { computed } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
@@ -11,8 +11,20 @@ import {
   SubmitEvent,
   SyntheticEvent,
 } from 'react';
-import { Button, ButtonProps, Form, FormGroupProps, FormProps, InputGroup } from 'react-bootstrap';
-import { Editor, EditorProps } from 'react-bootstrap-editor';
+import {
+  Button,
+  ButtonProps,
+  Editor,
+  EditorProps,
+  FormCheck,
+  FormFeedback,
+  Form,
+  FormGroup,
+  FormGroupProps,
+  FormLabel,
+  FormProps,
+  InputGroup,
+} from 'idea-react';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
 import { BadgeInput } from './BadgeInput';
@@ -49,12 +61,16 @@ export interface Field<T extends DataObject>
 }
 
 export interface FieldBoxProps<D extends DataObject>
-  extends FormGroupProps, Pick<Field<D>, 'renderLabel' | `${'' | 'in'}validMessage`> {
+  extends
+    FormGroupProps,
+    Pick<Field<D>, 'renderLabel' | `${'' | 'in'}validMessage`> {
   name: Field<D>['key'];
 }
 
 export interface RestFormProps<D extends DataObject, F extends Filter<D> = Filter<D>>
-  extends Pick<FormProps, 'className' | 'style'>, Pick<ButtonProps, 'size'> {
+  extends
+    Pick<FormProps, 'className' | 'style'>,
+    Pick<ButtonProps, 'size'> {
   id?: IDType;
   fields: Field<D>[];
   store?: ListModel<D, F>;
@@ -89,26 +105,23 @@ export class RestForm<
     children,
     ...props
   }: FieldBoxProps<D>) => (
-    <Form.Group {...props}>
-      <Form.Label>
+    <FormGroup {...props}>
+      <FormLabel htmlFor={name?.toString()}>
         {typeof renderLabel === 'function' ? renderLabel(name) : renderLabel || (name as string)}
-      </Form.Label>
+      </FormLabel>
       {children}
       {validMessage && (
-        <Form.Control.Feedback tooltip type="valid">
+        <FormFeedback tooltip type="valid" className="tooltip">
           {validMessage}
-        </Form.Control.Feedback>
+        </FormFeedback>
       )}
       {invalidMessage && (
-        <Form.Control.Feedback tooltip type="invalid">
+        <FormFeedback tooltip type="invalid" className="tooltip">
           {invalidMessage}
-        </Form.Control.Feedback>
+        </FormFeedback>
       )}
-    </Form.Group>
+    </FormGroup>
   );
-
-  @observable
-  accessor validated = false;
 
   #form = createRef<HTMLFormElement>();
 
@@ -147,8 +160,6 @@ export class RestForm<
     const form = event.currentTarget;
     const valid = form.checkValidity();
 
-    this.validated = true;
-
     if (valid) {
       const { id, store, onSubmit } = this.props;
       let data = formToJSON<D>(form);
@@ -159,7 +170,6 @@ export class RestForm<
 
       store?.clearCurrent();
     }
-    this.validated = false;
   };
 
   handleReset = ({ currentTarget }: SyntheticEvent<HTMLFormElement>) => {
@@ -235,17 +245,18 @@ export class RestForm<
         <div>
           {this.fieldReady &&
             options.map(({ value, label = value }) => (
-              <Form.Check
-                key={value}
-                id={[key, value] + ''}
-                label={label}
-                inline
-                {...meta}
-                type={type as 'radio' | 'checkbox'}
-                name={key.toString()}
-                value={value}
-                defaultChecked={data[key]?.includes(value)}
-              />
+              <div className="d-inline-flex align-items-center gap-2" key={value}>
+                <FormCheck
+                  id={[key, value] + ''}
+                  type={type as 'radio' | 'checkbox'}
+                  name={key.toString()}
+                  value={value}
+                  disabled={meta.disabled}
+                  required={meta.required}
+                  defaultChecked={data[key]?.includes(value)}
+                />
+                <label htmlFor={[key, value] + ''}>{label}</label>
+              </div>
             ))}
         </div>
       </RestForm.FieldBox>
@@ -284,33 +295,33 @@ export class RestForm<
       typeof renderLabel === 'function' ? renderLabel(key) : renderLabel || (key as string);
 
     return ({ [key]: value }: D) => (
-      <InputGroup hasValidation={this.customValidation}>
+      <InputGroup>
         {this.fieldReady && (
           <FormField
             {...props}
             {...meta}
             {...{ type, step, label }}
-            size={this.observedProps.size}
+            size={this.observedProps.size === 'xs' ? 'sm' : this.observedProps.size}
             name={key.toString()}
             defaultValue={RestForm.dateValueOf({ type, step }, value)}
           />
         )}
         {validMessage && (
-          <Form.Control.Feedback tooltip type="valid">
+          <FormFeedback tooltip type="valid" className="tooltip">
             {validMessage}
-          </Form.Control.Feedback>
+          </FormFeedback>
         )}
         {invalidMessage && (
-          <Form.Control.Feedback tooltip type="invalid">
+          <FormFeedback tooltip type="invalid" className="tooltip">
             {invalidMessage}
-          </Form.Control.Feedback>
+          </FormFeedback>
         )}
       </InputGroup>
     );
   };
 
   render() {
-    const { fields, readOnly, customValidation, validated } = this,
+    const { fields, readOnly, customValidation } = this,
       {
         id,
         className = 'd-flex flex-column gap-3',
@@ -327,7 +338,8 @@ export class RestForm<
       <Form
         ref={this.#form}
         {...props}
-        {...{ className, validated }}
+        className={className}
+        data-bs-validate
         noValidate={customValidation}
         onSubmit={this.handleSubmit}
         onReset={this.handleReset}
@@ -344,7 +356,7 @@ export class RestForm<
               className="flex-fill"
               size={size}
               type="reset"
-              variant="danger"
+              theme="danger"
               disabled={loading}
             >
               {t('cancel')}

@@ -1,7 +1,7 @@
 import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps, reaction } from 'mobx-react-helper';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'idea-react';
 import { blobOf, fileMetaOf, fileNameOf } from 'web-utility';
 
 import { FilePreview, FilePreviewProps } from './FilePreview';
@@ -119,13 +119,13 @@ export class FilePicker extends FormComponent<FilePickerProps> {
         {this.renderInput()}
 
         {filePath && (
-          <ButtonGroup className={`position-absolute top-0 end-0 ${styles.toolbar}`} size="sm">
+          <ButtonGroup className={`btn-group-sm position-absolute top-0 end-0 ${styles.toolbar}`}>
             {onView && (
-              <Button onClick={() => onView({ path: filePath, file })}>
+              <Button size="sm" onClick={() => onView({ path: filePath, file })}>
                 <i className="bi bi-eye-fill" />
               </Button>
             )}
-            <Button onClick={() => this.#changeFile()}>
+            <Button size="sm" onClick={() => this.#changeFile()}>
               <i className="bi bi-x-lg" />
             </Button>
           </ButtonGroup>

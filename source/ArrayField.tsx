@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject } from 'mobx-restful';
 import { ChangeEvent, HTMLAttributes, ReactNode } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'idea-react';
 import { formToJSON, isEmpty, uniqueID } from 'web-utility';
 
 export type ArrayFieldProps<T extends DataObject = DataObject> = Pick<
@@ -80,19 +80,13 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
             onChange={this.handleUpdate(index)}
           >
             <div className="flex-fill">{renderItem(item, index)}</div>
-            <ButtonGroup>
-              <Button
-                type="button"
-                size="sm"
-                variant="warning"
-                onClick={() => this.insert(index + 1)}
-              >
+            <ButtonGroup className="btn-group-sm">
+              <Button type="button" theme="warning" onClick={() => this.insert(index + 1)}>
                 +
               </Button>
               <Button
                 type="button"
-                size="sm"
-                variant="danger"
+                theme="danger"
                 disabled={length < 2}
                 onClick={() => this.remove(index)}
               >
