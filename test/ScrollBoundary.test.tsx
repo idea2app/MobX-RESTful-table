@@ -2,9 +2,17 @@ import assert from 'node:assert/strict';
 import { it, mock } from 'node:test';
 
 import { render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 
 import { MockIntersectionObserver } from './setup';
 import { ScrollBoundary } from '../source/ScrollBoundary';
+
+it('forwards the ref to the boundary container', () => {
+  const ref = createRef<HTMLDivElement>();
+  const { container } = render(<ScrollBoundary ref={ref} onTouch={() => {}} />);
+
+  assert.equal(ref.current, container.firstElementChild);
+});
 
 it('renders every edge slot around the children', () => {
   const { container } = render(

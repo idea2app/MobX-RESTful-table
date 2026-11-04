@@ -98,7 +98,13 @@ export class SearchableInput<
             value = data[valueKey];
 
           return (
-            <ListGroupItem key={value} type="button" action onClick={() => this.add(label, value)}>
+            <ListGroupItem
+              key={value}
+              as="button"
+              type="button"
+              action
+              onClick={() => this.add(label, value)}
+            >
               {label}
             </ListGroupItem>
           );

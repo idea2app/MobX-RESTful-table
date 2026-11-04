@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { it, mock } from 'node:test';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 
 import './setup';
 import { BadgeBar, text2color } from '../source/BadgeBar';
@@ -10,13 +11,14 @@ it('renders a badge list with the default color resolver', () => {
   const { container } = render(<BadgeBar list={[{ text: 'React' }]} />);
 
   const list = container.querySelector('ul')!,
-    badge = screen.getByText('React').closest('span')!;
+    badge = screen.getByRole('listitem');
 
   assert.ok(list.classList.contains('list-unstyled'));
   assert.ok(list.classList.contains('d-flex'));
 
   assert.ok(badge.classList.contains('badge'));
   assert.ok(badge.classList.contains(`theme-${text2color('React')}`));
+  assert.equal(badge.parentElement, list);
 });
 
 it('merges custom classes and background colors', () => {
@@ -24,7 +26,15 @@ it('merges custom classes and background colors', () => {
     <BadgeBar className="custom" list={[{ text: 'React' }]} bgResolver={() => 'success'} />,
   );
   assert.ok(container.querySelector('ul')!.classList.contains('custom'));
-  assert.ok(screen.getByText('React').closest('span')!.classList.contains('theme-success'));
+  assert.ok(screen.getByRole('listitem').classList.contains('theme-success'));
+});
+
+it('forwards the list ref and native attributes', () => {
+  const ref = createRef<HTMLUListElement>();
+  const { container } = render(<BadgeBar ref={ref} id="badges" list={[]} />);
+
+  assert.equal(ref.current, container.querySelector('ul'));
+  assert.equal(ref.current?.id, 'badges');
 });
 
 it('renders links for link items and URL-like text', () => {

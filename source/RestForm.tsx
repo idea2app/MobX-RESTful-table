@@ -1,4 +1,4 @@
-import { computed } from 'mobx';
+import { computed, observable } from 'mobx';
 import { TranslationModel } from 'mobx-i18n';
 import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
@@ -6,7 +6,7 @@ import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import {
   createRef,
   Fragment,
-  InputHTMLAttributes,
+  ComponentPropsWithRef,
   ReactNode,
   SubmitEvent,
   SyntheticEvent,
@@ -35,7 +35,7 @@ import { FormField, FormFieldProps } from './FormField';
 export interface Field<T extends DataObject>
   extends
     Pick<
-      InputHTMLAttributes<HTMLInputElement>,
+      ComponentPropsWithRef<'input'>,
       | 'type'
       | 'readOnly'
       | 'disabled'
@@ -61,16 +61,12 @@ export interface Field<T extends DataObject>
 }
 
 export interface FieldBoxProps<D extends DataObject>
-  extends
-    FormGroupProps,
-    Pick<Field<D>, 'renderLabel' | `${'' | 'in'}validMessage`> {
+  extends FormGroupProps, Pick<Field<D>, 'renderLabel' | `${'' | 'in'}validMessage`> {
   name: Field<D>['key'];
 }
 
 export interface RestFormProps<D extends DataObject, F extends Filter<D> = Filter<D>>
-  extends
-    Pick<FormProps, 'className' | 'style'>,
-    Pick<ButtonProps, 'size'> {
+  extends Pick<FormProps, 'className' | 'style'>, Pick<ButtonProps, 'size'> {
   id?: IDType;
   fields: Field<D>[];
   store?: ListModel<D, F>;
@@ -123,6 +119,9 @@ export class RestForm<
     </FormGroup>
   );
 
+  @observable
+  accessor validated = false;
+
   #form = createRef<HTMLFormElement>();
 
   componentDidMount() {
@@ -160,6 +159,8 @@ export class RestForm<
     const form = event.currentTarget;
     const valid = form.checkValidity();
 
+    this.validated = true;
+
     if (valid) {
       const { id, store, onSubmit } = this.props;
       let data = formToJSON<D>(form);
@@ -170,6 +171,7 @@ export class RestForm<
 
       store?.clearCurrent();
     }
+    this.validated = false;
   };
 
   handleReset = ({ currentTarget }: SyntheticEvent<HTMLFormElement>) => {
@@ -295,7 +297,9 @@ export class RestForm<
       typeof renderLabel === 'function' ? renderLabel(key) : renderLabel || (key as string);
 
     return ({ [key]: value }: D) => (
-      <InputGroup>
+      <InputGroup
+      //hasValidation={this.customValidation}
+      >
         {this.fieldReady && (
           <FormField
             {...props}
@@ -307,12 +311,12 @@ export class RestForm<
           />
         )}
         {validMessage && (
-          <FormFeedback tooltip type="valid" className="tooltip">
+          <FormFeedback tooltip type="valid">
             {validMessage}
           </FormFeedback>
         )}
         {invalidMessage && (
-          <FormFeedback tooltip type="invalid" className="tooltip">
+          <FormFeedback tooltip type="invalid">
             {invalidMessage}
           </FormFeedback>
         )}
@@ -321,7 +325,7 @@ export class RestForm<
   };
 
   render() {
-    const { fields, readOnly, customValidation } = this,
+    const { fields, readOnly, customValidation, validated } = this,
       {
         id,
         className = 'd-flex flex-column gap-3',
@@ -340,7 +344,7 @@ export class RestForm<
         ref={this.#form}
         {...props}
         className={className}
-        data-bs-validate
+        data-bs-validate={validated}
         noValidate={customValidation}
         onSubmit={this.handleSubmit}
         onReset={this.handleReset}

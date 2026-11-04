@@ -10,7 +10,7 @@ it('renders selected values as removable badges and a hidden input', () => {
   const { container } = render(
     <BadgeInput name="keywords" value={['React', 'MobX']} placeholder="Add keyword" />,
   );
-  const badges = container.querySelectorAll('span.badge'),
+  const badges = container.querySelectorAll('li.badge'),
     hidden = container.querySelector('input[type="hidden"]') as HTMLInputElement,
     input = screen.getByPlaceholderText('Add keyword');
 

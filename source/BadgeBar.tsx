@@ -1,5 +1,5 @@
 import { Badge, CloseButton, ComponentTheme } from 'idea-react';
-import { FC, HTMLAttributes } from 'react';
+import { ComponentPropsWithRef, FC } from 'react';
 import { sum } from 'web-utility';
 
 export const VariantColors: ComponentTheme[] = [
@@ -19,7 +19,7 @@ export interface BadgeItem {
   link?: string;
 }
 
-export interface BadgeBarProps extends HTMLAttributes<HTMLUListElement> {
+export interface BadgeBarProps extends ComponentPropsWithRef<'ul'> {
   list: BadgeItem[];
   bgResolver?: (text: string) => ComponentTheme | string;
   onCheck?: (item: BadgeItem, index: number) => any;
@@ -36,29 +36,29 @@ export const BadgeBar: FC<BadgeBarProps> = ({
 }) => (
   <ul className={`list-unstyled m-0 d-flex flex-wrap gap-2 ${className}`} {...props}>
     {list.map(({ text, link }, index) => (
-      <li key={text}>
-        <Badge
-          theme={bgResolver(text) as ComponentTheme}
-          className="d-flex align-items-center gap-2"
-        >
-          {link || URL.canParse(text) ? (
-            <a className="text-decoration-none fg-white" href={link || text}>
-              {text}
-            </a>
-          ) : onCheck ? (
-            <button
-              type="button"
-              className="bg-transparent border-0 p-0"
-              onClick={() => onCheck({ text, link }, index)}
-            >
-              {text}
-            </button>
-          ) : (
-            text
-          )}
-          {onDelete && <CloseButton onClick={() => onDelete({ text, link }, index)} />}
-        </Badge>
-      </li>
+      <Badge
+        key={text}
+        theme={bgResolver(text) as ComponentTheme}
+        as="li"
+        className="d-flex align-items-center gap-2"
+      >
+        {link || URL.canParse(text) ? (
+          <a className="text-decoration-none fg-white" href={link || text}>
+            {text}
+          </a>
+        ) : onCheck ? (
+          <button
+            type="button"
+            className="bg-transparent border-0 p-0"
+            onClick={() => onCheck({ text, link }, index)}
+          >
+            {text}
+          </button>
+        ) : (
+          text
+        )}
+        {onDelete && <CloseButton onClick={() => onDelete({ text, link }, index)} />}
+      </Badge>
     ))}
   </ul>
 );

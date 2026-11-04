@@ -1,6 +1,6 @@
 import { ListModel } from 'mobx-restful';
 import { FC, MouseEvent } from 'react';
-import { FormControl } from 'idea-react';
+import { FormControl, Pagination, PageItem, PageText, PageLink } from 'idea-react';
 import { buildURLData, parseURLData } from 'web-utility';
 
 export type PageMeta = Pick<ListModel<{}>, 'pageSize' | 'pageIndex'>;
@@ -53,51 +53,33 @@ export const Pager: FC<PagerProps> = ({ pageSize, pageIndex, pageCount, onChange
           input.reportValidity() && onChange?.({ pageSize, pageIndex: +input.value })
         }
       />
-      <nav aria-label="Pagination">
-        <ul className="pagination m-0">
-          {pageIndex > 1 && (
-            <li className="page-item">
-              <a className="page-link" {...propsOf(1)}>
-                1
-              </a>
-            </li>
-          )}
-          {pageIndex > 3 && (
-            <li className="page-item disabled" aria-hidden="true">
-              <span className="page-link">…</span>
-            </li>
-          )}
-          {pageIndex > 2 && (
-            <li className="page-item">
-              <a className="page-link" {...propsOf(pageIndex - 1)}>
-                {pageIndex - 1}
-              </a>
-            </li>
-          )}
-          <li className="page-item active" aria-current="page">
-            <span className="page-link">{pageIndex}</span>
-          </li>
-          {pageCount - pageIndex > 1 && (
-            <li className="page-item">
-              <a className="page-link" {...propsOf(pageIndex + 1)}>
-                {pageIndex + 1}
-              </a>
-            </li>
-          )}
-          {pageCount - pageIndex > 2 && (
-            <li className="page-item disabled" aria-hidden="true">
-              <span className="page-link">…</span>
-            </li>
-          )}
-          {pageIndex < pageCount && (
-            <li className="page-item">
-              <a className="page-link" {...propsOf(pageCount)}>
-                {pageCount}
-              </a>
-            </li>
-          )}
-        </ul>
-      </nav>
+      <Pagination className="m-0">
+        {pageIndex > 1 && (
+          <PageItem>
+            <PageLink {...propsOf(1)}>1</PageLink>
+          </PageItem>
+        )}
+        {pageIndex > 3 && <PageText>...</PageText>}
+        {pageIndex > 2 && (
+          <PageItem>
+            <PageLink {...propsOf(pageIndex - 1)}>{pageIndex - 1}</PageLink>
+          </PageItem>
+        )}
+        <PageItem active>
+          <PageLink>{pageIndex}</PageLink>
+        </PageItem>
+        {pageCount - pageIndex > 1 && (
+          <PageItem>
+            <PageLink {...propsOf(pageIndex + 1)}>{pageIndex + 1}</PageLink>
+          </PageItem>
+        )}
+        {pageCount - pageIndex > 2 && <PageText>...</PageText>}
+        {pageIndex < pageCount && (
+          <PageItem>
+            <PageLink {...propsOf(pageCount)}>{pageCount}</PageLink>
+          </PageItem>
+        )}
+      </Pagination>
     </form>
   );
 };

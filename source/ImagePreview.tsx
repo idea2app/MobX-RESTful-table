@@ -4,13 +4,10 @@ import classNames from 'classnames';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
-import { DialogBody, Image, ImageProps, NativeDialog, Spinner } from 'idea-react';
+import { DialogBody, DialogFooter, Image, ImageProps, NativeDialog, Spinner } from 'idea-react';
 import { fileNameOf } from 'web-utility';
 
-export type ImagePreviewProps = ImageProps & {
-  rounded?: boolean;
-  roundedCircle?: boolean;
-};
+export type ImagePreviewProps = ImageProps & Partial<Record<`rounded${'' | 'Circle'}`, boolean>>;
 
 @observer
 export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
@@ -94,7 +91,7 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
             <Image
               className={classNames(
                 'object-fit-contain',
-                rounded && 'rounded',
+                { rounded },
                 roundedCircle && 'rounded-circle',
               )}
               {...{ loading, fluid, rounded, roundedCircle, thumbnail }}
@@ -103,21 +100,19 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
             />
           )
         )}
-        <NativeDialog
-          open={viewing}
-          onClose={() => (this.viewing = false)}
-        >
+        <NativeDialog open={viewing} onClose={() => (this.viewing = false)}>
           <DialogBody className="text-center">
             <Image fluid src={loadedPath} />
           </DialogBody>
-          <a
-            className="dialog-footer justify-content-center max-w-100 text-break"
+          <DialogFooter
+            className="justify-content-center max-w-100 text-break"
+            as="a"
             href={loadedPath}
             target="_blank"
             download={fileNameOf(loadedPath)}
           >
             {loadedPath}
-          </a>
+          </DialogFooter>
         </NativeDialog>
       </div>
     );

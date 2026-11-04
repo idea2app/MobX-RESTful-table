@@ -2,9 +2,18 @@ import assert from 'node:assert/strict';
 import { it, mock } from 'node:test';
 
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { createRef } from 'react';
 
 import './setup';
 import { FormField } from '../source/FormField';
+
+it('forwards the ref to the native input', () => {
+  const ref = createRef<HTMLInputElement>();
+
+  render(<FormField ref={ref} name="language" label="Language" />);
+
+  assert.equal(ref.current, screen.getByLabelText('Language'));
+});
 
 it('renders a text input with its label as placeholder', () => {
   render(<FormField name="language" label="Language" defaultValue="TypeScript" />);

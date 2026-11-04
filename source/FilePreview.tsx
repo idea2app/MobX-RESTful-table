@@ -1,14 +1,14 @@
-import { FC, HTMLAttributes, InputHTMLAttributes } from 'react';
+import { ComponentPropsWithRef, FC } from 'react';
 import { Icon, ImageProps } from 'idea-react';
 import { fileMetaOf } from 'web-utility';
 
 import { ImagePreview } from './ImagePreview';
 
 export type FilePreviewProps = Omit<ImageProps, 'ref'> &
-  Omit<HTMLAttributes<HTMLAudioElement>, 'ref'> &
-  Omit<HTMLAttributes<HTMLVideoElement>, 'ref'> &
-  Omit<HTMLAttributes<HTMLAnchorElement>, 'ref'> & {
-    type?: InputHTMLAttributes<HTMLInputElement>['accept'];
+  Omit<ComponentPropsWithRef<'audio'>, 'ref'> &
+  Omit<ComponentPropsWithRef<'video'>, 'ref'> &
+  Omit<ComponentPropsWithRef<'a'>, 'ref'> & {
+    type?: ComponentPropsWithRef<'input'>['accept'];
     path?: string;
     file?: HTMLMediaElement['srcObject'];
   };

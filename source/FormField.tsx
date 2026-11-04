@@ -3,10 +3,9 @@ import {
   FC,
   FocusEvent,
   FocusEventHandler,
-  InputHTMLAttributes,
+  ComponentPropsWithRef,
   ReactNode,
   ChangeEventHandler,
-  TextareaHTMLAttributes,
 } from 'react';
 import { FormControlProps, FormSelectProps, FormTextAreaProps } from 'idea-react';
 import { uniqueID } from 'web-utility';
@@ -18,18 +17,20 @@ export interface SelectOption extends Partial<
 }
 
 export type FormFieldProps = Omit<
-  InputHTMLAttributes<HTMLInputElement>,
+  ComponentPropsWithRef<'input'>,
   'size' | 'onBlur' | 'onChange' | 'color'
 > &
-  Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'rows'> & {
+  Pick<ComponentPropsWithRef<'textarea'>, 'rows'> & {
+    as?: 'textarea';
     label?: ReactNode;
     options?: SelectOption[];
     size?: 'sm' | 'lg';
-    as?: 'textarea';
     color?: boolean;
     onBlur?: FocusEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
     onChange?: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
   };
+
+export type HTMLFieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 export const FormField: FC<FormFieldProps> = ({
   className,
@@ -49,7 +50,7 @@ export const FormField: FC<FormFieldProps> = ({
   const handleBlur =
     onBlur &&
     ((event: FocusEvent<HTMLDivElement>) => {
-      const control = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+      const control = event.target as HTMLFieldElement;
 
       if (control.checkValidity()) {
         control.classList.remove('is-invalid');
@@ -58,9 +59,7 @@ export const FormField: FC<FormFieldProps> = ({
         control.classList.add('is-invalid');
         event.currentTarget.classList.add('is-invalid');
       }
-      onBlur(
-        event as unknown as FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-      );
+      onBlur(event as unknown as FocusEvent<HTMLFieldElement>);
     });
 
   return (
@@ -68,12 +67,10 @@ export const FormField: FC<FormFieldProps> = ({
       {options ? (
         <FormSelect
           {...(controlProps as unknown as FormSelectProps)}
-          id={id}
-          name={name}
-          multiple={multiple}
+          className={multiple ? 'h-auto' : ''}
           size={multiple ? rows || undefined : undefined}
           controlSize={size}
-          className={multiple ? 'h-auto' : ''}
+          {...{ id, name, multiple }}
         >
           {options.map(({ value, text, label, disabled }) => (
             <option key={value} {...{ value, label, disabled }}>
@@ -84,19 +81,14 @@ export const FormField: FC<FormFieldProps> = ({
       ) : as === 'textarea' ? (
         <FormTextArea
           {...(controlProps as unknown as FormTextAreaProps)}
-          id={id}
-          name={name}
-          rows={rows || undefined}
-          placeholder={placeholder}
           className={rows > 1 ? 'h-auto' : ''}
+          rows={rows || undefined}
+          {...{ id, name, placeholder }}
         />
       ) : (
         <FormControl
           {...(controlProps as unknown as FormControlProps)}
-          id={id}
-          name={name}
-          multiple={multiple}
-          placeholder={placeholder}
+          {...{ id, name, multiple, placeholder }}
           controlSize={size}
         />
       )}

@@ -181,7 +181,7 @@ export default class PaginationPage extends Component {
 ```tsx
 import { observer } from 'mobx-react';
 import { FC } from 'react';
-import { Container } from 'idea-react';
+import { Container, Row, Col } from 'idea-react';
 import { Loading } from 'idea-react';
 import { ScrollList } from 'mobx-restful-table';
 
@@ -199,13 +199,13 @@ const ScrollListPage: FC = observer(() => (
       translator={i18n}
       store={repositoryStore}
       renderList={allItems => (
-        <ul className="row row-cols-1 sm:row-cols-2 list-unstyled g-4">
+        <Row as="ul" className="list-unstyled g-4" xs={1} sm={2}>
           {allItems.map(item => (
-            <li className="col" key={item.id}>
+            <Col as="li" key={item.id}>
               <GitCard className="h-100 shadow-sm" {...item} />
-            </li>
+            </Col>
           ))}
-        </ul>
+        </Row>
       )}
     />
   </Container>

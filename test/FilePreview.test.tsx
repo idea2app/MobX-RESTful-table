@@ -28,12 +28,15 @@ it('renders images through ImagePreview', async () => {
 });
 
 it('renders audio players', () => {
-  const { container } = render(<FilePreview path="https://example.com/demo.mp3" />);
-
+  const { container } = render(
+    <FilePreview path="https://example.com/demo.mp3" preload="metadata" crossOrigin="anonymous" />,
+  );
   const audio = container.querySelector('audio') as HTMLAudioElement;
 
   assert.ok(audio.controls);
   assert.equal(audio.getAttribute('src'), 'https://example.com/demo.mp3');
+  assert.equal(audio.preload, 'metadata');
+  assert.equal(audio.crossOrigin, 'anonymous');
 });
 
 it('renders muted video players', () => {

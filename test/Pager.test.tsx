@@ -15,7 +15,7 @@ it('renders page size and index controls with the current page active', () => {
   assert.equal(size.value, '10');
   assert.equal(index.value, '2');
 
-  assert.equal(active.getAttribute('aria-current'), 'page');
+  assert.equal(active.querySelector('.page-link')?.getAttribute('aria-current'), 'page');
   assert.equal(active.textContent, '2');
 });
 
@@ -31,10 +31,10 @@ it('renders the first and last page links around the current page', () => {
 it('renders ellipses for distant pages', () => {
   const { container } = render(<Pager pageSize={10} pageIndex={5} pageCount={10} />);
 
-  const ellipses = container.querySelectorAll('li.page-item.disabled');
+  const ellipses = [...container.querySelectorAll('.pagination > .page-link')];
 
   assert.equal(ellipses.length, 2);
-  assert.ok([...ellipses].every(({ textContent }) => textContent === '…'));
+  assert.ok(ellipses.every(({ textContent }) => textContent === '...'));
 });
 
 it('renders only the active page for a single-page list', () => {

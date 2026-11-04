@@ -5,7 +5,6 @@ import { Button, Col, Container, Drawer, Icon, PageNav, Row } from 'idea-react';
 import { createRoot } from 'react-dom/client';
 
 import { Content } from './content';
-import * as styles from './index.module.less';
 
 configure({ enforceActions: 'never' });
 
