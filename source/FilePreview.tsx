@@ -1,5 +1,5 @@
 import { FC, HTMLAttributes, InputHTMLAttributes } from 'react';
-import { ImageProps } from 'idea-react';
+import { Icon, ImageProps } from 'idea-react';
 import { fileMetaOf } from 'web-utility';
 
 import { ImagePreview } from './ImagePreview';
@@ -71,9 +71,9 @@ export const FilePreview: FC<FilePreviewProps> = ({
             download={name}
             {...props}
           >
-            <i className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`} />
+            <Icon name={extension ? `filetype-${extension}` : 'file-earmark'} className="fs-3xl" />
           </a>
-          <figcaption className="mw-100 text-wrap text-truncate">{name}</figcaption>
+          <figcaption className="max-w-100 text-wrap text-truncate">{name}</figcaption>
         </>
       )}
     </figure>

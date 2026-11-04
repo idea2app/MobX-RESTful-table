@@ -320,7 +320,13 @@ export class RestTable<
     const {
         className = 'overflow-auto d-flex flex-column gap-3',
         striped,
+        stripedColumns,
         hover,
+        bordered,
+        borderless,
+        small,
+        responsive,
+        columns,
         size,
         editable,
         deletable,
@@ -363,6 +369,7 @@ export class RestTable<
           {editable && (
             <Button
               size={fieldSize}
+              theme="primary"
               onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}
             >
               {t('create')}
@@ -373,7 +380,7 @@ export class RestTable<
         {this.renderTable()}
 
         <footer className="d-flex justify-content-between align-items-center">
-          {!!totalCount && <span className="mx-3 fs14">{t('total_x_rows', { totalCount })}</span>}
+          {!!totalCount && <span className="mx-5 fs-sm">{t('total_x_rows', { totalCount })}</span>}
 
           <Pager {...{ pageSize, pageIndex, pageCount }} onChange={this.getList} />
         </footer>
@@ -381,7 +388,7 @@ export class RestTable<
         {editable && (
           <RestFormModal
             size={fieldSize}
-            fields={this.columns.map(({ renderHead, ...field }) => ({
+            fields={columns.map(({ renderHead, renderBody, renderFoot, ...field }) => ({
               ...field,
               renderLabel: renderHead,
             }))}

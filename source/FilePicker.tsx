@@ -1,7 +1,7 @@
 import { computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps, reaction } from 'mobx-react-helper';
-import { Button, ButtonGroup } from 'idea-react';
+import { Button, ButtonGroup, Icon } from 'idea-react';
 import { blobOf, fileMetaOf, fileNameOf } from 'web-utility';
 
 import { FilePreview, FilePreviewProps } from './FilePreview';
@@ -112,8 +112,8 @@ export class FilePicker extends FormComponent<FilePickerProps> {
         {filePath ? (
           <FilePreview className="w-100 h-100" type={fileType} path={filePath} file={file} />
         ) : (
-          <div className="w-100 h-100 d-flex justify-content-center align-items-center display-1">
-            +
+          <div className="w-100 h-100 d-flex justify-content-center align-items-center fs-6xl">
+            <Icon name="plus" aria-hidden="true" />
           </div>
         )}
         {this.renderInput()}
@@ -121,12 +121,22 @@ export class FilePicker extends FormComponent<FilePickerProps> {
         {filePath && (
           <ButtonGroup className={`btn-group-sm position-absolute top-0 end-0 ${styles.toolbar}`}>
             {onView && (
-              <Button size="sm" onClick={() => onView({ path: filePath, file })}>
-                <i className="bi bi-eye-fill" />
+              <Button
+                size="sm"
+                theme="primary"
+                aria-label="View file"
+                onClick={() => onView({ path: filePath, file })}
+              >
+                <Icon name="eye-fill" />
               </Button>
             )}
-            <Button size="sm" onClick={() => this.#changeFile()}>
-              <i className="bi bi-x-lg" />
+            <Button
+              size="sm"
+              theme="primary"
+              aria-label="Remove file"
+              onClick={() => this.#changeFile()}
+            >
+              <Icon name="x-lg" />
             </Button>
           </ButtonGroup>
         )}

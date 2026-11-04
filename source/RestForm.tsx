@@ -328,6 +328,7 @@ export class RestForm<
         size,
         store,
         translator,
+        fields: _fields,
         ...props
       } = this.props;
     const { downloading = 0, uploading = 0, currentOne = {} as D } = store || {},
@@ -349,7 +350,13 @@ export class RestForm<
         ))}
         {!readOnly && (
           <footer className="d-flex gap-3">
-            <Button className="flex-fill" size={size} type="submit" disabled={loading}>
+            <Button
+              className="flex-fill"
+              size={size}
+              theme="primary"
+              type="submit"
+              disabled={loading}
+            >
               {t('submit')}
             </Button>
             <Button

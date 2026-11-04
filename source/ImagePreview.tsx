@@ -51,6 +51,7 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount();
     if (this.objectURL) URL.revokeObjectURL(this.objectURL);
   }
 
@@ -110,7 +111,7 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
             <Image fluid src={loadedPath} />
           </DialogBody>
           <a
-            className="dialog-footer justify-content-center"
+            className="dialog-footer justify-content-center max-w-100 text-break"
             href={loadedPath}
             target="_blank"
             download={fileNameOf(loadedPath)}

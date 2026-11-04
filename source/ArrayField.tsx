@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject } from 'mobx-restful';
 import { ChangeEvent, HTMLAttributes, ReactNode } from 'react';
-import { Button, ButtonGroup } from 'idea-react';
+import { Button, ButtonGroup, Icon } from 'idea-react';
 import { formToJSON, isEmpty, uniqueID } from 'web-utility';
 
 export type ArrayFieldProps<T extends DataObject = DataObject> = Pick<
@@ -81,16 +81,22 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
           >
             <div className="flex-fill">{renderItem(item, index)}</div>
             <ButtonGroup className="btn-group-sm">
-              <Button type="button" theme="warning" onClick={() => this.insert(index + 1)}>
-                +
+              <Button
+                type="button"
+                theme="warning"
+                aria-label="Add row"
+                onClick={() => this.insert(index + 1)}
+              >
+                <Icon name="plus" aria-hidden="true" />
               </Button>
               <Button
                 type="button"
                 theme="danger"
+                aria-label="Remove row"
                 disabled={length < 2}
                 onClick={() => this.remove(index)}
               >
-                -
+                <Icon name="dash" aria-hidden="true" />
               </Button>
             </ButtonGroup>
           </fieldset>
