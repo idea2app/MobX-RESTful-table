@@ -13,10 +13,11 @@ A **Pagination Table** & **Scroll List** component suite for [CRUD operation][1]
 
 ## Versions
 
-| SemVer |    status    | ES decorator |    MobX     |
-| :----: | :----------: | :----------: | :---------: |
-| `>=2`  | ✅developing |   stage-3    |  `>=6.11`   |
-|  `<2`  | ❌deprecated |   stage-2    | `>=4 <6.11` |
+|  SemVer  |  Branch  |    status    | ES decorator |    MobX     | Bootstrap |
+| :------: | :------: | :----------: | :----------: | :---------: | :-------: |
+|  `>=3`   |  `main`  | ✅developing |   stage-3    |  `>=6.11`   |    v6     |
+| `>=2 <3` | `master` | ❌deprecated |   stage-3    |  `>=6.11`   |    v5     |
+|   `<2`   | `master` | ❌deprecated |   stage-2    | `>=4 <6.11` |    v5     |
 
 ## Components
 
