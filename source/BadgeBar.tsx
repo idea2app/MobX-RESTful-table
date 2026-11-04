@@ -1,9 +1,8 @@
-import { FC } from 'react';
-import { Badge, BadgeProps, CloseButton } from 'react-bootstrap';
-import { Variant } from 'react-bootstrap/esm/types';
+import { Badge, CloseButton, ComponentTheme } from 'idea-react';
+import { ComponentPropsWithRef, FC } from 'react';
 import { sum } from 'web-utility';
 
-export const VariantColors: Variant[] = [
+export const VariantColors: ComponentTheme[] = [
   'primary',
   'secondary',
   'success',
@@ -20,9 +19,9 @@ export interface BadgeItem {
   link?: string;
 }
 
-export interface BadgeBarProps extends BadgeProps {
+export interface BadgeBarProps extends ComponentPropsWithRef<'ul'> {
   list: BadgeItem[];
-  bgResolver?: (text: string) => Variant | string;
+  bgResolver?: (text: string) => ComponentTheme | string;
   onCheck?: (item: BadgeItem, index: number) => any;
   onDelete?: (item: BadgeItem, index: number) => any;
 }
@@ -39,13 +38,12 @@ export const BadgeBar: FC<BadgeBarProps> = ({
     {list.map(({ text, link }, index) => (
       <Badge
         key={text}
-        bg={bgResolver(text)}
-        text="white"
+        theme={bgResolver(text) as ComponentTheme}
         as="li"
         className="d-flex align-items-center gap-2"
       >
         {link || URL.canParse(text) ? (
-          <a className="text-decoration-none text-white" href={link || text}>
+          <a className="text-decoration-none fg-white" href={link || text}>
             {text}
           </a>
         ) : onCheck ? (

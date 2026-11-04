@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { DataObject, Filter, ListModel } from 'mobx-restful';
-import { Modal } from 'react-bootstrap';
+import { CloseButton, DialogBody, DialogHeader, NativeDialog } from 'idea-react';
 import { isEmpty } from 'web-utility';
 
 import { RestForm, RestFormProps } from './RestForm';
@@ -18,13 +18,19 @@ export const RestFormModal = observer(
       ID = currentOne?.[indexKey];
 
     return (
-      <Modal show={editing} onHide={() => store?.clearCurrent()}>
-        <Modal.Header closeButton>{ID}</Modal.Header>
+      <NativeDialog
+        open={editing}
+        onClose={() => store?.clearCurrent()}
+      >
+        <DialogHeader className="d-flex align-items-center justify-content-between">
+          {ID}
+          <CloseButton onClick={() => store?.clearCurrent()} />
+        </DialogHeader>
 
-        <Modal.Body>
+        <DialogBody>
           <RestForm id={ID} {...{ fields, store, translator, ...props }} />
-        </Modal.Body>
-      </Modal>
+        </DialogBody>
+      </NativeDialog>
     );
   },
 );

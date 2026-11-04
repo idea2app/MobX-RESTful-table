@@ -6,13 +6,25 @@ import { DataObject, Filter, IDType, ListModel } from 'mobx-restful';
 import {
   createRef,
   Fragment,
-  InputHTMLAttributes,
+  ComponentPropsWithRef,
   ReactNode,
   SubmitEvent,
   SyntheticEvent,
 } from 'react';
-import { Button, ButtonProps, Form, FormGroupProps, FormProps, InputGroup } from 'react-bootstrap';
-import { Editor, EditorProps } from 'react-bootstrap-editor';
+import {
+  Button,
+  ButtonProps,
+  Editor,
+  EditorProps,
+  FormCheck,
+  FormFeedback,
+  Form,
+  FormGroup,
+  FormGroupProps,
+  FormLabel,
+  FormProps,
+  InputGroup,
+} from 'idea-react';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
 import { BadgeInput } from './BadgeInput';
@@ -23,7 +35,7 @@ import { FormField, FormFieldProps } from './FormField';
 export interface Field<T extends DataObject>
   extends
     Pick<
-      InputHTMLAttributes<HTMLInputElement>,
+      ComponentPropsWithRef<'input'>,
       | 'type'
       | 'readOnly'
       | 'disabled'
@@ -89,22 +101,22 @@ export class RestForm<
     children,
     ...props
   }: FieldBoxProps<D>) => (
-    <Form.Group {...props}>
-      <Form.Label>
+    <FormGroup {...props}>
+      <FormLabel htmlFor={name?.toString()}>
         {typeof renderLabel === 'function' ? renderLabel(name) : renderLabel || (name as string)}
-      </Form.Label>
+      </FormLabel>
       {children}
       {validMessage && (
-        <Form.Control.Feedback tooltip type="valid">
+        <FormFeedback tooltip type="valid" className="tooltip">
           {validMessage}
-        </Form.Control.Feedback>
+        </FormFeedback>
       )}
       {invalidMessage && (
-        <Form.Control.Feedback tooltip type="invalid">
+        <FormFeedback tooltip type="invalid" className="tooltip">
           {invalidMessage}
-        </Form.Control.Feedback>
+        </FormFeedback>
       )}
-    </Form.Group>
+    </FormGroup>
   );
 
   @observable
@@ -235,17 +247,18 @@ export class RestForm<
         <div>
           {this.fieldReady &&
             options.map(({ value, label = value }) => (
-              <Form.Check
-                key={value}
-                id={[key, value] + ''}
-                label={label}
-                inline
-                {...meta}
-                type={type as 'radio' | 'checkbox'}
-                name={key.toString()}
-                value={value}
-                defaultChecked={data[key]?.includes(value)}
-              />
+              <div className="d-inline-flex align-items-center gap-2" key={value}>
+                <FormCheck
+                  id={[key, value] + ''}
+                  type={type as 'radio' | 'checkbox'}
+                  name={key.toString()}
+                  value={value}
+                  disabled={meta.disabled}
+                  required={meta.required}
+                  defaultChecked={data[key]?.includes(value)}
+                />
+                <label htmlFor={[key, value] + ''}>{label}</label>
+              </div>
             ))}
         </div>
       </RestForm.FieldBox>
@@ -284,26 +297,28 @@ export class RestForm<
       typeof renderLabel === 'function' ? renderLabel(key) : renderLabel || (key as string);
 
     return ({ [key]: value }: D) => (
-      <InputGroup hasValidation={this.customValidation}>
+      <InputGroup
+      //hasValidation={this.customValidation}
+      >
         {this.fieldReady && (
           <FormField
             {...props}
             {...meta}
             {...{ type, step, label }}
-            size={this.observedProps.size}
+            size={this.observedProps.size === 'xs' ? 'sm' : this.observedProps.size}
             name={key.toString()}
             defaultValue={RestForm.dateValueOf({ type, step }, value)}
           />
         )}
         {validMessage && (
-          <Form.Control.Feedback tooltip type="valid">
+          <FormFeedback tooltip type="valid">
             {validMessage}
-          </Form.Control.Feedback>
+          </FormFeedback>
         )}
         {invalidMessage && (
-          <Form.Control.Feedback tooltip type="invalid">
+          <FormFeedback tooltip type="invalid">
             {invalidMessage}
-          </Form.Control.Feedback>
+          </FormFeedback>
         )}
       </InputGroup>
     );
@@ -317,6 +332,7 @@ export class RestForm<
         size,
         store,
         translator,
+        fields: _fields,
         ...props
       } = this.props;
     const { downloading = 0, uploading = 0, currentOne = {} as D } = store || {},
@@ -327,7 +343,8 @@ export class RestForm<
       <Form
         ref={this.#form}
         {...props}
-        {...{ className, validated }}
+        className={className}
+        data-bs-validate={validated}
         noValidate={customValidation}
         onSubmit={this.handleSubmit}
         onReset={this.handleReset}
@@ -337,14 +354,20 @@ export class RestForm<
         ))}
         {!readOnly && (
           <footer className="d-flex gap-3">
-            <Button className="flex-fill" size={size} type="submit" disabled={loading}>
+            <Button
+              className="flex-fill"
+              size={size}
+              theme="primary"
+              type="submit"
+              disabled={loading}
+            >
               {t('submit')}
             </Button>
             <Button
               className="flex-fill"
               size={size}
               type="reset"
-              variant="danger"
+              theme="danger"
               disabled={loading}
             >
               {t('cancel')}

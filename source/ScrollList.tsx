@@ -65,7 +65,7 @@ export class ScrollList<
         <div>
           {renderList(allItems)}
 
-          <footer className="mt-2 text-center text-muted small">
+          <footer className="mt-2 text-center fg-secondary small">
             {noMore || !allItems.length ? t('no_more') : t('load_more')}
           </footer>
         </div>

@@ -2,7 +2,7 @@ import { observable } from 'mobx';
 import { GitRepository, RepositoryFilter } from 'mobx-github';
 import { observer } from 'mobx-react';
 import { FC } from 'react';
-import { Form, InputGroup } from 'react-bootstrap';
+import { FormControl, FormSelect, InputGroup } from 'idea-react';
 import { blobOf } from 'web-utility';
 
 import {
@@ -189,11 +189,11 @@ export const Content: FC = observer(() => (
           name="prices"
           renderItem={({ currency, amount }: Price) => (
             <InputGroup>
-              <Form.Select name="currency" defaultValue={currency}>
+              <FormSelect name="currency" defaultValue={currency}>
                 <option value="USD">USD $</option>
                 <option value="CNY">CNY ¥</option>
-              </Form.Select>
-              <Form.Control
+              </FormSelect>
+              <FormControl
                 placeholder="Amount"
                 type="number"
                 name="amount"

@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { DataObject } from 'mobx-restful';
-import { ChangeEvent, HTMLAttributes, ReactNode } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { ChangeEvent, ComponentPropsWithRef, ReactNode } from 'react';
+import { Button, ButtonGroup, Icon } from 'idea-react';
 import { formToJSON, isEmpty, uniqueID } from 'web-utility';
 
 export type ArrayFieldProps<T extends DataObject = DataObject> = Pick<
-  HTMLAttributes<HTMLFieldSetElement>,
+  ComponentPropsWithRef<'fieldset'>,
   'className' | 'style'
 > &
   FormComponentProps<T[]> & {
@@ -80,23 +80,23 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
             onChange={this.handleUpdate(index)}
           >
             <div className="flex-fill">{renderItem(item, index)}</div>
-            <ButtonGroup>
+            <ButtonGroup size="sm">
               <Button
                 type="button"
-                size="sm"
-                variant="warning"
+                theme="warning"
+                aria-label="Add row"
                 onClick={() => this.insert(index + 1)}
               >
-                +
+                <Icon name="plus" aria-hidden="true" />
               </Button>
               <Button
                 type="button"
-                size="sm"
-                variant="danger"
+                theme="danger"
+                aria-label="Remove row"
                 disabled={length < 2}
                 onClick={() => this.remove(index)}
               >
-                -
+                <Icon name="dash" aria-hidden="true" />
               </Button>
             </ButtonGroup>
           </fieldset>

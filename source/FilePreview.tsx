@@ -1,14 +1,14 @@
-import { FC, HTMLAttributes, InputHTMLAttributes } from 'react';
-import { ImageProps } from 'react-bootstrap';
+import { ComponentPropsWithRef, FC } from 'react';
+import { Icon, ImageProps } from 'idea-react';
 import { fileMetaOf } from 'web-utility';
 
 import { ImagePreview } from './ImagePreview';
 
-export type FilePreviewProps = ImageProps &
-  HTMLAttributes<HTMLAudioElement> &
-  HTMLAttributes<HTMLVideoElement> &
-  HTMLAttributes<HTMLAnchorElement> & {
-    type?: InputHTMLAttributes<HTMLInputElement>['accept'];
+export type FilePreviewProps = Omit<ImageProps, 'ref'> &
+  Omit<ComponentPropsWithRef<'audio'>, 'ref'> &
+  Omit<ComponentPropsWithRef<'video'>, 'ref'> &
+  Omit<ComponentPropsWithRef<'a'>, 'ref'> & {
+    type?: ComponentPropsWithRef<'input'>['accept'];
     path?: string;
     file?: HTMLMediaElement['srcObject'];
   };
@@ -71,9 +71,9 @@ export const FilePreview: FC<FilePreviewProps> = ({
             download={name}
             {...props}
           >
-            <i className={`bi bi-filetype-${extension || 'file-earmark'} fs-1`} />
+            <Icon name={extension ? `filetype-${extension}` : 'file-earmark'} className="fs-3xl" />
           </a>
-          <figcaption className="mw-100 text-wrap text-truncate">{name}</figcaption>
+          <figcaption className="max-w-100 text-wrap text-truncate">{name}</figcaption>
         </>
       )}
     </figure>
