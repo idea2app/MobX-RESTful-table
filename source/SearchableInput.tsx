@@ -135,6 +135,7 @@ export class SearchableInput<
         {needNew && fields?.[0] && (
           <Button
             className="w-100 sticky-top"
+            variant="solid"
             theme="warning"
             size="sm"
             type="button"

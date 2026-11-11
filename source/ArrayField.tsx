@@ -83,6 +83,7 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
             <ButtonGroup size="sm">
               <Button
                 type="button"
+                variant="solid"
                 theme="warning"
                 aria-label="Add row"
                 onClick={() => this.insert(index + 1)}
@@ -91,6 +92,7 @@ export class ArrayField<T extends DataObject = DataObject> extends FormComponent
               </Button>
               <Button
                 type="button"
+                variant="solid"
                 theme="danger"
                 aria-label="Remove row"
                 disabled={length < 2}

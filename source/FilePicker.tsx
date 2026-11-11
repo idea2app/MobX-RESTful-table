@@ -122,6 +122,8 @@ export class FilePicker extends FormComponent<FilePickerProps> {
           <ButtonGroup size="sm" className={`position-absolute top-0 end-0 ${styles.toolbar}`}>
             {onView && (
               <Button
+                icon
+                variant="solid"
                 theme="primary"
                 aria-label="View file"
                 onClick={() => onView({ path: filePath, file })}
@@ -129,7 +131,13 @@ export class FilePicker extends FormComponent<FilePickerProps> {
                 <Icon name="eye-fill" />
               </Button>
             )}
-            <Button theme="primary" aria-label="Remove file" onClick={() => this.#changeFile()}>
+            <Button
+              icon
+              variant="solid"
+              theme="primary"
+              aria-label="Remove file"
+              onClick={() => this.#changeFile()}
+            >
               <Icon name="x-lg" />
             </Button>
           </ButtonGroup>

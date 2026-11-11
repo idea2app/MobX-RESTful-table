@@ -18,11 +18,14 @@ it('renders a loading container and a closed dialog before the image loads', asy
   assert.ok(wrapper.classList.contains('custom'));
   assert.equal(dialog.hasAttribute('open'), false);
   assert.ok(container.querySelector('.spinner-border'));
+  assert.equal(container.querySelector('img[src=""]'), null);
+  assert.equal(dialog.querySelector('img'), null);
 
   await waitFor(() => assert.ok(container.querySelector('img.object-fit-contain')));
 
   assert.ok(!container.querySelector('.spinner-border'));
   assert.equal(container.querySelector('img.object-fit-contain')?.getAttribute('src'), path);
+  assert.equal(dialog.querySelector('img')?.getAttribute('src'), path);
 });
 
 it('passes container attributes through', async () => {

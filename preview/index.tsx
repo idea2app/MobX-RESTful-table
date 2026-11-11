@@ -41,6 +41,7 @@ export class App extends Component {
       <>
         <Button
           className="my-5 md:d-none"
+          variant="solid"
           aria-label="Open navigation"
           aria-controls="page-navigation"
           aria-expanded={menuOpen}
@@ -71,12 +72,12 @@ export class App extends Component {
 
   render() {
     return (
-      <Container className="pb-5 md:py-12" breakpoint="md">
+      <Container className="pb-5 md:py-12" fluid="md">
         <Row>
-          <Col span={12} md={3} className="sticky-top align-self-start bg-subtle-secondary">
+          <Col xs={12} md={3} className="sticky-top align-self-start bg-subtle-secondary">
             {this.renderMenu()}
           </Col>
-          <Col span={12} md={9} id="examples">
+          <Col xs={12} md={9} id="examples">
             <Content />
           </Col>
         </Row>

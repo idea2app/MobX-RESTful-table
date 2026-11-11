@@ -136,6 +136,7 @@ export class RestTable<
           {!disabled && editable && (
             <Button
               className="text-nowrap m-1"
+              variant="solid"
               theme={readOnly ? 'primary' : 'warning'}
               size={fieldSize}
               onClick={() => (store.currentOne = data)}
@@ -146,6 +147,7 @@ export class RestTable<
           {deletable && (
             <Button
               className="text-nowrap m-1"
+              variant="solid"
               theme="danger"
               size={fieldSize}
               onClick={() => this.deleteList([data[store.indexKey]])}
@@ -358,6 +360,7 @@ export class RestTable<
           )}
           {deletable && (
             <Button
+              variant="solid"
               theme="danger"
               size={fieldSize}
               disabled={!this.checkedKeys[0]}
@@ -368,6 +371,7 @@ export class RestTable<
           )}
           {editable && (
             <Button
+              variant="solid"
               size={fieldSize}
               theme="primary"
               onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}

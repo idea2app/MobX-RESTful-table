@@ -101,18 +101,22 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
           )
         )}
         <NativeDialog open={viewing} onClose={() => (this.viewing = false)}>
-          <DialogBody className="text-center">
-            <Image fluid src={loadedPath} />
-          </DialogBody>
-          <DialogFooter
-            className="justify-content-center max-w-100 text-break"
-            as="a"
-            href={loadedPath}
-            target="_blank"
-            download={fileNameOf(loadedPath)}
-          >
-            {loadedPath}
-          </DialogFooter>
+          {loadedPath && (
+            <>
+              <DialogBody className="text-center">
+                <Image fluid src={loadedPath} />
+              </DialogBody>
+              <DialogFooter
+                className="justify-content-center max-w-100 text-break"
+                as="a"
+                href={loadedPath}
+                target="_blank"
+                download={fileNameOf(loadedPath)}
+              >
+                {loadedPath}
+              </DialogFooter>
+            </>
+          )}
         </NativeDialog>
       </div>
     );

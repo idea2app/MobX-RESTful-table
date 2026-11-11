@@ -1,3 +1,4 @@
+import { FormRange } from 'idea-react';
 import { observer } from 'mobx-react';
 import { FormComponent, FormComponentProps } from 'mobx-react-helper';
 import { ReactNode } from 'react';
@@ -36,11 +37,10 @@ export class RangeInput extends FormComponent<RangeInputProps> {
 
     return (
       <div className={className} title={value + ''}>
-        <input
+        <FormRange
           {...{ min, max, value, ...props }}
           className={icon ? 'opacity-0' : ''}
           style={{ margin: '0 -0.5rem', cursor: 'pointer' }}
-          type="range"
           onChange={({ currentTarget: { value } }) => (this.innerValue = value)}
         />
         <ol className="list-unstyled user-select-none position-absolute start-0 top-0 w-100 h-100 pe-none d-flex justify-content-around">

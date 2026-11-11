@@ -14,8 +14,6 @@ import {
 import {
   Button,
   ButtonProps,
-  Editor,
-  EditorProps,
   FormCheck,
   FormFeedback,
   Form,
@@ -25,6 +23,7 @@ import {
   FormProps,
   InputGroup,
 } from 'idea-react';
+import { Editor, EditorProps } from 'react-bootstrap-editor';
 import { formatDate, formToJSON, isEmpty } from 'web-utility';
 
 import { BadgeInput } from './BadgeInput';
@@ -356,8 +355,9 @@ export class RestForm<
           <footer className="d-flex gap-3">
             <Button
               className="flex-fill"
-              size={size}
+              variant="solid"
               theme="primary"
+              size={size}
               type="submit"
               disabled={loading}
             >
@@ -365,9 +365,10 @@ export class RestForm<
             </Button>
             <Button
               className="flex-fill"
+              variant="solid"
+              theme="danger"
               size={size}
               type="reset"
-              theme="danger"
               disabled={loading}
             >
               {t('cancel')}
