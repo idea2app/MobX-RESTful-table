@@ -8,7 +8,7 @@ import {
 import '@open-file-viewer/core/style.css';
 import { FileViewer } from '@open-file-viewer/react';
 import { FC } from 'react';
-import { DialogBody, NativeDialog } from 'idea-react';
+import { DialogBody, Dialog } from 'idea-react';
 
 const workerSrc = new URL('../node_modules/pdfjs-dist/build/pdf.worker.mjs', import.meta.url) + '';
 
@@ -25,7 +25,7 @@ export interface FileViewProps {
 }
 
 export const FileView: FC<FileViewProps> = ({ file, onClose }) => (
-  <NativeDialog open={!!file} style={{ width: 'min(90vw, 72rem)' }} onClose={onClose}>
+  <Dialog open={!!file} style={{ width: 'min(90vw, 72rem)' }} onClose={onClose}>
     <DialogBody>
       {file && (
         <FileViewer
@@ -38,6 +38,6 @@ export const FileView: FC<FileViewProps> = ({ file, onClose }) => (
         />
       )}
     </DialogBody>
-  </NativeDialog>
+  </Dialog>
 );
 FileView.displayName = 'FileView';

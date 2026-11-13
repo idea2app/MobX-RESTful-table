@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ObservedComponent, reaction } from 'mobx-react-helper';
-import { DialogBody, DialogFooter, Image, ImageProps, NativeDialog, Spinner } from 'idea-react';
+import { DialogBody, DialogFooter, Image, ImageProps, Dialog, Spinner } from 'idea-react';
 import { fileNameOf } from 'web-utility';
 
 export type ImagePreviewProps = ImageProps & Partial<Record<`rounded${'' | 'Circle'}`, boolean>>;
@@ -100,7 +100,7 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
             />
           )
         )}
-        <NativeDialog open={viewing} onClose={() => (this.viewing = false)}>
+        <Dialog open={viewing} onClose={() => (this.viewing = false)}>
           {loadedPath && (
             <>
               <DialogBody className="text-center">
@@ -117,7 +117,7 @@ export class ImagePreview extends ObservedComponent<ImagePreviewProps> {
               </DialogFooter>
             </>
           )}
-        </NativeDialog>
+        </Dialog>
       </div>
     );
   }
