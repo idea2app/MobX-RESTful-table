@@ -18,17 +18,14 @@ export const RestFormModal = observer(
       ID = currentOne?.[indexKey];
 
     return (
-      <NativeDialog
-        open={editing}
-        onClose={() => store?.clearCurrent()}
-      >
+      <NativeDialog open={editing} onClose={() => store?.clearCurrent()}>
         <DialogHeader className="d-flex align-items-center justify-content-between">
           {ID}
           <CloseButton onClick={() => store?.clearCurrent()} />
         </DialogHeader>
 
         <DialogBody>
-          <RestForm id={ID} {...{ fields, store, translator, ...props }} />
+          {editing && <RestForm key={ID} id={ID} {...{ fields, store, translator, ...props }} />}
         </DialogBody>
       </NativeDialog>
     );

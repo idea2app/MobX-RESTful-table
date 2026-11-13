@@ -167,8 +167,12 @@ export class SearchableInput<
 
     return (
       <InputGroup className="position-relative">
-        <InputGroupText className="d-flex flex-wrap align-items-center gap-2">
+        <InputGroupText
+          className="d-flex flex-wrap align-items-center gap-2"
+          style={{ maxWidth: '70%', overflowX: 'auto' }}
+        >
           <BadgeBar
+            className="flex-nowrap w-max"
             list={(value || []).map(({ label }) => ({ text: label }))}
             onDelete={!readOnly && !disabled ? ({}, index) => this.delete(index) : undefined}
           />

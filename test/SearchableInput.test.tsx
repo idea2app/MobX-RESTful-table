@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { it, mock } from 'node:test';
 
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import './setup';
 import { SearchableInput } from '../source/SearchableInput';
@@ -26,6 +26,8 @@ it('renders selected options as badges and a hidden input', () => {
     />,
   );
   const group = container.querySelector('.input-group') as HTMLElement,
+    badgeArea = container.querySelector('.input-group-text') as HTMLElement,
+    badgeBar = badgeArea.querySelector('ul') as HTMLUListElement,
     search = screen.getByRole('searchbox'),
     hidden = container.querySelector('input[type="hidden"][name="topics"]') as HTMLInputElement,
     badges = container.querySelectorAll('.badge');
@@ -34,6 +36,10 @@ it('renders selected options as badges and a hidden input', () => {
   assert.equal(badges.length, 2);
   assert.equal(badges[0].textContent, 'React');
   assert.equal(badges[1].textContent, 'MobX');
+  assert.equal(badgeArea.style.maxWidth, '70%');
+  assert.equal(badgeArea.style.overflowX, 'auto');
+  assert.ok(badgeBar.classList.contains('flex-nowrap'));
+  assert.ok(badgeBar.classList.contains('w-max'));
 
   assert.deepEqual(JSON.parse(hidden.value), ['1', '2']);
   assert.ok(search.classList.contains('form-control'));
@@ -71,15 +77,14 @@ it('renders the given input type and states', () => {
   assert.ok(container.querySelector('input[type="hidden"][name="topics"]'));
 });
 
-it('renders a creation form when fields are configured', () => {
+it('renders a closed creation dialog when fields are configured', () => {
   const { container } = render(
     <SearchableInput {...commonProps} fields={[{ key: 'name', required: true }]} />,
   );
   const dialog = container.querySelector('dialog') as HTMLDialogElement;
 
   assert.equal(dialog.hasAttribute('open'), false);
-  assert.ok(within(dialog).getByLabelText('name'));
-  assert.ok(within(dialog).getByRole('button', { name: 'Submit', hidden: true }));
+  assert.equal(dialog.querySelector('form'), null);
 });
 
 it('removes a selected option through its close button', () => {

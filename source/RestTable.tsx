@@ -374,7 +374,7 @@ export class RestTable<
               variant="solid"
               size={fieldSize}
               theme="primary"
-              onClick={() => (store.currentOne[indexKey] = '' as D[keyof D])}
+              onClick={() => (store.currentOne = { [indexKey]: '' } as D)}
             >
               {t('create')}
             </Button>

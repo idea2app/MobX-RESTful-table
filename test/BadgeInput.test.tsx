@@ -11,12 +11,18 @@ it('renders selected values as removable badges and a hidden input', () => {
     <BadgeInput name="keywords" value={['React', 'MobX']} placeholder="Add keyword" />,
   );
   const badges = container.querySelectorAll('li.badge'),
+    badgeBar = container.querySelector('ul') as HTMLUListElement,
+    badgeArea = badgeBar.parentElement as HTMLElement,
     hidden = container.querySelector('input[type="hidden"]') as HTMLInputElement,
     input = screen.getByPlaceholderText('Add keyword');
 
   assert.equal(badges.length, 2);
   assert.equal(badges[0].textContent, 'React');
   assert.equal(badges[1].textContent, 'MobX');
+  assert.equal(badgeArea.style.maxWidth, '70%');
+  assert.equal(badgeArea.style.overflowX, 'auto');
+  assert.ok(badgeBar.classList.contains('flex-nowrap'));
+  assert.ok(badgeBar.classList.contains('w-max'));
 
   assert.equal(hidden.name, 'keywords');
   assert.deepEqual(JSON.parse(hidden.value), ['React', 'MobX']);

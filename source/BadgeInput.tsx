@@ -53,10 +53,13 @@ export class BadgeInput extends FormComponent<BadgeInputProps> {
 
     return (
       <div className={`form-control p-2 d-flex flex-wrap gap-2 ${className}`} style={style}>
-        <BadgeBar
-          list={(value || []).map(text => ({ text }))}
-          onDelete={({}, index) => this.delete(index)}
-        />
+        <div style={{ maxWidth: '70%', overflowX: 'auto' }}>
+          <BadgeBar
+            className="flex-nowrap w-max"
+            list={(value || []).map(text => ({ text }))}
+            onDelete={({}, index) => this.delete(index)}
+          />
+        </div>
         <input
           className="border-0 flex-fill"
           style={{ outline: 'none' }}

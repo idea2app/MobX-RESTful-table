@@ -225,3 +225,46 @@ it('opens the edit dialog with the current row data', async () => {
 
   assert.equal(input.value, 'A');
 });
+
+it('starts creation with a blank form after editing, and preserves the row', () => {
+  const listStore = store();
+  listStore.clearCurrent = () => {
+    listStore.currentOne = {} as typeof listStore.currentOne;
+  };
+  const { container } = render(
+    <RestTable store={listStore} translator={translator} columns={[{ key: 'name' }]} editable />,
+  );
+  const dialog = container.querySelector('dialog') as HTMLDialogElement;
+
+  fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+  assert.equal((within(dialog).getByLabelText('name') as HTMLInputElement).value, 'A');
+
+  fireEvent.change(within(dialog).getByLabelText('name'), { target: { value: 'Changed' } });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+
+  assert.equal((within(dialog).getByLabelText('name') as HTMLInputElement).value, '');
+  assert.deepEqual(listStore.currentOne, { id: '' });
+  assert.equal(listStore.currentPage[0].name, 'A');
+
+  fireEvent.change(within(dialog).getByLabelText('name'), { target: { value: 'Draft' } });
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+
+  assert.equal((within(dialog).getByLabelText('name') as HTMLInputElement).value, '');
+});
+
+it('replaces the edit record when switching directly to creation', () => {
+  const listStore = store();
+  const { container } = render(
+    <RestTable store={listStore} translator={translator} columns={[{ key: 'name' }]} editable />,
+  );
+  const dialog = container.querySelector('dialog') as HTMLDialogElement;
+
+  fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Create', hidden: true }));
+
+  assert.equal((within(dialog).getByLabelText('name') as HTMLInputElement).value, '');
+  assert.deepEqual(listStore.currentOne, { id: '' });
+  assert.deepEqual(listStore.currentPage[0], { id: 1, name: 'A', url: 'https://a.com' });
+});
